@@ -2,7 +2,7 @@
     "name": "dmstr/yii2-pages-module",
     "description": "Application sitemap and navigation manager module for Yii 2.0 Framework",
     "type": "yii2-extension",
-    "keywords": ["yii2","extension"],
+    "keywords": ["yii2","extension","sitemap","navigation"],
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -11,7 +11,8 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "*"
+        "yiisoft/yii2": "2.0.*",
+        "creocoder/yii2-nested-sets": "0.9.*"
     },
     "autoload": {
         "psr-4": {

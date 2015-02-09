@@ -22,10 +22,15 @@ or add
 to the require section of your `composer.json` file.
 
 
+Database
+--------
+```
+fig run web ./yii migrate \
+    --disableLookup=1 \
+    --migrationPath=@vendor/dmstr/yii2-pages-module/migrations
+```
+
 Usage
 -----
 
-Once the extension is installed, simply use it in your code by  :
-
-```php
-<?= \dmstr\modules\pages\AutoloadExample::widget(); ?>```
+TBD
