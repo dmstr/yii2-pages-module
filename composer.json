@@ -18,5 +18,8 @@
         "psr-4": {
             "dmstr\\modules\\pages\\": ""
         }
+    },
+    "extra": {
+        "bootstrap": "dmstr\\modules\\pages\\Bootstrap"
     }
 }
