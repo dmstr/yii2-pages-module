@@ -11,6 +11,6 @@ class Module extends \yii\base\Module
 {
     public function run()
     {
-        return "Hello!";
+
     }
 }
