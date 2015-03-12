@@ -12,7 +12,7 @@ class m150309_153255_create_tree_manager_tables extends Migration
         $this->execute(
             "DROP TABLE IF EXISTS tbl_tree;
 
-            CREATE TABLE tbl_tree (
+            CREATE TABLE dmstr_pages (
                 id            INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY
                 COMMENT 'Unique tree node identifier',
                 root          INT(11)               DEFAULT NULL
@@ -68,7 +68,7 @@ class m150309_153255_create_tree_manager_tables extends Migration
 
     public function down()
     {
-        $this->dropTable('tbl_tree');
+        $this->dropTable('dmstr_pages');
 
         return false;
     }

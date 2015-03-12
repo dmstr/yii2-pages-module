@@ -11,7 +11,7 @@
         */
         public static function tableName()
         {
-            return 'tbl_tree';
+            return 'dmstr_pages';
         }
 
         /**

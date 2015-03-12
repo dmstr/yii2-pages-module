@@ -15,5 +15,4 @@ echo TreeView::widget([
     'displayValue' => 1,        // initial display value
     //'softDelete' => true,    // normally not needed to change
     //'cacheSettings' => ['enableCache' => true] // normally not needed to change
-    'allowNewRoots' => false
 ]);
