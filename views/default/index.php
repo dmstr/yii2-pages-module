@@ -45,7 +45,7 @@ function getMenuItems($rootNode)
                 'itemOptions' => $nodeOptions,
             ];
             $item          = $itemTemplate;
-            $item['items'] = null;
+            $item['items'] = [];
 
             // Count items in stack
             $counter = count($stack);
@@ -74,5 +74,5 @@ function getMenuItems($rootNode)
 }
 
 $rootNode = Tree::find()->addOrderBy('root, lft')->all();
-\yii\helpers\VarDumper::dump(getMenuItems($rootNode), 10, true);
+\yii\helpers\VarDumper::dump(getMenuItems($rootNode), 25, true);
 
