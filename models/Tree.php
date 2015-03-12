@@ -35,11 +35,21 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function getMenuItems($rootName)
     {
-        // Get page tree by root node name
-        $rootNode   = self::findOne(['name' => $rootName]);
-        $leaves     = $rootNode->children()->all();
+        // Get root node by name
+        $rootNode = self::findOne(['name' => $rootName]);
 
-        // tree mapping
+        if ($rootNode === null) {
+            return [];
+        }
+
+        // Get all leaves from this root node
+        $leaves = $rootNode->children()->all();
+
+        if ($leaves === null) {
+            return [];
+        }
+
+        // tree mapping and leave stack
         $treeMap = [];
         $stack   = [];
 
