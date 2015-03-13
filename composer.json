@@ -22,8 +22,8 @@
     ],
     "require": {
         "yiisoft/yii2": "2.0.*",
-        "kartik-v/yii2-tree-manager": "dev-master",
-        "kartik-v/yii2-widget-select2": "dev-master",
+        "kartik-v/yii2-tree-manager": "*",
+        "kartik-v/yii2-widget-select2": "*",
         "rmrevin/yii2-fontawesome": "2.7.*"
     },
     "autoload": {
