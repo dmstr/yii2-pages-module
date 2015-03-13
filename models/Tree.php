@@ -70,7 +70,6 @@ class Tree extends \kartik\tree\models\Tree
                     'linkOptions' => $nodeOptions,
                 ];
                 $item          = $itemTemplate;
-                $item['items'] = [];
 
                 // Count items in stack
                 $counter = count($stack);
@@ -88,6 +87,9 @@ class Tree extends \kartik\tree\models\Tree
                     $treeMap[$i] = $item;
                     $stack[]     = &$treeMap[$i];
                 } else {
+                    if (!isset($stack[$counter - 1]['items'])) {
+                        $stack[$counter - 1]['items'] = [];
+                    }
                     // add the node to parent node
                     $i                                = count($stack[$counter - 1]['items']);
                     $stack[$counter - 1]['items'][$i] = $item;
@@ -96,5 +98,44 @@ class Tree extends \kartik\tree\models\Tree
             }
         }
         return array_filter($treeMap);
+    }
+
+
+
+
+    /**
+     * @param array $additionalParams
+     * @param bool $absolute
+     *
+     * @return mixed
+     */
+    public function createUrl($additionalParams = array(), $absolute = false)
+    {
+
+        if (is_array(CJSON::decode($this->route)) && count(CJSON::decode($this->route)) !== 0) {
+            $link = CJSON::decode($this->route);
+        } else {
+            $link['route']  = '/p3pages/default/page';
+            $link['params'] = CMap::mergeArray(
+                $additionalParams,
+                array(
+                    P3Page::PAGE_ID_KEY   => $this->id,
+                    P3Page::PAGE_NAME_KEY => $this->t('seoUrl', null, true)
+                )
+            );
+        }
+
+        if (isset($link['route'])) {
+            $params = (isset($link['params'])) ? $link['params'] : array();
+            if ($absolute === true) {
+                return Yii::app()->controller->createAbsoluteUrl($link['route'], $params);
+            } else {
+                return Yii::app()->controller->createUrl($link['route'], $params);
+            }
+        } elseif (isset($link['url'])) {
+            return $link['url'];
+        } else {
+            Yii::log('Could not determine URL string for P3Page #' . $this->id, CLogger::LEVEL_WARNING);
+        }
     }
 }
