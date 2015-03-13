@@ -11,6 +11,7 @@ use kartik\tree\TreeView;
 use \yii\helpers\Inflector;
 use \yii\helpers\Html;
 use \rmrevin\yii\fontawesome\FA;
+use devgroup\jsoneditor\Jsoneditor;
 
 /**
  * @var yii\web\View $this
@@ -112,6 +113,7 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+
             <?= $form->field(
                 $node,
                 $nameAttribute,
@@ -119,6 +121,19 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                     'addon' => ['prepend' => ['content' => Inflector::titleize($nameAttribute)]]
                 ]
             )->textInput($inputOpts)->label("") ?>
+            
+            <?= "JSON Editor testing" .
+            Jsoneditor::widget(
+                [
+                    'editorOptions' => [
+                        'modes' => ['code', 'form', 'text', 'tree', 'view'], // available modes
+                        'mode' => 'tree', // current mode
+                    ],
+                    'name' => $iconAttribute, // input name. Either 'name', or 'model' and 'attribute' properties must be specified.
+                    'options' => [], // html options
+                ]
+            );
+            ?>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <?php if (isset($module->treeViewSettings['fontAwesome']) && $module->treeViewSettings['fontAwesome'] == true): ?>
