@@ -5,10 +5,20 @@
     "keywords": ["yii2","extension","sitemap","navigation"],
     "license": "BSD-3-Clause",
     "authors": [
-        {
-            "name": "Tobias Munk",
-            "email": "tobias@diemeisterei.de"
-        }
+      {
+        "name": "Tobias Munk",
+        "email": "tobias@diemeisterei.de"
+      },
+      {
+        "name": "Christopher Stebe",
+        "email": "c.stebe@herzogkommunikation.de"
+      }
+    ],
+    "repositories": [
+      {
+        "type": "git",
+        "url": "git@github.com:Quexer69/yii2-fontawesome.git"
+      }
     ],
     "require": {
         "yiisoft/yii2": "2.0.*",
