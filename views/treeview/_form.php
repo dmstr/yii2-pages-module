@@ -15,22 +15,22 @@ use yii\helpers\Url;
 use \rmrevin\yii\fontawesome\FA;
 
 /**
- * @var yii\web\View            $this
+ * @var yii\web\View $this
  * @var kartik\tree\models\Tree $node
- * @var kartik\form\ActiveForm  $form
+ * @var kartik\form\ActiveForm $form
  */
 extract($params);
 $isAdmin = ($isAdmin == true || $isAdmin === "true");
 if (empty($parentKey)) {
-    $parent = $node->parents(1)->one();
+    $parent    = $node->parents(1)->one();
     $parentKey = empty($parent) ? '' : Html::getAttributeValue($parent, $keyAttribute);
 } elseif ($parentKey == 'root') {
     $parent = '';
 } else {
     $parent = $modelClass::findOne($parentKey);
 }
-$parentName = empty($parent) ? '' : $parent->$nameAttribute . ' &raquo; ';
-$inputOpts = [];
+$parentName  = empty($parent) ? '' : $parent->$nameAttribute . ' &raquo; ';
+$inputOpts   = [];
 $flagOptions = ['class' => 'kv-parent-flag'];
 if ($node->isNewRecord) {
     $name = Yii::t('kvtree', 'Untitled');
@@ -59,12 +59,12 @@ function renderContent($part)
     if (empty($nodeAddlViews[$part])) {
         return '';
     }
-    $p = $params;
+    $p         = $params;
     $p['form'] = $form;
     return $this->render($nodeAddlViews[$part], $p);
 }
 
-$module   = TreeView::module();
+$module = TreeView::module();
 // In case you are extending this form, it is mandatory to set 
 // all these hidden inputs as defined below.
 echo Html::hiddenInput('treeNodeModify', $node->isNewRecord);
@@ -147,17 +147,17 @@ $keyField = $form->field($node, $keyAttribute)->textInput(['readonly' => true]);
             <?= $form->field($node, $iconAttribute)->multiselect(
                 $iconsList,
                 [
-                    'item' => function ($index, $label, $name, $checked, $value) use ($inputOpts) {
+                    'item'     => function ($index, $label, $name, $checked, $value) use ($inputOpts) {
                         if ($index == 0 && $value == '') {
                             $checked = true;
-                            $value = '';
+                            $value   = '';
                         }
                         return '<div class="radio">' . Html::radio(
                             $name,
                             $checked,
                             [
-                                'value' => $value,
-                                'label' => $label,
+                                'value'    => $value,
+                                'label'    => $label,
                                 'disabled' => !empty($inputOpts['readonly']) || !empty($inputOpts['disabled'])
                             ]
                         ) . '</div>';

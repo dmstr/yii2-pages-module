@@ -17,10 +17,3 @@ echo TreeView::widget(
         //'cacheSettings' => ['enableCache' => true] // normally not needed to change
     ]
 );
-
-/**
- * Playground for generating structured menuItems array
- */
-
-\yii\helpers\VarDumper::dump(Tree::getMenuItems('root-1'), 25, true);
-
