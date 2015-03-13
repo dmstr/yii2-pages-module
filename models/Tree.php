@@ -67,7 +67,7 @@ class Tree extends \kartik\tree\models\Tree
                     'label'       => $node->name,
                     'url'         => '',// TODO $node->createUrl(),
                     'active'      => $node->active,
-                    'itemOptions' => $nodeOptions,
+                    'linkOptions' => $nodeOptions,
                 ];
                 $item          = $itemTemplate;
                 $item['items'] = [];
@@ -76,7 +76,7 @@ class Tree extends \kartik\tree\models\Tree
                 $counter = count($stack);
 
                 // Check on different levels
-                while ($counter > 0 && $stack[$counter - 1]['itemOptions']['data-lvl'] >= $item['itemOptions']['data-lvl']) {
+                while ($counter > 0 && $stack[$counter - 1]['linkOptions']['data-lvl'] >= $item['linkOptions']['data-lvl']) {
                     array_pop($stack);
                     $counter--;
                 }
