@@ -111,9 +111,17 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
 
     <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+            <?= $form->field(
+                $node,
+                $nameAttribute,
+                [
+                    'addon' => ['prepend' => ['content' => Inflector::titleize($nameAttribute)]]
+                ]
+            )->textInput($inputOpts)->label("") ?>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <?php if (isset($module->treeViewSettings['fontAwesome']) && $module->treeViewSettings['fontAwesome'] == true): ?>
-
                 <?php
                 $escape = new \yii\web\JsExpression("function(m) { return m; }");
                 $addon  = [
@@ -149,16 +157,7 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                 )->textInput($inputOpts)->label("") ?>
             <?php endif; ?>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-            <?= $form->field(
-                $node,
-                $nameAttribute,
-                [
-                    'addon' => ['prepend' => ['content' => Inflector::titleize($nameAttribute)]]
-                ]
-            )->textInput($inputOpts)->label("") ?>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
             <?= $form->field(
                 $node,
                 $iconTypeAttribute,
