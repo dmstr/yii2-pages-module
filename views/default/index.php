@@ -43,7 +43,7 @@ echo TreeView::widget(
         'displayValue'    => 1,
         'wrapperTemplate' => "{header}{footer}{tree}",
         'headingOptions'  => ['label' => $title . '-Module'],
-        'treeOptions'     => ['style' => 'height:500px'],
+        'treeOptions'     => ['style' => 'height:600px'],
         'headerTemplate'  => $headerTemplate,
         'mainTemplate'    => $mainTemplate,
     ]

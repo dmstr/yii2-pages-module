@@ -3,7 +3,25 @@
 namespace dmstr\modules\pages\models;
 
 use Yii;
+use yii\db\Expression;
+use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
 
+/**
+ * This is the tree model class, extended from \kartik\tree\models\Tree
+ *
+ * @property string  $page_title
+ * @property string  $name_id
+ * @property string  $slug
+ * @property string  $route
+ * @property string  $default_meta_keywords
+ * @property string  $default_meta_description
+ * @property string  $request_params
+ * @property integer $owner
+ * @property string  $created_at
+ * @property string  $updated_at
+ *
+ */
 class Tree extends \kartik\tree\models\Tree
 {
     /**
@@ -12,6 +30,86 @@ class Tree extends \kartik\tree\models\Tree
     public static function tableName()
     {
         return 'dmstr_pages';
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * Use yii\behaviors\TimestampBehavior for created_at and updated_at attribute
+     * @return array
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                [
+                    'class'              => TimestampBehavior::className(),
+                    'createdAtAttribute' => 'created_at',
+                    'updatedAtAttribute' => 'updated_at',
+                    'value'              => new Expression('NOW()'),
+                ]
+            ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return ArrayHelper::merge(
+            parent::rules(),
+            [
+                [
+                    [
+                        'name_id',
+                    ],
+                    'required'
+                ],
+                [
+                    [
+                        'name_id',
+                    ],
+                    'unique'
+                ],
+                [
+                    [
+                        'name_id',
+                        'page_title',
+                        'slug',
+                        'route',
+                        'default_meta_keywords',
+                        'default_meta_description',
+                        'request_params',
+                    ],
+                    'string',
+                    'max' => 255
+                ],
+                [
+                    [
+                        'owner',
+                    ],
+                    'integer',
+                    'max' => 11
+                ],
+                [
+                    [
+                        'name_id',
+                        'page_title',
+                        'slug',
+                        'route',
+                        'default_meta_keywords',
+                        'default_meta_description',
+                        'request_params',
+                        'owner',
+                        'created_at',
+                        'updated_at',
+                    ],
+                    'safe'
+                ],
+            ]
+        );
     }
 
     /**
@@ -63,13 +161,13 @@ class Tree extends \kartik\tree\models\Tree
                     'data-lvl'    => $node->lvl,
                 ];
 
-                $itemTemplate  = [
+                $itemTemplate = [
                     'label'       => $node->name,
                     'url'         => '',// TODO $node->createUrl(),
                     'active'      => $node->active,
                     'linkOptions' => $nodeOptions,
                 ];
-                $item          = $itemTemplate;
+                $item         = $itemTemplate;
 
                 // Count items in stack
                 $counter = count($stack);
@@ -99,8 +197,6 @@ class Tree extends \kartik\tree\models\Tree
         }
         return array_filter($treeMap);
     }
-
-
 
 
     /**

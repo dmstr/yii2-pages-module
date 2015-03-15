@@ -124,27 +124,24 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
             <?php if (isset($module->treeViewSettings['fontAwesome']) && $module->treeViewSettings['fontAwesome'] == true): ?>
-                <?php
-                $escape = new \yii\web\JsExpression("function(m) { return m; }");
-                $addon  = [
-                    'prepend' => [
-                        'content' => Inflector::titleize($iconAttribute)
-                    ],
-                ];
-                echo $form->field($node, $iconAttribute)->widget(
+                <?= $form->field($node, $iconAttribute)->widget(
                     \kartik\select2\Select2::classname(),
                     [
                         'name'          => $iconAttribute,
                         'model'         => $node,
                         'attribute'     => $iconAttribute,
-                        'addon'         => $addon,
+                        'addon'         => [
+                            'prepend' => [
+                                'content' => Inflector::titleize($iconAttribute)
+                            ],
+                        ],
                         'data'          => FA::getConstants(true),
                         'options'       => [
                             'placeholder' => Yii::t('app', 'Type to autocomplete'),
                             'multiple'    => false,
                         ],
                         'pluginOptions' => [
-                            'escapeMarkup' => $escape,
+                            'escapeMarkup' => new \yii\web\JsExpression("function(m) { return m; }"),
                             'allowClear'   => true
                         ]
                     ]
@@ -160,74 +157,153 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
             <?php endif; ?>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+            <?= $form->field($node, $iconTypeAttribute)->widget(
+                \kartik\select2\Select2::classname(),
+                [
+                    'name'          => $iconTypeAttribute,
+                    'model'         => $node,
+                    'attribute'     => $iconTypeAttribute,
+                    'addon'         => [
+                        'prepend' => [
+                            'content' => Inflector::titleize($iconTypeAttribute)
+                        ],
+                    ],
+                    'data'          => [
+                        TreeView::ICON_CSS => 'CSS Suffix',
+                        TreeView::ICON_RAW => 'Raw Markup',
+                    ],
+                    'options'       => [
+                            'placeholder' => Yii::t('app', 'Select'),
+                            'multiple'    => false,
+                        ] + $inputOpts,
+                    'pluginOptions' => [
+                        'allowClear' => false
+                    ]
+                ]
+            )->label("");
+            ?>
+        </div>
+    </div>
+
+    <hr/><h4><?= Yii::t('kvtree', 'Title / Names') ?></h4>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
             <?= $form->field(
                 $node,
-                $iconTypeAttribute,
+                'page_title',
                 [
-                    'addon' => ['prepend' => ['content' => Inflector::titleize($iconTypeAttribute)]]
+                    'addon' => ['prepend' => ['content' => Inflector::titleize('page_title')]]
                 ]
-            )->dropdownList(
+            )->textInput($inputOpts)->label("") ?>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+            <?= $form->field(
+                $node,
+                'name_id',
                 [
-                    TreeView::ICON_CSS => 'CSS Suffix',
-                    TreeView::ICON_RAW => 'Raw Markup',
-                ],
-                $inputOpts
+                    'addon' => ['prepend' => ['content' => 'Name ID']]
+                ]
+            )->textInput()->label("") ?>
+        </div>
+    </div>
+
+    <hr/><h4><?= Yii::t('kvtree', 'SEO') ?></h4>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <?= $form->field(
+                $node,
+                'default_meta_keywords',
+                [
+                    'addon' => ['prepend' => ['content' => 'Keywords']]
+                ]
+            )->textInput()->label("") ?>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <?= $form->field(
+                $node,
+                'default_meta_description',
+                [
+                    'addon' => ['prepend' => ['content' => 'Description']]
+                ]
+            )->textInput()->label("") ?>
+        </div>
+    </div>
+
+    <?= renderContent(Module::VIEW_PART_2); ?>
+
+    <hr/><h4><?= Yii::t('kvtree', 'Route') ?></h4>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
+            <?= $form->field($node, 'route')->widget(
+                \kartik\select2\Select2::classname(),
+                [
+                    'name'          => 'route',
+                    'model'         => $node,
+                    'attribute'     => 'route',
+                    'addon'         => [
+                        'prepend' => [
+                            'content' => 'Controller / View'
+                        ],
+                    ],
+                    'data'          => [
+                        'xxx' => 'MyController'
+                    ],
+                    'options'       => [
+                        'placeholder' => Yii::t('app', 'Select route'),
+                        'multiple'    => false,
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ]
+                ]
+            )->label("");
+            ?>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
+            <?= $form->field(
+                $node,
+                'slug',
+                [
+                    'addon' => ['prepend' => ['content' => Inflector::titleize('slug')]]
+                ]
+            )->textInput(
+                [
+                    'value' => '/' . Inflector::slug($node->page_title) . '-' . $node->id . '.html',
+                    'disabled' => true
+                ]
             )->label("") ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <?= "JSON Editor testing" .
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h5>Request params</h5>
+            <?=
             Jsoneditor::widget(
                 [
                     'editorOptions' => [
                         'modes' => ['code', 'form', 'text', 'tree', 'view'], // available modes
                         'mode'  => 'tree', // current mode
                     ],
-                    'name'          => 'XXX',
-                    // input name. Either 'name', or 'model' and 'attribute' properties must be specified.
-                    'options'       => [],
+                    'model'         => $node,
+                    'attribute'     => 'request_params',
+                    'options'       => [
+                        'id'    => 'tree-request_params',
+                        'class' => 'form-control',
+                    ],
                     // html options
                 ]
             );
+            $js = <<<JS
+$(document).ready(function () {
+    // Event listener on key events in JSONEditor
+    // TreeRequestParamsEditor -> Jsoneditor:43
+    $('#tree-request_params-jsoneditor').on('keypress keydown keyup',function (e) {
+        $('#tree-request_params').val(TreeRequestParamsEditor.getText());
+    });
+});
+JS;
+            $this->registerJs($js);
             ?>
-        </div>
-    </div>
-    <hr/><h4><?= Yii::t('kvtree', 'Title / Names') ?></h4>
-
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___pageTitle___
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___slug___
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___name_id___
-        </div>
-    </div>
-    <hr/><h4><?= Yii::t('kvtree', 'Route') ?></h4>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___controller___
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___view___
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___request_params___
-        </div>
-    </div>
-    <hr/><h4><?= Yii::t('kvtree', 'SEO') ?></h4>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___default_meta_keywords___
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___default_meta_description___
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-            ___default_meta_???___
         </div>
     </div>
 <?php else : ?>
@@ -273,9 +349,6 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
         </div>
     </div>
 <?php endif; ?>
-
-<?= renderContent(Module::VIEW_PART_2); ?>
-
 <?php
 /**
  * ADMIN Settings
@@ -308,5 +381,4 @@ if ($isAdmin): ?>
     <?= renderContent(Module::VIEW_PART_4); ?>
 <?php endif; ?>
 <?php ActiveForm::end() ?>
-
 <?= renderContent(Module::VIEW_PART_5); ?>

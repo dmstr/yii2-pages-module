@@ -5,82 +5,75 @@ use yii\db\Migration;
 
 class m150309_153255_create_tree_manager_tables extends Migration
 {
-
-    public function up()
-    {
-
-        $this->execute(
-            "DROP TABLE IF EXISTS tbl_tree;
-
-            CREATE TABLE dmstr_pages (
-                id            INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY
-                COMMENT 'Unique tree node identifier',
-                root          INT(11)               DEFAULT NULL
-                COMMENT 'Tree root identifier',
-                lft           INT(11)      NOT NULL
-                COMMENT 'Nested set left property',
-                rgt           INT(11)      NOT NULL
-                COMMENT 'Nested set right property',
-                lvl           SMALLINT(5)  NOT NULL
-                COMMENT 'Nested set level / depth',
-                name          VARCHAR(60)  NOT NULL
-                COMMENT 'The tree node name / label',
-                icon          VARCHAR(255)          DEFAULT NULL
-                COMMENT 'The icon to use for the node',
-                icon_type     TINYINT(1)   NOT NULL DEFAULT '1'
-                COMMENT 'Icon Type: 1 = CSS Class, 2 = Raw Markup',
-                active        TINYINT(1)   NOT NULL DEFAULT TRUE
-                COMMENT 'Whether the node is active (will be set to false on deletion)',
-                selected      TINYINT(1)   NOT NULL DEFAULT FALSE
-                COMMENT 'Whether the node is selected/checked by default',
-                disabled      TINYINT(1)   NOT NULL DEFAULT FALSE
-                COMMENT 'Whether the node is enabled',
-                readonly      TINYINT(1)   NOT NULL DEFAULT FALSE
-                COMMENT 'Whether the node is read only (unlike disabled - will allow toolbar actions)',
-                visible       TINYINT(1)   NOT NULL DEFAULT TRUE
-                COMMENT 'Whether the node is visible',
-                collapsed     TINYINT(1)   NOT NULL DEFAULT FALSE
-                COMMENT 'Whether the node is collapsed by default',
-                movable_u     TINYINT(1)   NOT NULL DEFAULT TRUE
-                COMMENT 'Whether the node is movable one position up',
-                movable_d     TINYINT(1)   NOT NULL DEFAULT TRUE
-                COMMENT 'Whether the node is movable one position down',
-                movable_l     TINYINT(1)   NOT NULL DEFAULT TRUE
-                COMMENT 'Whether the node is movable to the left (from sibling to parent)',
-                movable_r     TINYINT(1)   NOT NULL DEFAULT TRUE
-                COMMENT 'Whether the node is movable to the right (from sibling to child)',
-                removable     TINYINT(1)   NOT NULL DEFAULT TRUE
-                COMMENT 'Whether the node is removable (any children below will be moved as siblings before deletion)',
-                removable_all TINYINT(1)   NOT NULL DEFAULT FALSE
-                COMMENT 'Whether the node is removable along with descendants',
-                KEY tbl_tree_NK1 (root),
-                KEY tbl_tree_NK2 (lft),
-                KEY tbl_tree_NK3 (rgt),
-                KEY tbl_tree_NK4 (lvl),
-                KEY tbl_tree_NK5 (active)
-            )
-                ENGINE = InnoDB
-                DEFAULT CHARSET = utf8
-                AUTO_INCREMENT = 1;"
-        );
-
-    }
-
-    public function down()
-    {
-        $this->dropTable('dmstr_pages');
-
-        return false;
-    }
-    
-    /*
     // Use safeUp/safeDown to run migration code within a transaction
     public function safeUp()
     {
+        $this->execute(
+            "
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema ks-1
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Table `dmstr_pages`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `dmstr_pages`;
+CREATE TABLE IF NOT EXISTS `dmstr_pages` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique tree node identifier',
+  `root` INT(11) NULL DEFAULT NULL COMMENT 'Tree root identifier',
+  `lft` INT(11) NOT NULL COMMENT 'Nested set left property',
+  `rgt` INT(11) NOT NULL COMMENT 'Nested set right property',
+  `lvl` SMALLINT(5) NOT NULL COMMENT 'Nested set level / depth',
+  `page_title` VARCHAR(255) NULL COMMENT 'The page title',
+  `name` VARCHAR(60) NOT NULL COMMENT 'The tree node name / label',
+  `name_id` VARCHAR(255) NOT NULL COMMENT 'The unique name_id',
+  `slug` VARCHAR(255) NULL COMMENT 'The auto generated slugged name_id',
+  `route` VARCHAR(255) NULL COMMENT 'The controller/view route',
+  `default_meta_keywords` VARCHAR(255) NULL COMMENT 'SEO - meta keywords - comma seperated',
+  `default_meta_description` TEXT NULL COMMENT 'SEO - meta description',
+  `request_params` TEXT NULL COMMENT 'JSON - request params',
+  `owner` INT(11) NULL,
+  `icon` VARCHAR(255) NULL DEFAULT NULL COMMENT 'The icon to use for the node',
+  `icon_type` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Icon Type: 1 = CSS Class, 2 = Raw Markup',
+  `active` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is active (will be set to false on deletion)',
+  `selected` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is selected/checked by default',
+  `disabled` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is enabled',
+  `readonly` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is read only (unlike disabled - will allow toolbar actions)',
+  `visible` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is visible',
+  `collapsed` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is collapsed by default',
+  `movable_u` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is movable one position up',
+  `movable_d` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is movable one position down',
+  `movable_l` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is movable to the left (from sibling to parent)',
+  `movable_r` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is movable to the right (from sibling to child)',
+  `removable` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is removable (any children below will be moved as siblings before deletion)',
+  `removable_all` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is removable along with descendants',
+  `created_at` DATETIME NULL,
+  `updated_at` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `tbl_tree_NK1` (`root` ASC),
+  INDEX `tbl_tree_NK2` (`lft` ASC),
+  INDEX `tbl_tree_NK3` (`rgt` ASC),
+  INDEX `tbl_tree_NK4` (`lvl` ASC),
+  INDEX `tbl_tree_NK5` (`active` ASC),
+  UNIQUE INDEX `name_id_UNIQUE` (`name_id` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 45
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+"
+        );
     }
-    
+
     public function safeDown()
     {
+        $this->dropTable('dmstr_pages');
     }
-    */
 }
