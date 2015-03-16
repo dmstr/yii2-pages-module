@@ -245,8 +245,10 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                             'content' => 'Controller / View'
                         ],
                     ],
+                    // TODO data via \dmstr\helpers\Metadata::getAllControllers()
                     'data'          => [
-                        'xxx' => 'MyController'
+                        '/site/index'    => '/site/index',
+                        '/pages/default' => '/pages/default',
                     ],
                     'options'       => [
                         'placeholder' => Yii::t('app', 'Select route'),

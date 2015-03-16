@@ -6,6 +6,9 @@ use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\Json;
+use yii\helpers\VarDumper;
+use yii\web\HttpException;
 
 /**
  * This is the tree model class, extended from \kartik\tree\models\Tree
@@ -127,6 +130,38 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
+     * @param array $additionalParams
+     *
+     * @return null|string
+     */
+    public function createUrl($additionalParams = [])
+    {
+        $leave = Tree::find()->where(['id' => $this->id])->one();
+
+        if ($leave === null) {
+            Yii::error("Tree node with id=" . $this->id . " not found.");
+            return null;
+        }
+
+        if ($leave->route !== null && $leave->request_params !== null) {
+            $params = Json::decode($leave->request_params);
+            return \Yii::$app->urlManager->createUrl(
+                [
+                    $leave->route . '?page_name=' . $params['page_name'],
+                    /*ArrayHelper::merge(
+                        $additionalParams,
+                        [
+                            'page_name' => $params['page_name'],
+                        ]
+                    )*/
+                ]
+            );
+        } elseif ($leave->route !== null) {
+            return \Yii::$app->urlManager->createUrl([$leave->route]);
+        }
+    }
+
+    /**
      * @param $rootName the name of the root node
      *
      * @return array
@@ -163,7 +198,7 @@ class Tree extends \kartik\tree\models\Tree
 
                 $itemTemplate = [
                     'label'       => $node->name,
-                    'url'         => '',// TODO $node->createUrl(),
+                    'url'         => $node->createUrl(),// TODO $node->createUrl(),
                     'active'      => $node->active,
                     'linkOptions' => $nodeOptions,
                 ];
@@ -196,42 +231,5 @@ class Tree extends \kartik\tree\models\Tree
             }
         }
         return array_filter($treeMap);
-    }
-
-
-    /**
-     * @param array $additionalParams
-     * @param bool $absolute
-     *
-     * @return mixed
-     */
-    public function createUrl($additionalParams = array(), $absolute = false)
-    {
-
-        if (is_array(CJSON::decode($this->route)) && count(CJSON::decode($this->route)) !== 0) {
-            $link = CJSON::decode($this->route);
-        } else {
-            $link['route']  = '/p3pages/default/page';
-            $link['params'] = CMap::mergeArray(
-                $additionalParams,
-                array(
-                    P3Page::PAGE_ID_KEY   => $this->id,
-                    P3Page::PAGE_NAME_KEY => $this->t('seoUrl', null, true)
-                )
-            );
-        }
-
-        if (isset($link['route'])) {
-            $params = (isset($link['params'])) ? $link['params'] : array();
-            if ($absolute === true) {
-                return Yii::app()->controller->createAbsoluteUrl($link['route'], $params);
-            } else {
-                return Yii::app()->controller->createUrl($link['route'], $params);
-            }
-        } elseif (isset($link['url'])) {
-            return $link['url'];
-        } else {
-            Yii::log('Could not determine URL string for P3Page #' . $this->id, CLogger::LEVEL_WARNING);
-        }
     }
 }
