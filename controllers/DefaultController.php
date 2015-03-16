@@ -1,8 +1,18 @@
 <?php
+/**
+ * @link http://www.diemeisterei.de/
+ * @copyright Copyright (c) 2015 diemeisterei GmbH, Stuttgart
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace dmstr\modules\pages\controllers;
 
+use dmstr\modules\pages\models\Tree;
+use yii\helpers\Url;
 use yii\filters\AccessControl;
+use yii\web\HttpException;
 
 /**
  * Class DefaultController
@@ -28,8 +38,12 @@ class DefaultController extends \yii\web\Controller
                 'rules' => [
                     [
                         'allow'   => true,
-                        'actions' => ['index', 'page'],
+                        'actions' => ['index'],
                         'roles'   => ['@']
+                    ],
+                    [
+                        'allow'   => true,
+                        'actions' => ['page'],
                     ]
                 ]
             ]
@@ -53,9 +67,35 @@ class DefaultController extends \yii\web\Controller
         return $this->render('index');
     }
 
-    public function actionPage()
+    public function actionPage($id)
     {
-        return $this->render('page');
-    }
+        Url::remember();
 
+        // Set layout
+        $this->layout = '@app/views/layouts/main';
+
+        // Get Tree object
+        $page         = Tree::findOne(
+            [
+                Tree::ATTR_ID      => $id,
+                Tree::ATTR_ACTIVE  => Tree::ACTIVE,
+                Tree::ATTR_VISIBLE => Tree::VISIBLE
+            ]
+        );
+
+        if ($page !== null) {
+
+            // Set page title
+            $this->view->title = $page->page_title;
+
+            // Register default SEO meta tags
+            $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords]);
+            $this->view->registerMetaTag(['name' => 'description', 'content' => $page->default_meta_description]);
+
+            // Render view
+            return $this->render($page->view, ['page' => $page]);
+        } else {
+            throw new HttpException(404, \Yii::t('app', 'Page not found.') . ' [ID: ' . $id . ']');
+        }
+    }
 }
