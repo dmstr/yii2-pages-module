@@ -33,4 +33,24 @@ fig run web ./yii migrate \
 Usage
 -----
 
-TBD
+**find a root node**
+
+```
+$localizedRoot = 'root_' . \Yii::$app->language;
+$menuItems = \dmstr\modules\pages\models\Tree::getMenuItems($localizedRoot);
+```
+
+**use for example with bootstrap Navbar**
+
+```
+$localizedRoot = 'root_' . \Yii::$app->language;
+    echo yii\bootstrap\Nav::widget(
+        [
+            'options'         => ['class' => 'navbar-nav navbar-right'],
+            'activateItems'   => false,
+            'encodeLabels'    => false,
+            'activateParents' => true,
+            'items'           => Tree::getMenuItems($localizedRoot),
+        ]
+    );
+```
