@@ -50,74 +50,20 @@ echo TreeView::widget(
 );
 ?>
 <hr/>
-<h3>InputWidget</h3>
-<?php
-echo TreeViewInput::widget(
-    [
-        // single query fetch to render the tree
-        'query'          => Tree::find()->addOrderBy('root, lft'),
-        'headingOptions' => ['label' => 'Categories'],
-        'name'           => 'kv-product',    // input name
-        'value'          => '1,2,3',         // values selected (comma separated for multiple select)
-        'asDropdown'     => true,            // will render the tree input widget as a dropdown.
-        'multiple'       => false,            // set to false if you do not need multiple selection
-        'fontAwesome'    => true,            // render font awesome icons
-        'rootOptions'    => [
-            'label' => '<i class="fa fa-tree"></i>',
-            'class' => 'text-success'
-        ]
-    ]
-);
-// custom root label
-//'options'         => ['disabled' => true],
-?>
-<hr/>
 <h3>TODOs</h3>
 
 <ul>
     <li>
-        <b>Datenmodell</b> <br/>
+        <b>Add copy pages / </b> <br/>
         <ul>
             <li>
-                pageTitle NULL
+                with widgets
             </li>
             <li>
-                slug NULL
+                without widgets
             </li>
             <li>
-                name_id NOT NULL
-            </li>
-            <li>
-                controller NULL (via config)
-            </li>
-            <li>
-                view NULL (via config)
-            </li>
-            <li>
-                default_meta_keywords NULL
-            </li>
-            <li>
-                default_meta_description NULL
-            </li>
-            <li>
-                request_params TEXT NULL
-            </li>
-            <li>
-                ?? other seo fields
-            </li>
-        </ul>
-    </li>
-    <li>
-        <b>Models / Views</b> <br/>
-        <ul>
-            <li>
-                extend model attributes and validations <code>dmstr\modules\pages\models\Tree</code>
-            </li>
-            <li>
-                update <code>_form</code> view
-            </li>
-            <li>
-                ...
+                recursive and single
             </li>
         </ul>
     </li>
