@@ -14,12 +14,6 @@
         "email": "c.stebe@herzogkommunikation.de"
       }
     ],
-    "repositories": [
-      {
-        "type": "git",
-        "url": "git@github.com:dmstr/yii2-tree-manager.git"
-      }
-    ],
     "require": {
         "yiisoft/yii2": "2.0.*",
         "kartik-v/yii2-tree-manager": "*",
