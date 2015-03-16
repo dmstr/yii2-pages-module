@@ -1,9 +1,15 @@
 <?php
+/**
+ * @link http://www.diemeisterei.de/
+ * @copyright Copyright (c) 2015 diemeisterei GmbH, Stuttgart
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-use yii\db\Schema;
 use yii\db\Migration;
 
-class m150309_153255_create_tree_manager_tables extends Migration
+class m150309_153255_create_tree_manager_table extends Migration
 {
     // Use safeUp/safeDown to run migration code within a transaction
     public function safeUp()
@@ -21,8 +27,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Table `dmstr_pages`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `dmstr_pages`;
-CREATE TABLE IF NOT EXISTS `dmstr_pages` (
+DROP TABLE IF EXISTS `dmstr_page`;
+CREATE TABLE IF NOT EXISTS `dmstr_page` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique tree node identifier',
   `root` INT(11) NULL DEFAULT NULL COMMENT 'Tree root identifier',
   `lft` INT(11) NOT NULL COMMENT 'Nested set left property',
@@ -33,10 +39,11 @@ CREATE TABLE IF NOT EXISTS `dmstr_pages` (
   `name_id` VARCHAR(255) NOT NULL COMMENT 'The unique name_id',
   `slug` VARCHAR(255) NULL COMMENT 'The auto generated slugged name_id',
   `route` VARCHAR(255) NULL COMMENT 'The controller/view route',
+  `view` VARCHAR(255) NULL COMMENT 'The view to render through the given route',
   `default_meta_keywords` VARCHAR(255) NULL COMMENT 'SEO - meta keywords - comma seperated',
   `default_meta_description` TEXT NULL COMMENT 'SEO - meta description',
   `request_params` TEXT NULL COMMENT 'JSON - request params',
-  `owner` INT(11) NULL,
+  `owner` INT(11) NULL COMMENT 'The owner user id how created the page node',
   `icon` VARCHAR(255) NULL DEFAULT NULL COMMENT 'The icon to use for the node',
   `icon_type` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Icon Type: 1 = CSS Class, 2 = Raw Markup',
   `active` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is active (will be set to false on deletion)',
