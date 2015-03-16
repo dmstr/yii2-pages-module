@@ -33,7 +33,9 @@ fig run web ./yii migrate \
 Usage
 -----
 
-**find a root node**
+**find a root node / leave node**
+
+by `name_id`
 
 ```
 $localizedRoot = 'root_' . \Yii::$app->language;
