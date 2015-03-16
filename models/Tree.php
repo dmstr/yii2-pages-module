@@ -8,9 +8,7 @@
  */
 namespace dmstr\modules\pages\models;
 
-use rmrevin\yii\fontawesome\FA;
 use Yii;
-use yii\bootstrap\Nav;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;

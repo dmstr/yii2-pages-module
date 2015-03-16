@@ -74,7 +74,7 @@ $form = ActiveForm::begin(['action' => $action]);
 // Get tree manager module
 $module = TreeView::module();
 
-// In case you are extending this form, it is mandatory to set 
+// In case you are extending this form, it is mandatory to set
 // all these hidden inputs as defined below.
 echo Html::hiddenInput("Tree[{$keyAttribute}]", $node->id);
 echo Html::hiddenInput('treeNodeModify', $node->isNewRecord);
