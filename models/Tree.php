@@ -145,9 +145,10 @@ class Tree extends \kartik\tree\models\Tree
 
         if ($leave->route !== null && $leave->request_params !== null) {
             $params = Json::decode($leave->request_params);
+            $page_name = (isset($params['page_name'])) ? '?page_name=' . $params['page_name'] : null;
             return \Yii::$app->urlManager->createUrl(
                 [
-                    $leave->route . '?page_name=' . $params['page_name'],
+                    $leave->route . $page_name,
                     /*ArrayHelper::merge(
                         $additionalParams,
                         [
@@ -169,7 +170,7 @@ class Tree extends \kartik\tree\models\Tree
     public static function getMenuItems($rootName)
     {
         // Get root node by name
-        $rootNode = self::findOne(['name' => $rootName]);
+        $rootNode = self::findOne(['name_id' => $rootName]);
 
         if ($rootNode === null) {
             return [];
