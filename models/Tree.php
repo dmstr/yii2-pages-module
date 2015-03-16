@@ -1,14 +1,20 @@
 <?php
-
+/**
+ * @link http://www.diemeisterei.de/
+ * @copyright Copyright (c) 2015 diemeisterei GmbH, Stuttgart
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace dmstr\modules\pages\models;
 
+use rmrevin\yii\fontawesome\FA;
 use Yii;
+use yii\bootstrap\Nav;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
-use yii\helpers\Json;
-use yii\helpers\VarDumper;
-use yii\web\HttpException;
+use yii\helpers\Url;
 
 /**
  * This is the tree model class, extended from \kartik\tree\models\Tree
@@ -17,6 +23,7 @@ use yii\web\HttpException;
  * @property string  $name_id
  * @property string  $slug
  * @property string  $route
+ * @property string  $view
  * @property string  $default_meta_keywords
  * @property string  $default_meta_description
  * @property string  $request_params
@@ -28,11 +35,54 @@ use yii\web\HttpException;
 class Tree extends \kartik\tree\models\Tree
 {
     /**
+     * Constants useful for frontend actions
+     */
+    const ICON_TYPE_CSS = 1;
+    const ICON_TYPE_RAW = 2;
+
+    const ACTIVE = 1;
+    const NOT_ACTIVE = 0;
+
+    const SELECTED = 1;
+    const NOT_SELECTED = 0;
+
+    const DISABLED = 1;
+    const NOT_DISABLED = 0;
+
+    const READ_ONLY = 1;
+    const NOT_READ_ONLY = 0;
+
+    const VISIBLE = 1;
+    const NOT_VISIBLE = 0;
+
+
+    const COLLAPSED = 1;
+    const NOT_COLLAPSED = 0;
+
+
+    /**
+     * Attribute names
+     */
+    const ATTR_ID = 'id';
+    const ATTR_NAME_ID = 'name_id';
+    const ATTR_ROUTE = 'route';
+    const ATTR_VIEW = 'view';
+    const ATTR_REQUEST_PARAMS = 'request_params';
+    const ATTR_ICON = 'icon';
+    const ATTR_ICON_TYPE = 'icon_type';
+    const ATTR_ACTIVE = 'active';
+    const ATTR_SELECTED = 'selected';
+    const ATTR_DISABLED = 'disabled';
+    const ATTR_READ_ONLY = 'readonly';
+    const ATTR_VISIBLE = 'visible';
+    const ATTR_COLLAPSED = 'collapsed';
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'dmstr_pages';
+        return 'dmstr_page';
     }
 
     /**
@@ -82,6 +132,7 @@ class Tree extends \kartik\tree\models\Tree
                         'page_title',
                         'slug',
                         'route',
+                        'view',
                         'default_meta_keywords',
                         'default_meta_description',
                         'request_params',
@@ -102,6 +153,7 @@ class Tree extends \kartik\tree\models\Tree
                         'page_title',
                         'slug',
                         'route',
+                        'view',
                         'default_meta_keywords',
                         'default_meta_description',
                         'request_params',
@@ -130,6 +182,15 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
+     * Get all configured
+     * @return array list of options
+     */
+    public static function optsView()
+    {
+        return \Yii::$app->getModule('pages')->params['availableViews'];
+    }
+
+    /**
      * @param array $additionalParams
      *
      * @return null|string
@@ -144,17 +205,19 @@ class Tree extends \kartik\tree\models\Tree
         }
 
         if ($leave->route !== null && $leave->request_params !== null) {
-            $params = Json::decode($leave->request_params);
-            $page_name = (isset($params['page_name'])) ? '?page_name=' . $params['page_name'] : null;
-            return \Yii::$app->urlManager->createUrl(
+            // TODO iterate over all request params and add to createUrl
+            //            $params = Json::decode($leave->request_params);
+            //            $page_name = (isset($params['page_name'])) ? '?page_name=' . $params['page_name'] : null;
+
+            // TODO $additionalParams
+            if ($additionalParams) {
+                // merge with $params
+            }
+
+            return Url::toRoute(
                 [
-                    $leave->route . $page_name,
-                    /*ArrayHelper::merge(
-                        $additionalParams,
-                        [
-                            'page_name' => $params['page_name'],
-                        ]
-                    )*/
+                    $leave->route,
+                    'id' => $leave->id // TODO merged request and additional params
                 ]
             );
         } elseif ($leave->route !== null) {
@@ -189,19 +252,18 @@ class Tree extends \kartik\tree\models\Tree
 
         if (count($leaves) > 0) {
 
-            foreach ($leaves as $node) {
+            foreach ($leaves as $page) {
 
                 // prepare node identifiers
-                $nodeOptions = [
-                    'data-pageId' => $node->id,
-                    'data-lvl'    => $node->lvl,
+                $pageOptions = [
+                    'data-page-id' => $page->id,
+                    'data-lvl'     => $page->lvl,
                 ];
 
                 $itemTemplate = [
-                    'label'       => $node->name,
-                    'url'         => $node->createUrl(),// TODO $node->createUrl(),
-                    'active'      => $node->active,
-                    'linkOptions' => $nodeOptions,
+                    'label'       => ($page->icon) ? '<i class="' . $page->icon . '"></i> ' . $page->name : $page->name,
+                    'url'         => $page->createUrl(),
+                    'linkOptions' => $pageOptions,
                 ];
                 $item         = $itemTemplate;
 
