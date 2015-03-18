@@ -21,13 +21,8 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema ks-1
+-- Table `dmstr_page`
 -- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Table `dmstr_pages`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `dmstr_page`;
 CREATE TABLE IF NOT EXISTS `dmstr_page` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique tree node identifier',
   `root` INT(11) NULL DEFAULT NULL COMMENT 'Tree root identifier',
@@ -44,6 +39,11 @@ CREATE TABLE IF NOT EXISTS `dmstr_page` (
   `default_meta_description` TEXT NULL COMMENT 'SEO - meta description',
   `request_params` TEXT NULL COMMENT 'JSON - request params',
   `owner` INT(11) NULL COMMENT 'The owner user id how created the page node',
+  `access_owner` INT(11) NULL DEFAULT NULL,
+  `access_domain` VARCHAR(8) NULL DEFAULT NULL,
+  `access_read` VARCHAR(255) NULL DEFAULT NULL,
+  `access_update` VARCHAR(255) NULL DEFAULT NULL,
+  `access_delete` VARCHAR(255) NULL DEFAULT NULL,
   `icon` VARCHAR(255) NULL DEFAULT NULL COMMENT 'The icon to use for the node',
   `icon_type` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Icon Type: 1 = CSS Class, 2 = Raw Markup',
   `active` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is active (will be set to false on deletion)',
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `dmstr_page` (
   INDEX `tbl_tree_NK5` (`active` ASC),
   UNIQUE INDEX `name_id_UNIQUE` (`name_id` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 45
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -81,6 +81,6 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
     public function safeDown()
     {
-        $this->dropTable('dmstr_pages');
+        $this->dropTable('dmstr_page');
     }
 }

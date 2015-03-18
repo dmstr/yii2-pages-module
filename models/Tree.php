@@ -25,11 +25,16 @@ use yii\helpers\Url;
  * @property string  $default_meta_keywords
  * @property string  $default_meta_description
  * @property string  $request_params
- * @property integer $owner
+ * @property integer $access_owner
+ * @property string  $access_domain
+ * @property string  $access_read
+ * @property string  $access_update
+ * @property string  $access_delete
  * @property string  $created_at
  * @property string  $updated_at
  *
  */
+
 class Tree extends \kartik\tree\models\Tree
 {
     /**
@@ -132,15 +137,24 @@ class Tree extends \kartik\tree\models\Tree
                         'route',
                         'view',
                         'default_meta_keywords',
-                        'default_meta_description',
                         'request_params',
+                        'access_read',
+                        'access_update',
+                        'access_delete',
                     ],
                     'string',
                     'max' => 255
                 ],
                 [
                     [
-                        'owner',
+                        'access_domain',
+                    ],
+                    'string',
+                    'max' => 8
+                ],
+                [
+                    [
+                        'access_owner',
                     ],
                     'integer',
                     'max' => 11
@@ -155,7 +169,11 @@ class Tree extends \kartik\tree\models\Tree
                         'default_meta_keywords',
                         'default_meta_description',
                         'request_params',
-                        'owner',
+                        'access_domain',
+                        'access_owner',
+                        'access_read',
+                        'access_update',
+                        'access_delete',
                         'created_at',
                         'updated_at',
                     ],

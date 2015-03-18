@@ -82,6 +82,9 @@ echo Html::hiddenInput('parentKey', $parentKey);
 echo Html::hiddenInput('currUrl', $currUrl);
 echo Html::hiddenInput('modelClass', $modelClass);
 echo Html::hiddenInput('softDelete', $softDelete);
+
+// Access fields
+echo Html::hiddenInput(Html::getInputName($node, 'access_domain'), \Yii::$app->language);
 ?>
 
 <?php
