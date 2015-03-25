@@ -225,8 +225,10 @@ class Tree extends \kartik\tree\models\Tree
             // provide first parent for URL creation
             $parent = $leave->parents(1)->one();
 
-            if ($parent->lvl != '0') {
-                $parentLeave = Inflector::slug($parent->name);
+            if ($parent) {
+                if ($parent->lvl != '0') {
+                    $parentLeave = Inflector::slug($parent->name);
+                }
             } else {
                 $parentLeave = null;
             }
