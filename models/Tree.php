@@ -220,12 +220,25 @@ class Tree extends \kartik\tree\models\Tree
                 // merge with $params
             }
 
+
+            // TODO provide all parents in URL
+            // provide first parent for URL creation
+            $parent = $leave->parents(1)->one();
+
+            if ($parent->lvl != '0') {
+                $parentLeave = Inflector::slug($parent->name);
+            } else {
+                $parentLeave = null;
+            }
+
+
             // TODO merged request and additional params, URL rule has therefore to be updated/extended
             return Url::toRoute(
                 [
                     $leave->route,
-                    'id'       => $leave->id,
-                    'pageName' => Inflector::slug($leave->page_title)
+                    'id'          => $leave->id,
+                    'pageName'    => Inflector::slug($leave->page_title),
+                    'parentLeave' => $parentLeave
                 ]
             );
         } elseif ($leave->route !== null) {

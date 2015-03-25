@@ -43,6 +43,7 @@ class Bootstrap implements BootstrapInterface
         if (getenv('APP_PRETTY_URLS')) {
             $app->urlManager->addRules(
                 [
+                    '<parentLeave:[a-zA-Z0-9_\-\.]*>/<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>.html' => 'pages/default/page',
                     '<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>.html' => 'pages/default/page',
                 ]
             );
