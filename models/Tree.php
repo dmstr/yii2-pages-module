@@ -223,16 +223,14 @@ class Tree extends \kartik\tree\models\Tree
 
             // TODO provide all parents in URL
             // provide first parent for URL creation
-            $parent = $leave->parents(1)->one();
+            $parent      = $leave->parents(1)->one();
+            $parentLeave = null;
 
             if ($parent) {
                 if ($parent->lvl != '0') {
                     $parentLeave = Inflector::slug($parent->name);
                 }
-            } else {
-                $parentLeave = null;
             }
-
 
             // TODO merged request and additional params, URL rule has therefore to be updated/extended
             return Url::toRoute(
