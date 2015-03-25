@@ -12,6 +12,7 @@ use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\Inflector;
 use yii\helpers\Url;
 
 /**
@@ -34,7 +35,6 @@ use yii\helpers\Url;
  * @property string  $updated_at
  *
  */
-
 class Tree extends \kartik\tree\models\Tree
 {
     /**
@@ -215,19 +215,17 @@ class Tree extends \kartik\tree\models\Tree
         }
 
         if ($leave->route !== null && $leave->request_params !== null) {
-            // TODO iterate over all request params and add to createUrl
-            //            $params = Json::decode($leave->request_params);
-            //            $page_name = (isset($params['page_name'])) ? '?page_name=' . $params['page_name'] : null;
 
-            // TODO $additionalParams
             if ($additionalParams) {
                 // merge with $params
             }
 
+            // TODO merged request and additional params, URL rule has therefore to be updated/extended
             return Url::toRoute(
                 [
                     $leave->route,
-                    'id' => $leave->id // TODO merged request and additional params
+                    'id'       => $leave->id,
+                    'pageName' => Inflector::slug($leave->page_title)
                 ]
             );
         } elseif ($leave->route !== null) {
