@@ -68,6 +68,7 @@ class Tree extends \kartik\tree\models\Tree
      */
     const ATTR_ID = 'id';
     const ATTR_NAME_ID = 'name_id';
+    const ATTR_ACCESS_DOMAIN = 'access_domain';
     const ATTR_ROUTE = 'route';
     const ATTR_VIEW = 'view';
     const ATTR_REQUEST_PARAMS = 'request_params';
@@ -141,6 +142,13 @@ class Tree extends \kartik\tree\models\Tree
                 ],
                 [
                     [
+                        'default_meta_description',
+                    ],
+                    'string',
+                    'max' => 160
+                ],
+                [
+                    [
                         'access_domain',
                     ],
                     'string',
@@ -192,12 +200,38 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
+     * @return array
+     */
+    public static function optsAccessDomain()
+    {
+        $availableLanguages = [];
+        foreach (Yii::$app->localeUrls->languages as $language) {
+
+            $availableLanguages[$language] = $language;
+        }
+        return $availableLanguages;
+    }
+
+    /**
      * Get all configured
      * @return array list of options
      */
     public static function optsView()
     {
         return \Yii::$app->getModule('pages')->params['availableViews'];
+    }
+
+    /**
+     * TODO which routes will be provided by default ?
+     *
+     * @return array
+     */
+    public static function optsRoute()
+    {
+        return [
+            '/site/index'         => '/site/index',
+            '/pages/default/page' => '/pages/default/page',
+        ];
     }
 
     /**
@@ -217,9 +251,25 @@ class Tree extends \kartik\tree\models\Tree
         if ($leave->route !== null && $leave->request_params !== null) {
 
             if ($additionalParams) {
+                // TODO merged request and additional params, URL rule has therefore to be updated/extended
                 // merge with $params
             }
+            return self::getSluggedUrl($leave);
+        } elseif ($leave->route !== null) {
+            return \Yii::$app->urlManager->createUrl([$leave->route]);
+        }
+    }
 
+    /**
+     * get relative url from tree leave
+     *
+     * @param $leave
+     *
+     * @return null|string
+     */
+    public static function getSluggedUrl($leave)
+    {
+        if ($leave->route) {
 
             // TODO provide all parents in URL
             // provide first parent for URL creation
@@ -231,18 +281,16 @@ class Tree extends \kartik\tree\models\Tree
                     $parentLeave = Inflector::slug($parent->name);
                 }
             }
-
-            // TODO merged request and additional params, URL rule has therefore to be updated/extended
             return Url::toRoute(
                 [
                     $leave->route,
                     'id'          => $leave->id,
                     'pageName'    => Inflector::slug($leave->page_title),
-                    'parentLeave' => $parentLeave
+                    'parentLeave' => $parentLeave,
                 ]
             );
-        } elseif ($leave->route !== null) {
-            return \Yii::$app->urlManager->createUrl([$leave->route]);
+        } else {
+            return null;
         }
     }
 

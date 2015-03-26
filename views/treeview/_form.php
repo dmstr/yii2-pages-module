@@ -212,27 +212,56 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
             )->textInput()->label("") ?>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <?= $form->field(
-                $node,
-                'slug',
-                [
-                    'addon' => ['prepend' => ['content' => Inflector::titleize('slug')]]
-                ]
-            )->textInput(
-                [
-                    'value' => '/' . Inflector::slug($node->page_title) . '-' . $node->id . '.html',
-                    'disabled' => true
-                ]
-            )->label("") ?>
+    <?php if ($node->route != '/site/index' && $node->route != null) : ?>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <?= $form->field(
+                    $node,
+                    'slug',
+                    [
+                        'addon' => ['prepend' => ['content' => Inflector::titleize('slug')]]
+                    ]
+                )->textInput(
+                    [
+                        'value'    => Tree::getSluggedUrl($node),
+                        'disabled' => true
+                    ]
+                )->label("") ?>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 
     <hr/><h4><?= Yii::t('kvtree', 'Route') ?></h4>
     <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+            <?= $form->field($node, Tree::ATTR_ACCESS_DOMAIN)->widget(
+                \kartik\select2\Select2::classname(),
+                [
+                    'name'          => Html::getInputName($node, Tree::ATTR_ACCESS_DOMAIN),
+                    'model'         => $node,
+                    'attribute'     => Tree::ATTR_ACCESS_DOMAIN,
+                    'addon'         => [
+                        'prepend' => [
+                            'content' => 'Access Domain'
+                        ],
+                    ],
+                    'data'          => Tree::optsAccessDomain(),
+                    'options'       => [
+                        'id'          => 'tree-access_domain',
+                        'placeholder' => Yii::t('app', 'Select language'),
+                        'multiple'    => false,
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => false
+                    ]
+                ]
+            )->label("");
+            ?>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
-            <?= $form->field($node, 'route')->widget(
+            <?= $form->field($node, Tree::ATTR_ROUTE)->widget(
                 \kartik\select2\Select2::classname(),
                 [
                     'name'          => Html::getInputName($node, Tree::ATTR_ROUTE),
@@ -243,11 +272,7 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                             'content' => 'Controller / View'
                         ],
                     ],
-                    // TODO data via \dmstr\helpers\Metadata::getAllControllers()
-                    'data'          => [
-                        '/site/index'         => '/site/index',
-                        '/pages/default/page' => '/pages/default/page',
-                    ],
+                    'data'          => Tree::optsRoute(),
                     'options'       => [
                         'placeholder' => Yii::t('app', 'Select route'),
                         'multiple'    => false,
@@ -260,7 +285,7 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
             ?>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
-            <?= $form->field($node, 'view')->widget(
+            <?= $form->field($node, Tree::ATTR_VIEW)->widget(
                 \kartik\select2\Select2::classname(),
                 [
                     'name'          => Html::getInputName($node, Tree::ATTR_VIEW),
@@ -335,7 +360,7 @@ JS;
                 [
                     'addon' => ['prepend' => ['content' => 'Description']]
                 ]
-            )->textInput()->label("") ?>
+            )->textarea(['rows' => 5])->label("") ?>
         </div>
     </div>
 
