@@ -20,6 +20,15 @@ use \dmstr\modules\pages\models\Tree;
  * @var kartik\form\ActiveForm $form
  */
 
+$this->registerCss(
+    "
+    .hints {
+        font-size: 12px;
+        color: #888888;
+    }
+    "
+);
+
 /**
  * Function to render custom contents defined in
  */
@@ -212,24 +221,6 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
             )->textInput()->label("") ?>
         </div>
     </div>
-    <?php if ($node->route != '/site/index' && $node->route != null) : ?>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <?= $form->field(
-                    $node,
-                    'slug',
-                    [
-                        'addon' => ['prepend' => ['content' => Inflector::titleize('slug')]]
-                    ]
-                )->textInput(
-                    [
-                        'value'    => Tree::getSluggedUrl($node),
-                        'disabled' => true
-                    ]
-                )->label("") ?>
-            </div>
-        </div>
-    <?php endif; ?>
 
     <hr/><h4><?= Yii::t('kvtree', 'Route') ?></h4>
     <div class="row">
@@ -343,6 +334,39 @@ JS;
     </div>
 
     <hr/><h4><?= Yii::t('kvtree', 'SEO') ?></h4>
+    <?php if ($node->route != '/site/index' && $node->route != null) : ?>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <?= $form->field(
+                    $node,
+                    'slug',
+                    [
+                        'addon' => [
+                            'prepend' => [
+                                'content' => \Yii::t('crud', 'Page URL')
+                            ]
+                        ]
+                    ]
+                )->textInput(
+                    [
+                        'value'    => Tree::getSluggedUrl($node),
+                        'disabled' => true
+                    ]
+                )->label("")->hint(
+                    FA::icon('info-circle') . ' ' .
+                    \Yii::t(
+                        'crud',
+                        'Automatically generated from page title.'
+                    ) . ' ' .
+                    \Yii::t(
+                        'crud',
+                        'To change URL change page title above.'
+                    ),
+                    ['class' => 'hints']
+                ) ?>
+            </div>
+        </div>
+    <?php endif; ?>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <?= $form->field(
