@@ -269,6 +269,11 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function getSluggedUrl($leave)
     {
+        // pages with children do not get an URL
+        if ($leave->children(1)->one()) {
+            return null;
+        }
+
         if ($leave->route) {
 
             // TODO provide all parents in URL
