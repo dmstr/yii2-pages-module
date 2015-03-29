@@ -334,7 +334,7 @@ JS;
     </div>
 
     <hr/><h4><?= Yii::t('kvtree', 'SEO') ?></h4>
-    <?php if ($node->route != '/site/index' && $node->route != null) : ?>
+    <?php if ($node->createUrl() != null) : ?>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <?= $form->field(
