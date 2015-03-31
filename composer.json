@@ -18,7 +18,7 @@
         "yiisoft/yii2": "2.0.*",
         "kartik-v/yii2-tree-manager": "*",
         "kartik-v/yii2-widget-select2": "*",
-        "rmrevin/yii2-fontawesome": "2.8.*",
+        "rmrevin/yii2-fontawesome": "2.9.*",
         "devgroup/yii2-jsoneditor": "1.0.*"
     },
     "autoload": {
