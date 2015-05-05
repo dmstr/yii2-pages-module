@@ -9,6 +9,8 @@
 
 namespace dmstr\modules\pages;
 
+use dmstr\modules\pages\models\Tree;
+
 /**
  * Class Module
  * @package dmstr\modules\pages
@@ -19,5 +21,19 @@ class Module extends \yii\base\Module
     public function run()
     {
 
+    }
+
+    public function getLocalizedRootNode()
+    {
+        $localizedRoot = 'root_' . \Yii::$app->language;
+        \Yii::trace('localizedRoot: ' . $localizedRoot, __METHOD__);
+        $page = Tree::findOne(
+            [
+                Tree::ATTR_NAME_ID => $localizedRoot,
+                Tree::ATTR_ACTIVE  => Tree::ACTIVE,
+                Tree::ATTR_VISIBLE => Tree::VISIBLE
+            ]
+        );
+        return $page;
     }
 }

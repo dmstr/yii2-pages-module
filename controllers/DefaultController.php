@@ -10,8 +10,8 @@
 namespace dmstr\modules\pages\controllers;
 
 use dmstr\modules\pages\models\Tree;
-use yii\helpers\Url;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\HttpException;
 
 /**
@@ -55,15 +55,17 @@ class DefaultController extends \yii\web\Controller
      */
     public function beforeAction($action)
     {
-        if (parent::beforeAction($action)) {
-            return true;
-        } else {
-            return false;
-        }
+        return parent::beforeAction($action);
     }
 
     public function actionIndex()
     {
+        if (!$this->module->getLocalizedRootNode()) {
+            $language = \Yii::$app->language;
+            $msg      = "<b>Localized root-node missing</b><br/>Please create a new root node for the current language, with <b>Name</b> and <b>Name ID</b> <code>root_{$language}</code>";
+            \Yii::$app->session->addFlash('warning', $msg);
+        }
+
         return $this->render('index');
     }
 
@@ -75,7 +77,7 @@ class DefaultController extends \yii\web\Controller
         $this->layout = '@app/views/layouts/main';
 
         // Get Tree object
-        $page         = Tree::findOne(
+        $page = Tree::findOne(
             [
                 Tree::ATTR_ID      => $id,
                 Tree::ATTR_ACTIVE  => Tree::ACTIVE,

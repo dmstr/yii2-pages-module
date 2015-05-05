@@ -7,7 +7,9 @@ use dmstr\modules\pages\models\Tree;
 use\yii\helpers\Inflector;
 
 $title = Inflector::titleize($this->context->module->id);
+?>
 
+<?php
 /**
  * Output TreeView widget
  */

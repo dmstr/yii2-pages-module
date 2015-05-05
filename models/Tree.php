@@ -205,7 +205,7 @@ class Tree extends \kartik\tree\models\Tree
     public static function optsAccessDomain()
     {
         $availableLanguages = [];
-        foreach (Yii::$app->localeUrls->languages as $language) {
+        foreach (Yii::$app->urlManager->languages as $language) {
 
             $availableLanguages[$language] = $language;
         }
