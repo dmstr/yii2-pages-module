@@ -50,23 +50,3 @@ echo TreeView::widget(
         'mainTemplate'    => $mainTemplate,
     ]
 );
-?>
-<hr/>
-<h3>TODOs</h3>
-
-<ul>
-    <li>
-        <b>Add copy pages / </b> <br/>
-        <ul>
-            <li>
-                with widgets
-            </li>
-            <li>
-                without widgets
-            </li>
-            <li>
-                recursive and single
-            </li>
-        </ul>
-    </li>
-</ul>
