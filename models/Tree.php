@@ -261,6 +261,20 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
+     * Check if a tree route and view are set
+     *
+     * @return bool
+     */
+    public function hasRoute()
+    {
+        if (!empty($this->route) && !empty($this->view)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * get relative url from tree leave
      *
      * @param $leave
