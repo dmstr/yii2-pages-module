@@ -13,6 +13,7 @@ use \yii\helpers\Html;
 use \rmrevin\yii\fontawesome\FA;
 use devgroup\jsoneditor\Jsoneditor;
 use \dmstr\modules\pages\models\Tree;
+use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
@@ -22,11 +23,23 @@ use \dmstr\modules\pages\models\Tree;
 
 $this->registerCss(
     "
+    i.fa {
+        padding-right: 10px;
+    }
     .hints {
         font-size: 12px;
         color: #888888;
     }
+    .vertical-spacer {
+        height: 25px;
+    }
     "
+);
+
+$this->registerJs(
+    "$(function () {
+        $('[data-toggle=\'tooltip\']').tooltip({'html': false});
+    });"
 );
 
 /**
@@ -91,25 +104,42 @@ echo Html::hiddenInput('parentKey', $parentKey);
 echo Html::hiddenInput('currUrl', $currUrl);
 echo Html::hiddenInput('modelClass', $modelClass);
 echo Html::hiddenInput('softDelete', $softDelete);
+?>
+    <div class="vertical-spacer"></div>
+<?php if ($node->hasRoute()) {
+    echo Html::a(
+        '<i class="' . $node->icon . '"></i> ' . $node->name . ' <small>#' . $node->id . '</small>',
+        Url::to(
+            $node->createUrl(),
+            [
+                'target' => '_blank',
+            ]
+        ),
+        [
+            'class'       => 'btn btn-default',
+            'data-toggle' => 'tooltip',
+            'title'       => Yii::t('kvtree', 'Go to frontend')
+        ]
+    );
 
+} else {
+    echo "<label><h4><i class=\"{$node->icon}\"></i> {$node->name} <small>#{$node->id}</small></h4></label>";
+}
 /**
  * Begin output form
  */
 if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
     <div class="pull-right">
-        <?= Html::resetButton(
-            '<i class="glyphicon glyphicon-repeat"></i> ' . Yii::t('kvtree', 'Reset'),
-            ['class' => 'btn btn-default']
-        ) ?>
         <?= Html::submitButton(
             '<i class="glyphicon glyphicon-floppy-disk"></i> ' . Yii::t('kvtree', 'Save'),
             ['class' => 'btn btn-primary']
         ) ?>
+        <?= Html::resetButton(
+            '<i class="glyphicon glyphicon-repeat"></i> ' . Yii::t('kvtree', 'Reset'),
+            ['class' => 'btn btn-default']
+        ) ?>
     </div>
 <?php endif; ?>
-
-
-    <h3><?= $name . " <small>#" . $node->id . "</small>" ?></h3>
     <hr/>
     <div class="clearfix"></div>
 
@@ -238,7 +268,7 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                         'multiple'    => false,
                     ],
                     'pluginOptions' => [
-                        'allowClear' => false
+                        'allowClear' => true
                     ]
                 ]
             )->label("");
@@ -246,7 +276,7 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-7">
             <?= $form->field($node, Tree::ATTR_ROUTE)->widget(
                 \kartik\select2\Select2::classname(),
                 [
@@ -264,13 +294,15 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                         'multiple'    => false,
                     ],
                     'pluginOptions' => [
-                        'allowClear' => false
+                        'allowClear' => true
                     ]
                 ]
             )->label("");
             ?>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-5">
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-7">
             <?= $form->field($node, Tree::ATTR_VIEW)->widget(
                 \kartik\select2\Select2::classname(),
                 [
@@ -295,11 +327,13 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
             )->label(""); ?>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h5>Request params</h5>
-            <?=
-            Jsoneditor::widget(
+
+<!--    // TODO implement additional request params option-->
+    <!--<div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
+<!--            <h5>--><?//= \Yii::t('kvtree', 'Additional Request params') ?><!--</h5>-->
+<!--            --><?//=
+            /*Jsoneditor::widget(
                 [
                     'editorOptions' => [
                         'modes' => ['code', 'form', 'text', 'tree', 'view'], // available modes
@@ -313,8 +347,8 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                     ],
                     // html options
                 ]
-            );
-            $js = <<<JS
+            );*/
+           /* $js = <<<JS
 $(document).ready(function () {
     // Event listener on key events in JSONEditor
     // TreeRequestParamsEditor -> Jsoneditor:43
@@ -322,11 +356,12 @@ $(document).ready(function () {
         $('#tree-request_params').val(TreeRequestParamsEditor.getText());
     });
 });
-JS;
-            $this->registerJs($js);
-            ?>
-        </div>
-    </div>
+JS;*/
+            // TODO enable when additional request params option is implemented
+            // $this->registerJs($js);
+            // ?>
+        <!--</div>
+    </div>-->
 
     <hr/><h4><?= Yii::t('kvtree', 'SEO') ?></h4>
     <?php if ($node->createUrl() != null) : ?>
