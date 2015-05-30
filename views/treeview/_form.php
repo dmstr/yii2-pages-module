@@ -219,7 +219,7 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
 
     <hr/><h4><?= Yii::t('kvtree', 'Route') ?></h4>
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
             <?= $form->field($node, Tree::ATTR_ACCESS_DOMAIN)->widget(
                 \kartik\select2\Select2::classname(),
                 [
