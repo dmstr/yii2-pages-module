@@ -248,10 +248,10 @@ class Tree extends \kartik\tree\models\Tree
             return null;
         }
 
-        if ($leave->route !== null && $leave->request_params !== null) {
+        // TODO merged request and additional params, URL rule has therefore to be updated/extended
+        if ($leave->route !== null) {
 
             if ($additionalParams) {
-                // TODO merged request and additional params, URL rule has therefore to be updated/extended
                 // merge with $params
             }
             return self::getSluggedUrl($leave);
