@@ -5,14 +5,13 @@
  * @version 1.5.0
  */
 
+use dmstr\modules\pages\models\Tree;
 use kartik\form\ActiveForm;
 use kartik\tree\Module;
 use kartik\tree\TreeView;
-use \yii\helpers\Inflector;
-use \yii\helpers\Html;
-use \rmrevin\yii\fontawesome\FA;
-use devgroup\jsoneditor\Jsoneditor;
-use \dmstr\modules\pages\models\Tree;
+use rmrevin\yii\fontawesome\FA;
+use yii\helpers\Html;
+use yii\helpers\Inflector;
 use yii\helpers\Url;
 
 /**
@@ -24,7 +23,7 @@ use yii\helpers\Url;
 $this->registerCss(
     "
     i.fa {
-        padding-right: 10px;
+        width: 28px;
     }
     .hints {
         font-size: 12px;
@@ -108,7 +107,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <div class="vertical-spacer"></div>
 <?php if ($node->hasRoute()) {
     echo Html::a(
-        '<i class="' . $node->icon . '"></i> ' . $node->name . ' <small>#' . $node->id . '</small>',
+        '<small>#' . $node->id . '</small> <i class="' . $node->icon . '"></i> ' . $node->name,
         Url::to(
             $node->createUrl(),
             [
@@ -123,7 +122,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
     );
 
 } else {
-    echo "<label><h4><i class=\"{$node->icon}\"></i> {$node->name} <small>#{$node->id}</small></h4></label>";
+    if (!$node->isNewRecord) {
+        echo "<label><h4><small>#{$node->id}</small> <i class=\"{$node->icon}\"></i> {$node->name}</h4></label>";
+    }
 }
 /**
  * Begin output form
@@ -328,40 +329,40 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
         </div>
     </div>
 
-<!--    // TODO implement additional request params option-->
+    <!--    // TODO implement additional request params option-->
     <!--<div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
-<!--            <h5>--><?//= \Yii::t('kvtree', 'Additional Request params') ?><!--</h5>-->
-<!--            --><?//=
-            /*Jsoneditor::widget(
-                [
-                    'editorOptions' => [
-                        'modes' => ['code', 'form', 'text', 'tree', 'view'], // available modes
-                        'mode'  => 'tree', // current mode
-                    ],
-                    'model'         => $node,
-                    'attribute'     => Tree::ATTR_REQUEST_PARAMS,
-                    'options'       => [
-                        'id'    => 'tree-request_params',
-                        'class' => 'form-control',
-                    ],
-                    // html options
-                ]
-            );*/
-           /* $js = <<<JS
+    <!--            <h5>--><? //= \Yii::t('kvtree', 'Additional Request params') ?><!--</h5>-->
+    <!--            --><? //=
+    /*Jsoneditor::widget(
+        [
+            'editorOptions' => [
+                'modes' => ['code', 'form', 'text', 'tree', 'view'], // available modes
+                'mode'  => 'tree', // current mode
+            ],
+            'model'         => $node,
+            'attribute'     => Tree::ATTR_REQUEST_PARAMS,
+            'options'       => [
+                'id'    => 'tree-request_params',
+                'class' => 'form-control',
+            ],
+            // html options
+        ]
+    );*/
+    /* $js = <<<JS
 $(document).ready(function () {
-    // Event listener on key events in JSONEditor
-    // TreeRequestParamsEditor -> Jsoneditor:43
-    $('#tree-request_params-jsoneditor').on('keypress keydown keyup',function (e) {
-        $('#tree-request_params').val(TreeRequestParamsEditor.getText());
-    });
+// Event listener on key events in JSONEditor
+// TreeRequestParamsEditor -> Jsoneditor:43
+$('#tree-request_params-jsoneditor').on('keypress keydown keyup',function (e) {
+ $('#tree-request_params').val(TreeRequestParamsEditor.getText());
+});
 });
 JS;*/
-            // TODO enable when additional request params option is implemented
-            // $this->registerJs($js);
-            // ?>
-        <!--</div>
-    </div>-->
+    // TODO enable when additional request params option is implemented
+    // $this->registerJs($js);
+    // ?>
+    <!--</div>
+</div>-->
 
     <hr/><h4><?= Yii::t('kvtree', 'SEO') ?></h4>
     <?php if ($node->createUrl() != null) : ?>
