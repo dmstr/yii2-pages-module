@@ -151,6 +151,21 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
 
     <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+            <?= $form->field(
+                $node,
+                'name_id',
+                [
+                    'addon' => ['prepend' => ['content' => 'Name ID']]
+                ]
+            )->textInput()->label("") ?>
+        </div>
+    </div>
+
+
+    <hr/><h4><?= Yii::t('kvtree', 'Title / Names') ?></h4>
+
+    <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
 
             <?= $form->field(
@@ -161,6 +176,19 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                 ]
             )->textInput($inputOpts)->label("") ?>
         </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+            <?= $form->field(
+                $node,
+                'page_title',
+                [
+                    'addon' => ['prepend' => ['content' => Inflector::titleize('page_title')]]
+                ]
+            )->textInput($inputOpts)->label("") ?>
+        </div>
+
+    </div>
+
+    <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
             <?php if (isset($module->treeViewSettings['fontAwesome']) && $module->treeViewSettings['fontAwesome'] == true): ?>
                 <?= $form->field($node, $iconAttribute)->widget(
@@ -223,28 +251,6 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
                 ]
             )->label("");
             ?>
-        </div>
-    </div>
-
-    <hr/><h4><?= Yii::t('kvtree', 'Title / Names') ?></h4>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-            <?= $form->field(
-                $node,
-                'page_title',
-                [
-                    'addon' => ['prepend' => ['content' => Inflector::titleize('page_title')]]
-                ]
-            )->textInput($inputOpts)->label("") ?>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-            <?= $form->field(
-                $node,
-                'name_id',
-                [
-                    'addon' => ['prepend' => ['content' => 'Name ID']]
-                ]
-            )->textInput()->label("") ?>
         </div>
     </div>
 
