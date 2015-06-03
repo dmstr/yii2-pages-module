@@ -218,7 +218,9 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function optsView()
     {
-        return \Yii::$app->getModule('pages')->params['availableViews'];
+        return isset(\Yii::$app->getModule('pages')->params['availableViews'])?
+            \Yii::$app->getModule('pages')->params['availableViews']:
+            [];
     }
 
     /**

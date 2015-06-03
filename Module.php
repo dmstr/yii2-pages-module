@@ -18,10 +18,9 @@ use dmstr\modules\pages\models\Tree;
  */
 class Module extends \yii\base\Module
 {
-    public function run()
-    {
-
-    }
+    public $params = [
+        'availableViews' => []
+    ];
 
     public function getLocalizedRootNode()
     {
