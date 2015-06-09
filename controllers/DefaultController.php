@@ -72,6 +72,7 @@ class DefaultController extends \yii\web\Controller
     public function actionPage($id)
     {
         Url::remember();
+        \Yii::$app->session['__crudReturnUrl'] = null;
 
         // Set layout
         $this->layout = '@app/views/layouts/main';
