@@ -69,7 +69,7 @@ class DefaultController extends \yii\web\Controller
         return $this->render('index');
     }
 
-    public function actionPage($id)
+    public function actionPage($id, $pageName = null, $parentLeave = null)
     {
         Url::remember();
         \Yii::$app->session['__crudReturnUrl'] = null;
