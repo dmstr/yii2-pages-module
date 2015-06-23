@@ -10,6 +10,7 @@
 namespace dmstr\modules\pages;
 
 use dmstr\modules\pages\models\Tree;
+use yii\filters\AccessControl;
 
 /**
  * Class Module
@@ -18,6 +19,13 @@ use dmstr\modules\pages\models\Tree;
  */
 class Module extends \yii\base\Module
 {
+	/**
+	 * @var array the list of rights that are allowed to access this module.
+	 * If you modify, you also need to enable authManager.
+	 * http://www.yiiframework.com/doc-2.0/guide-security-authorization.html
+	 */
+	public $roles = [];
+
     public $params = [
         'availableViews' => []
     ];
@@ -35,4 +43,33 @@ class Module extends \yii\base\Module
         );
         return $page;
     }
+
+	/**
+	 * Restrict access permissions to admin user and users with auth-item 'module-controller'
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		return [
+			'access' => [
+				'class' => AccessControl::className(),
+				'rules' => [
+					[
+						'allow' => true,
+						'matchCallback' => function() {
+							if ($this->roles) {
+								foreach ($this->roles as $role) {
+									if (\Yii::$app->user->can($role)) {
+										return true;
+									}
+								}
+							}
+
+							return (\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin);
+						},
+					]
+				]
+			]
+		];
+	}
 }
