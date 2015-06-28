@@ -37,13 +37,28 @@ class DefaultController extends \yii\web\Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
+                        'actions' => ['page'],
                         'allow'   => true,
-                        'actions' => ['index'],
-                        'roles'   => ['@']
                     ],
                     [
-                        'allow'   => true,
-                        'actions' => ['page'],
+                        'allow'         => true,
+                        'actions'       => ['index'],
+                        'matchCallback' => function ($rule, $action) {
+                            return
+                                \Yii::$app->user->can(
+                                    strtr(
+                                        $this->module->id,
+                                        ['/' => '_', '-' => '_'])) ||
+                                \Yii::$app->user->can(
+                                    strtr(
+                                        $this->module->id . '/' . $this->id,
+                                        ['/' => '_', '-' => '_'])) ||
+                                \Yii::$app->user->can(
+                                    strtr(
+                                        $this->module->id . '/' . $this->id . '/' . $action->id,
+                                        ['/' => '_', '-' => '_'])) ||
+                                (\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin);
+                        },
                     ]
                 ]
             ]
