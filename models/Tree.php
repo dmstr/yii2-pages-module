@@ -299,7 +299,7 @@ class Tree extends \kartik\tree\models\Tree
             // TODO provide all parents in URL
             // provide first parent for URL creation
             $parent      = $leave->parents(1)->one();
-            $parentLeave = null;
+            $parentLeave = false;
 
             if ($parent) {
                 if ($parent->lvl != '0') {
