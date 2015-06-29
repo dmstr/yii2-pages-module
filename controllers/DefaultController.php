@@ -12,6 +12,7 @@ namespace dmstr\modules\pages\controllers;
 use dmstr\modules\pages\models\Tree;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
+use yii\web\Controller;
 use yii\web\HttpException;
 
 /**
@@ -19,7 +20,7 @@ use yii\web\HttpException;
  * @package dmstr\modules\pages\controllers
  * @author $Author
  */
-class DefaultController extends \yii\web\Controller
+class DefaultController extends Controller
 {
     /**
      * @var boolean whether to enable CSRF validation for the actions in this controller.
@@ -48,15 +49,21 @@ class DefaultController extends \yii\web\Controller
                                 \Yii::$app->user->can(
                                     strtr(
                                         $this->module->id,
-                                        ['/' => '_', '-' => '_'])) ||
+                                        ['/' => '_', '-' => '_']
+                                    )
+                                ) ||
                                 \Yii::$app->user->can(
                                     strtr(
                                         $this->module->id . '/' . $this->id,
-                                        ['/' => '_', '-' => '_'])) ||
+                                        ['/' => '_', '-' => '_']
+                                    )
+                                ) ||
                                 \Yii::$app->user->can(
                                     strtr(
                                         $this->module->id . '/' . $this->id . '/' . $action->id,
-                                        ['/' => '_', '-' => '_'])) ||
+                                        ['/' => '_', '-' => '_']
+                                    )
+                                ) ||
                                 (\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin);
                         },
                     ]

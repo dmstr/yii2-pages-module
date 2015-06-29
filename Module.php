@@ -63,9 +63,9 @@ class Module extends \yii\base\Module
 										return true;
 									}
 								}
+								return (\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin);
 							}
-
-							return (\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin);
+							return true;
 						},
 					]
 				]
