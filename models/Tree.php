@@ -292,8 +292,8 @@ class Tree extends \kartik\tree\models\Tree
 	    if (
 		    (
 			    !isset(\Yii::$app->modules['pages']) ||
-			    !isset(\Yii::$app->modules['pages']['pagesWithChildrenHasUrl']) ||
-	            !\Yii::$app->modules['pages']['pagesWithChildrenHasUrl']
+			    (is_array(\Yii::$app->modules['pages']) && (!isset(\Yii::$app->modules['pages']['pagesWithChildrenHasUrl']) || !\Yii::$app->modules['pages']['pagesWithChildrenHasUrl'])) ||
+			    (is_object(\Yii::$app->modules['pages']) && !\Yii::$app->modules['pages']->pagesWithChildrenHasUrl)
 	        ) &&
 		    $leave->children(1)->one())
 	    {
