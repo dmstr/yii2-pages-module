@@ -289,10 +289,17 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function getSluggedUrl($leave)
     {
-        // pages with children do not get an URL
-        if ($leave->children(1)->one()) {
+	    if (
+		    (
+			    !isset(\Yii::$app->modules['pages']) ||
+			    !isset(\Yii::$app->modules['pages']['pagesWithChildrenHasUrl']) ||
+	            !\Yii::$app->modules['pages']['pagesWithChildrenHasUrl']
+	        ) &&
+		    $leave->children(1)->one())
+	    {
+	        // pages with children do not get an URL
             return null;
-        }
+	    }
 
         if ($leave->route) {
 
@@ -332,6 +339,10 @@ class Tree extends \kartik\tree\models\Tree
         if ($rootNode === null) {
             return [];
         }
+
+	    /**
+	     * @var $leaves Tree[]
+	     */
 
         // Get all leaves from this root node
         $leaves = $rootNode->children()->all();

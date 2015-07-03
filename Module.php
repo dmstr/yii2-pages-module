@@ -25,6 +25,7 @@ class Module extends \yii\base\Module
 	 * http://www.yiiframework.com/doc-2.0/guide-security-authorization.html
 	 */
 	public $roles = [];
+	public $pagesWithChildrenHasUrl = false;
 
     public $params = [
         'availableViews' => []
