@@ -105,7 +105,14 @@ echo Html::hiddenInput('modelClass', $modelClass);
 echo Html::hiddenInput('softDelete', $softDelete);
 ?>
     <div class="vertical-spacer"></div>
-<?php if ($node->hasRoute()) {
+<?php
+/**
+ * @var $node dmstr\modules\pages\models\Tree
+ */
+if ($node->hasRoute()) {
+	$currentLanguage = \Yii::$app->language;
+	\Yii::$app->language = $node->access_domain;
+
     echo Html::a(
         '<small>#' . $node->id . '</small> <i class="' . $node->icon . '"></i> ' . $node->name,
         Url::to(
@@ -121,6 +128,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
         ]
     );
 
+	\Yii::$app->language = $currentLanguage;
 } else {
     if (!$node->isNewRecord) {
         echo "<label><h4><small>#{$node->id}</small> <i class=\"{$node->icon}\"></i> {$node->name}</h4></label>";
