@@ -104,7 +104,8 @@ class DefaultController extends Controller
             [
                 Tree::ATTR_ID      => $id,
                 Tree::ATTR_ACTIVE  => Tree::ACTIVE,
-                Tree::ATTR_VISIBLE => Tree::VISIBLE
+                Tree::ATTR_VISIBLE => Tree::VISIBLE,
+                Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
         );
 
