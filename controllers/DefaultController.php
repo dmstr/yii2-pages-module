@@ -91,6 +91,16 @@ class DefaultController extends Controller
         return $this->render('index');
     }
 
+    /**
+     * renders a page view from the database
+     *
+     * @param $id
+     * @param null $pageName
+     * @param null $parentLeave
+     *
+     * @return string
+     * @throws HttpException
+     */
     public function actionPage($id, $pageName = null, $parentLeave = null)
     {
         Url::remember();
@@ -99,12 +109,12 @@ class DefaultController extends Controller
         // Set layout
         $this->layout = '@app/views/layouts/main';
 
-        // Get Tree object
+        // Get active Tree object, allow access to invisible pages
+        // @todo: improve handling, using also roles
         $page = Tree::findOne(
             [
                 Tree::ATTR_ID      => $id,
                 Tree::ATTR_ACTIVE  => Tree::ACTIVE,
-                Tree::ATTR_VISIBLE => Tree::VISIBLE,
                 Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
         );

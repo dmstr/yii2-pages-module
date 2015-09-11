@@ -9,9 +9,9 @@
 namespace dmstr\modules\pages\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
-use yii\behaviors\TimestampBehavior;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 
@@ -327,6 +327,8 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
+     * @return active and visible menu nodes for the current application language
+     *
      * @param $rootName the name of the root node
      *
      * @return array
@@ -345,7 +347,13 @@ class Tree extends \kartik\tree\models\Tree
 	     */
 
         // Get all leaves from this root node
-        $leaves = $rootNode->children()->all();
+        $leaves = $rootNode->children()->andWhere(
+            [
+                Tree::ATTR_ACTIVE        => Tree::ACTIVE,
+                Tree::ATTR_VISIBLE       => Tree::VISIBLE,
+                Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
+            ]
+        )->all();
 
         if ($leaves === null) {
             return [];
