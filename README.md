@@ -1,5 +1,6 @@
 Yii2 Page Manager
 =================
+
 Application sitemap and navigation manager module for Yii 2.0 Framework
 
 Installation
@@ -21,6 +22,10 @@ or add
 
 to the require section of your `composer.json` file.
 
+Requirements
+------------
+
+- URL manager from [codemix/yii2-localeurls](https://github.com/codemix/yii2-localeurls) configured in application
 
 Database
 --------
@@ -33,52 +38,7 @@ fig run web ./yii migrate \
 Usage
 -----
 
-#### site/index action in controllers/SiteController
-
-```
-        /**
-         * Site/index for use with dmstr/yii2-pages-module
-         * @return string
-         * @throws HttpException
-         */
-        use dmstr\modules\pages\models\Tree;
-     
-        public function actionIndex()
-        {
-            Url::remember();
-            $this->layout = '@app/views/layouts/main';
-    
-            $localizedRoot = 'root_' . \Yii::$app->language;
-            $page          = Tree::findOne(
-                [
-                    Tree::ATTR_NAME_ID => $localizedRoot,
-                    Tree::ATTR_ACTIVE  => Tree::ACTIVE,
-                    Tree::ATTR_VISIBLE => Tree::VISIBLE
-                ]
-            );
-    
-            if ($page !== null) {
-    
-                // Set page title
-                $this->view->title = $page->page_title;
-    
-                // Register default SEO meta tags
-                $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords]);
-                $this->view->registerMetaTag(['name' => 'description', 'content' => $page->default_meta_description]);
-    
-                // Render view
-                return $this->render($page->view, ['page' => $page]);
-            } else {
-                \Yii::info(\Yii::t('app', 'Pages: Root node anlegen.'), 'pages');
-                \Yii::warning(\Yii::t('app', 'Page not found.') . ' [NameID: ' . $localizedRoot . ']', 'pages');
-                $this->redirect(['/pages']);
-            }
-        }
-```
-
-
-
-#### layouts/main render Navbar
+#### Navbar (eg. `layouts/main`) 
 
 *find a root node / leave node*
 
@@ -104,4 +64,19 @@ $localizedRoot = 'root_' . \Yii::$app->language;
     );
 ```
 
+#### Backend
 
+- visit `/pages` to create a root-node for your current application language.
+- click the *tree* icon
+- enter `root_LANG` as *Name ID* and *Name* and save
+- create child node
+- assign name, title, language and route/view
+- save
+
+Now you should be able to see the page in your `Nav` widget in the frontend of your application.
+ 
+
+Ressources
+----------
+
+tbd
