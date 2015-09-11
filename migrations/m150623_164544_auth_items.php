@@ -9,7 +9,7 @@ class m150623_164544_auth_items extends Migration
 		$auth = Yii::$app->authManager;
 
 		if ($auth) {
-			$permission = $auth->createPermission('Pages');
+			$permission = $auth->createPermission('pages');
 			$permission->description = 'Pages Module';
 			$auth->add($permission);
 		}
