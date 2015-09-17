@@ -336,7 +336,11 @@ class Tree extends \kartik\tree\models\Tree
     public static function getMenuItems($rootName)
     {
         // Get root node by name
-        $rootNode = self::findOne(['name_id' => $rootName]);
+        $rootCondition['name_id'] = $rootName;
+        if (!Yii::$app->user->can('pages')) {
+            $rootCondition[Tree::ATTR_DISABLED] = Tree::NOT_DISABLED;
+        }
+        $rootNode = self::findOne($rootCondition);
 
         if ($rootNode === null) {
             return [];
@@ -347,13 +351,22 @@ class Tree extends \kartik\tree\models\Tree
 	     */
 
         // Get all leaves from this root node
-        $leaves = $rootNode->children()->andWhere(
+        $leavesQuery = $rootNode->children()->andWhere(
             [
                 Tree::ATTR_ACTIVE        => Tree::ACTIVE,
                 Tree::ATTR_VISIBLE       => Tree::VISIBLE,
                 Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
-        )->all();
+        );
+        if (!Yii::$app->user->can('pages')) {
+            $leavesQuery->andWhere(
+                [
+                    Tree::ATTR_DISABLED => Tree::NOT_DISABLED,
+                ]
+            );
+        }
+
+        $leaves = $leavesQuery->all();
 
         if ($leaves === null) {
             return [];

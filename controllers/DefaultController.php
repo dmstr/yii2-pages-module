@@ -111,10 +111,31 @@ class DefaultController extends Controller
 
         // Get active Tree object, allow access to invisible pages
         // @todo: improve handling, using also roles
-        $page = Tree::findOne(
+        $pageQuery = Tree::find()->where(
             [
-                Tree::ATTR_ID      => $id,
-                Tree::ATTR_ACTIVE  => Tree::ACTIVE,
+                Tree::ATTR_ID            => $id,
+                Tree::ATTR_ACTIVE        => Tree::ACTIVE,
+                Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
+            ]
+        );
+
+        // Show disabled pages for admins
+        if (!\Yii::$app->user->can('pages')) {
+            $pageQuery->andWhere(
+                [
+                    Tree::ATTR_DISABLED => Tree::NOT_DISABLED,
+                ]
+            );
+        }
+
+        $page  = $pageQuery->one();
+        $page2 = Tree::findOne(
+            [
+                Tree::ATTR_ID            => $id,
+                Tree::ATTR_ACTIVE        => Tree::ACTIVE,
+                Tree::ATTR_DISABLED      => ((\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin) || \Yii::$app->user->can(
+                        'pages'
+                    )) ? null : Tree::NOT_DISABLED,
                 Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
         );
