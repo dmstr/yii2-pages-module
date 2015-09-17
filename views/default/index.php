@@ -7,6 +7,8 @@ use dmstr\modules\pages\models\Tree;
 use\yii\helpers\Inflector;
 
 $title = Inflector::titleize($this->context->module->id);
+\dmstr\modules\pages\assets\PagesAsset::register($this);
+
 ?>
 
 <?php
@@ -17,10 +19,10 @@ $title = Inflector::titleize($this->context->module->id);
 // Wrapper templates
 $headerTemplate = <<< HTML
 <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <div class="col-sm-6">
         {heading}
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <div class="col-sm-6">
         {search}
     </div>
 </div>
@@ -28,10 +30,10 @@ HTML;
 
 $mainTemplate = <<< HTML
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+    <div class="col-md-4">
         {wrapper}
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-8">
+    <div class="col-md-8">
         {detail}
     </div>
 </div>
