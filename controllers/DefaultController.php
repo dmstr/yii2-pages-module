@@ -39,11 +39,11 @@ class DefaultController extends Controller
                 'rules' => [
                     [
                         'actions' => ['page'],
-                        'allow'   => true,
+                        'allow' => true,
                     ],
                     [
-                        'allow'         => true,
-                        'actions'       => ['index'],
+                        'allow' => true,
+                        'actions' => ['index'],
                         'matchCallback' => function ($rule, $action) {
                             return
                                 \Yii::$app->user->can(
@@ -72,19 +72,11 @@ class DefaultController extends Controller
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function beforeAction($action)
-    {
-        return parent::beforeAction($action);
-    }
-
     public function actionIndex()
     {
         if (!$this->module->getLocalizedRootNode()) {
             $language = \Yii::$app->language;
-            $msg      = "<b>Localized root-node missing</b><br/>Please create a new root node for the current language, with <b>Name</b> and <b>Name ID</b> <code>root_{$language}</code>";
+            $msg = "<b>Localized root-node missing</b><br/>Please create a new root node for the current language, with <b>Name</b> and <b>Name ID</b> <code>root_{$language}</code>";
             \Yii::$app->session->addFlash('warning', $msg);
         }
 
@@ -113,8 +105,8 @@ class DefaultController extends Controller
         // @todo: improve handling, using also roles
         $pageQuery = Tree::find()->where(
             [
-                Tree::ATTR_ID            => $id,
-                Tree::ATTR_ACTIVE        => Tree::ACTIVE,
+                Tree::ATTR_ID => $id,
+                Tree::ATTR_ACTIVE => Tree::ACTIVE,
                 Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
         );
@@ -128,20 +120,10 @@ class DefaultController extends Controller
             );
         }
 
-        $page  = $pageQuery->one();
-        $page2 = Tree::findOne(
-            [
-                Tree::ATTR_ID            => $id,
-                Tree::ATTR_ACTIVE        => Tree::ACTIVE,
-                Tree::ATTR_DISABLED      => ((\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin) || \Yii::$app->user->can(
-                        'pages'
-                    )) ? null : Tree::NOT_DISABLED,
-                Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
-            ]
-        );
+        // get page
+        $page = $pageQuery->one();
 
         if ($page !== null) {
-
             // Set page title
             $this->view->title = $page->page_title;
 

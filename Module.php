@@ -19,17 +19,46 @@ use yii\filters\AccessControl;
  */
 class Module extends \yii\base\Module
 {
-	/**
-	 * @var array the list of rights that are allowed to access this module.
-	 * If you modify, you also need to enable authManager.
-	 * http://www.yiiframework.com/doc-2.0/guide-security-authorization.html
-	 */
-	public $roles = [];
-	public $pagesWithChildrenHasUrl = false;
+    /**
+     * @var array the list of rights that are allowed to access this module.
+     * If you modify, you also need to enable authManager.
+     * http://www.yiiframework.com/doc-2.0/guide-security-authorization.html
+     */
+    public $roles = [];
+    public $pagesWithChildrenHasUrl = false;
 
     public $params = [
         'availableViews' => []
     ];
+
+    /**
+     * Restrict access permissions to admin user and users with auth-item 'module-controller'
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'matchCallback' => function () {
+                            if ($this->roles) {
+                                foreach ($this->roles as $role) {
+                                    if (\Yii::$app->user->can($role)) {
+                                        return true;
+                                    }
+                                }
+                                return (\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin);
+                            }
+                            return true;
+                        },
+                    ]
+                ]
+            ]
+        ];
+    }
 
     public function getLocalizedRootNode()
     {
@@ -38,39 +67,10 @@ class Module extends \yii\base\Module
         $page = Tree::findOne(
             [
                 Tree::ATTR_NAME_ID => $localizedRoot,
-                Tree::ATTR_ACTIVE  => Tree::ACTIVE,
+                Tree::ATTR_ACTIVE => Tree::ACTIVE,
                 Tree::ATTR_VISIBLE => Tree::VISIBLE
             ]
         );
         return $page;
     }
-
-	/**
-	 * Restrict access permissions to admin user and users with auth-item 'module-controller'
-	 * @inheritdoc
-	 */
-	public function behaviors()
-	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-				'rules' => [
-					[
-						'allow' => true,
-						'matchCallback' => function() {
-							if ($this->roles) {
-								foreach ($this->roles as $role) {
-									if (\Yii::$app->user->can($role)) {
-										return true;
-									}
-								}
-								return (\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin);
-							}
-							return true;
-						},
-					]
-				]
-			]
-		];
-	}
 }

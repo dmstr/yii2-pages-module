@@ -7,7 +7,6 @@
 
 use dmstr\modules\pages\models\Tree;
 use kartik\form\ActiveForm;
-use kartik\tree\Module;
 use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
@@ -16,24 +15,9 @@ use yii\helpers\Url;
 
 /**
  * @var yii\web\View $this
- * @var kartik\tree\models\Tree $node
  * @var kartik\form\ActiveForm $form
+ * @var $node dmstr\modules\pages\models\Tree
  */
-
-$this->registerCss(
-    "
-    i.fa {
-        width: 28px;
-    }
-    .hints {
-        font-size: 12px;
-        color: #888888;
-    }
-    .vertical-spacer {
-        height: 25px;
-    }
-    "
-);
 
 $this->registerJs(
     "$(function () {
@@ -41,18 +25,6 @@ $this->registerJs(
     });"
 );
 
-/**
- * Function to render custom contents defined in
- */
-function renderContent($part)
-{
-    if (empty($nodeAddlViews[$part])) {
-        return '';
-    }
-    $p         = $params;
-    $p['form'] = $form;
-    return $this->render($nodeAddlViews[$part], $p);
-}
 
 // Extract $_POST to @vars
 extract($params);
@@ -61,7 +33,7 @@ extract($params);
 $isAdmin = ($isAdmin == true || $isAdmin === "true");
 
 if (empty($parentKey)) {
-    $parent    = $node->parents(1)->one();
+    $parent = $node->parents(1)->one();
     $parentKey = empty($parent) ? '' : Html::getAttributeValue($parent, $keyAttribute);
 } elseif ($parentKey == 'root') {
     $parent = '';
@@ -69,8 +41,8 @@ if (empty($parentKey)) {
     $parent = $modelClass::findOne($parentKey);
 }
 
-$parentName  = empty($parent) ? '' : $parent->$nameAttribute . ' &raquo; ';
-$inputOpts   = [];
+$parentName = empty($parent) ? '' : $parent->$nameAttribute . ' &raquo; ';
+$inputOpts = [];
 $flagOptions = ['class' => 'kv-parent-flag'];
 
 if ($node->isNewRecord) {
@@ -104,39 +76,35 @@ echo Html::hiddenInput('currUrl', $currUrl);
 echo Html::hiddenInput('modelClass', $modelClass);
 echo Html::hiddenInput('softDelete', $softDelete);
 ?>
-    <div class="vertical-spacer"></div>
+<div class="vertical-spacer"></div>
+
 <?php
-/**
- * @var $node dmstr\modules\pages\models\Tree
- */
 
 echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <small>#{$node->id}</small></h2></div>";
 
 if ($node->hasRoute()) {
-	$currentLanguage = \Yii::$app->language;
-	\Yii::$app->language = $node->access_domain;
+    $currentLanguage = \Yii::$app->language;
+    \Yii::$app->language = $node->access_domain;
     echo "<div class='pull-right'>";
     echo Html::a(
         'Open',
-        Url::to(            $node->createUrl()),
+        Url::to($node->createUrl()),
         [
-            'class'       => 'btn '.($node->disabled?'btn-warning':'btn-success'),
+            'class' => 'btn ' . ($node->disabled ? 'btn-warning' : 'btn-success'),
             'target' => '_blank',
             'data-toggle' => 'tooltip',
-            'title'       => Yii::t('kvtree', 'Go to frontend')
+            'title' => Yii::t('kvtree', 'Go to frontend')
         ]
     );
     echo "</div>";
-	\Yii::$app->language = $currentLanguage;
+    \Yii::$app->language = $currentLanguage;
 }
 ?>
 
 
-    <div class="clearfix"></div>
+<div class="clearfix"></div>
 
-<?= renderContent(Module::VIEW_PART_1); ?>
-
-    <h4><?= Yii::t('kvtree', 'General') ?></h4>
+<h4><?= Yii::t('kvtree', 'General') ?></h4>
 
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
 
@@ -153,7 +121,7 @@ if ($node->hasRoute()) {
         <div class="col-sm-3">
             <?= $form->field($node, 'visible')->checkbox() ?>
         </div>
-            <div class="col-sm-3">
+        <div class="col-sm-3">
             <?= $form->field($node, 'disabled')->checkbox() ?>
         </div>
     </div>
@@ -205,23 +173,23 @@ if ($node->hasRoute()) {
                 <?= $form->field($node, $iconAttribute)->widget(
                     \kartik\select2\Select2::classname(),
                     [
-                        'name'          => 'Tree[' . $iconAttribute . ']',
-                        'model'         => $node,
-                        'attribute'     => $iconAttribute,
-                        'addon'         => [
+                        'name' => 'Tree[' . $iconAttribute . ']',
+                        'model' => $node,
+                        'attribute' => $iconAttribute,
+                        'addon' => [
                             'prepend' => [
                                 'content' => Inflector::titleize($iconAttribute)
                             ],
                         ],
-                        'data'          => FA::getConstants(true),
-                        'options'       => [
-                            'id'          => 'tree-' . $iconAttribute,
+                        'data' => FA::getConstants(true),
+                        'options' => [
+                            'id' => 'tree-' . $iconAttribute,
                             'placeholder' => Yii::t('app', 'Type to autocomplete'),
-                            'multiple'    => false,
+                            'multiple' => false,
                         ],
                         'pluginOptions' => [
                             'escapeMarkup' => new \yii\web\JsExpression("function(m) { return m; }"),
-                            'allowClear'   => true
+                            'allowClear' => true
                         ]
                     ]
                 )->label(false); ?>
@@ -239,22 +207,22 @@ if ($node->hasRoute()) {
             <?= $form->field($node, $iconTypeAttribute)->widget(
                 \kartik\select2\Select2::classname(),
                 [
-                    'name'          => 'Tree[' . $iconTypeAttribute . ']',
-                    'model'         => $node,
-                    'attribute'     => $iconTypeAttribute,
-                    'addon'         => [
+                    'name' => 'Tree[' . $iconTypeAttribute . ']',
+                    'model' => $node,
+                    'attribute' => $iconTypeAttribute,
+                    'addon' => [
                         'prepend' => [
                             'content' => Inflector::titleize($iconTypeAttribute)
                         ],
                     ],
-                    'data'          => [
+                    'data' => [
                         TreeView::ICON_CSS => 'CSS Suffix',
                         TreeView::ICON_RAW => 'Raw Markup',
                     ],
-                    'options'       => [
-                            'id'          => 'tree-' . $iconTypeAttribute,
+                    'options' => [
+                            'id' => 'tree-' . $iconTypeAttribute,
                             'placeholder' => Yii::t('app', 'Select'),
-                            'multiple'    => false,
+                            'multiple' => false,
                         ] + $inputOpts,
                     'pluginOptions' => [
                         'allowClear' => false
@@ -271,19 +239,19 @@ if ($node->hasRoute()) {
             <?= $form->field($node, Tree::ATTR_ACCESS_DOMAIN)->widget(
                 \kartik\select2\Select2::classname(),
                 [
-                    'name'          => Html::getInputName($node, Tree::ATTR_ACCESS_DOMAIN),
-                    'model'         => $node,
-                    'attribute'     => Tree::ATTR_ACCESS_DOMAIN,
-                    'addon'         => [
+                    'name' => Html::getInputName($node, Tree::ATTR_ACCESS_DOMAIN),
+                    'model' => $node,
+                    'attribute' => Tree::ATTR_ACCESS_DOMAIN,
+                    'addon' => [
                         'prepend' => [
                             'content' => 'Access Domain'
                         ],
                     ],
-                    'data'          => Tree::optsAccessDomain(),
-                    'options'       => [
-                        'id'          => 'tree-access_domain',
+                    'data' => Tree::optsAccessDomain(),
+                    'options' => [
+                        'id' => 'tree-access_domain',
                         'placeholder' => Yii::t('app', 'Select language'),
-                        'multiple'    => false,
+                        'multiple' => false,
                     ],
                     'pluginOptions' => [
                         'allowClear' => true
@@ -296,18 +264,18 @@ if ($node->hasRoute()) {
             <?= $form->field($node, Tree::ATTR_ROUTE)->widget(
                 \kartik\select2\Select2::classname(),
                 [
-                    'name'          => Html::getInputName($node, Tree::ATTR_ROUTE),
-                    'model'         => $node,
-                    'attribute'     => Tree::ATTR_ROUTE,
-                    'addon'         => [
+                    'name' => Html::getInputName($node, Tree::ATTR_ROUTE),
+                    'model' => $node,
+                    'attribute' => Tree::ATTR_ROUTE,
+                    'addon' => [
                         'prepend' => [
                             'content' => 'Controller / View'
                         ],
                     ],
-                    'data'          => Tree::optsRoute(),
-                    'options'       => [
+                    'data' => Tree::optsRoute(),
+                    'options' => [
                         'placeholder' => Yii::t('app', 'Select route'),
-                        'multiple'    => false,
+                        'multiple' => false,
                     ],
                     'pluginOptions' => [
                         'allowClear' => true
@@ -322,19 +290,19 @@ if ($node->hasRoute()) {
             <?= $form->field($node, Tree::ATTR_VIEW)->widget(
                 \kartik\select2\Select2::classname(),
                 [
-                    'name'          => Html::getInputName($node, Tree::ATTR_VIEW),
-                    'model'         => $node,
-                    'attribute'     => Tree::ATTR_VIEW,
-                    'addon'         => [
+                    'name' => Html::getInputName($node, Tree::ATTR_VIEW),
+                    'model' => $node,
+                    'attribute' => Tree::ATTR_VIEW,
+                    'addon' => [
                         'prepend' => [
                             'content' => 'Available Views'
                         ],
                     ],
-                    'data'          => Tree::optsView(),
-                    'options'       => [
-                        'id'          => 'tree-views',
+                    'data' => Tree::optsView(),
+                    'options' => [
+                        'id' => 'tree-views',
                         'placeholder' => Yii::t('app', 'Type to autocomplete'),
-                        'multiple'    => false,
+                        'multiple' => false,
                     ],
                     'pluginOptions' => [
                         'allowClear' => true
@@ -346,15 +314,15 @@ if ($node->hasRoute()) {
 
     <h4><?= Yii::t('kvtree', 'SEO') ?></h4>
     <div class="row">
-    <div class="col-xs-12">
-        <?= $form->field(
-            $node,
-            'page_title',
-            [
-                'addon' => ['prepend' => ['content' => Inflector::titleize('page_title')]]
-            ]
-        )->textInput($inputOpts)->label(false) ?>
-    </div>
+        <div class="col-xs-12">
+            <?= $form->field(
+                $node,
+                'page_title',
+                [
+                    'addon' => ['prepend' => ['content' => Inflector::titleize('page_title')]]
+                ]
+            )->textInput($inputOpts)->label(false) ?>
+        </div>
     </div>
     <?php if ($node->createUrl() != null) : ?>
         <div class="row">
@@ -371,7 +339,7 @@ if ($node->hasRoute()) {
                     ]
                 )->textInput(
                     [
-                        'value'    => Tree::getSluggedUrl($node),
+                        'value' => Tree::getSluggedUrl($node),
                         'disabled' => true
                     ]
                 )->label(false)->hint(
@@ -410,8 +378,6 @@ if ($node->hasRoute()) {
         </div>
     </div>
 
-    <?= renderContent(Module::VIEW_PART_2); ?>
-
 
 <?php else : ?>
     <div class="row">
@@ -435,17 +401,17 @@ if ($node->hasRoute()) {
             )->multiselect(
                 $iconsList,
                 [
-                    'item'     => function ($index, $label, $name, $checked, $value) use ($inputOpts) {
+                    'item' => function ($index, $label, $name, $checked, $value) use ($inputOpts) {
                         if ($index == 0 && $value == '') {
                             $checked = true;
-                            $value   = '';
+                            $value = '';
                         }
                         return '<div class="radio">' . Html::radio(
                             $name,
                             $checked,
                             [
-                                'value'    => $value,
-                                'label'    => $label,
+                                'value' => $value,
+                                'label' => $label,
                                 'disabled' => !empty($inputOpts['readonly']) || !empty($inputOpts['disabled'])
                             ]
                         ) . '</div>';
@@ -457,8 +423,7 @@ if ($node->hasRoute()) {
     </div>
 <?php endif; ?>
 
-<?
-if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
+<?php if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
     <div class="pull-left">
         <?= Html::submitButton(
             '<i class="glyphicon glyphicon-floppy-disk"></i> ' . Yii::t('kvtree', 'Save'),
@@ -470,5 +435,5 @@ if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
         ) ?>
     </div>
 <?php endif; ?>
+
 <?php ActiveForm::end() ?>
-<?= renderContent(Module::VIEW_PART_5); ?>

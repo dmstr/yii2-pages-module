@@ -26,9 +26,10 @@ class Bootstrap implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-
+        // register migration
         $app->params['yii.migrations'][] = '@vendor/dmstr/yii2-pages-module/migrations';
 
+        // register module
         if (!\Yii::$app->hasModule('pages')) {
             $app->setModule(
                 'pages',
@@ -39,16 +40,13 @@ class Bootstrap implements BootstrapInterface
         }
 
         // provide default page url rule
-
-        if (getenv('APP_PRETTY_URLS')) {
-            $app->urlManager->addRules(
-                [
-                    // pages default page route
-                    '<parentLeave:[a-zA-Z0-9_\-\.]*>/<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
-                    '<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>'                                 => 'pages/default/page',
-                ],
-                true
-            );
-        }
+        $app->urlManager->addRules(
+            [
+                // pages default page route
+                '<parentLeave:[a-zA-Z0-9_\-\.]*>/<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
+                '<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
+            ],
+            true
+        );
     }
 }
