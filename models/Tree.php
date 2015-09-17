@@ -127,6 +127,12 @@ class Tree extends \kartik\tree\models\Tree
                 [
                     [
                         'name_id',
+                    ],
+                    'required'
+                ],
+                [
+                    [
+                        'name_id',
                         'page_title',
                         'slug',
                         'route',
