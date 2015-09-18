@@ -25,11 +25,18 @@ class Module extends \yii\base\Module
      * http://www.yiiframework.com/doc-2.0/guide-security-authorization.html
      */
     public $roles = [];
+
     public $pagesWithChildrenHasUrl = false;
 
-    public $params = [
-        'availableViews' => []
+    public $availableRoutes = [
+        '/pages/default/page' => '/pages/default/page',
+        '/site/index' => '/site/index',
     ];
+    public $availableViews = [
+        '@vendor/dmstr/yii2-widgets-module/example-views/default.php' => 'Default',
+        '@vendor/dmstr/yii2-widgets-module/example-views/column1.php' => 'One Column (with container)'
+    ];
+
 
     /**
      * Restrict access permissions to admin user and users with auth-item 'module-controller'

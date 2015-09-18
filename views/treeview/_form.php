@@ -250,7 +250,6 @@ if ($node->hasRoute()) {
                     'data' => Tree::optsAccessDomain(),
                     'options' => [
                         'id' => 'tree-access_domain',
-                        'placeholder' => Yii::t('app', 'Select language'),
                         'multiple' => false,
                     ],
                     'pluginOptions' => [
@@ -269,12 +268,12 @@ if ($node->hasRoute()) {
                     'attribute' => Tree::ATTR_ROUTE,
                     'addon' => [
                         'prepend' => [
-                            'content' => 'Controller / View'
+                            'content' => 'Route'
                         ],
                     ],
                     'data' => Tree::optsRoute(),
                     'options' => [
-                        'placeholder' => Yii::t('app', 'Select route'),
+                        #'placeholder' => Yii::t('app', 'Select route'),
                         'multiple' => false,
                     ],
                     'pluginOptions' => [

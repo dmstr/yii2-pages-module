@@ -210,15 +210,7 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function optsAccessDomain()
     {
-        $availableLanguages = [];
-        if (!isset(Yii::$app->urlManager->languages)) {
-            $availableLanguages = [Yii::$app->language];
-        } else {
-            foreach (Yii::$app->urlManager->languages as $language) {
-
-                $availableLanguages[$language] = $language;
-            }
-        }
+        $availableLanguages[Yii::$app->language] = Yii::$app->language;
         return $availableLanguages;
     }
 
@@ -228,9 +220,7 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function optsView()
     {
-        return isset(\Yii::$app->getModule('pages')->params['availableViews'])?
-            \Yii::$app->getModule('pages')->params['availableViews']:
-            [];
+        return \Yii::$app->getModule('pages')->availableViews;
     }
 
     /**
@@ -240,10 +230,7 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function optsRoute()
     {
-        return [
-            '/site/index'         => '/site/index',
-            '/pages/default/page' => '/pages/default/page',
-        ];
+        return \Yii::$app->getModule('pages')->availableRoutes;
     }
 
     /**
