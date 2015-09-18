@@ -41,7 +41,7 @@ HTML;
 
 echo TreeView::widget(
     [
-        'query'           => Tree::find()->addOrderBy('root, lft'),
+        'query'           => Tree::find()->addOrderBy('root, lft')->andWhere([Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language]),
         'isAdmin'         => true,
         'softDelete'      => false,
         'displayValue'    => 1,
