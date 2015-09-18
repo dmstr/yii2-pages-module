@@ -39,33 +39,12 @@ class DefaultController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['page'],
                         'allow' => true,
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['index'],
                         'matchCallback' => function ($rule, $action) {
-                            return
-                                \Yii::$app->user->can(
-                                    strtr(
-                                        $this->module->id,
-                                        ['/' => '_', '-' => '_']
-                                    )
-                                ) ||
-                                \Yii::$app->user->can(
-                                    strtr(
-                                        $this->module->id . '/' . $this->id,
-                                        ['/' => '_', '-' => '_']
-                                    )
-                                ) ||
-                                \Yii::$app->user->can(
-                                    strtr(
-                                        $this->module->id . '/' . $this->id . '/' . $action->id,
-                                        ['/' => '_', '-' => '_']
-                                    )
-                                ) ||
-                                (\Yii::$app->user->identity && \Yii::$app->user->identity->isAdmin);
+                            return \Yii::$app->user->can(
+                                $this->module->id . '_' . $this->id . '_' . $action->id,
+                                ['route' => true]
+                            );
                         },
                     ]
                 ]
