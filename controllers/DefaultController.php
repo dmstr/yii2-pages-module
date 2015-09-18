@@ -14,6 +14,7 @@ use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
+use yii\web\View;
 
 /**
  * Class DefaultController
@@ -76,7 +77,22 @@ class DefaultController extends Controller
     {
         if (!$this->module->getLocalizedRootNode()) {
             $language = \Yii::$app->language;
-            $msg = "<b>Localized root-node missing</b><br/>Please create a new root node for the current language, with <b>Name</b> and <b>Name ID</b> <code>root_{$language}</code>";
+
+            $msg = <<<HTML
+<b>Localized root-node missing</b>
+<p>
+Please create a new root-node for the current language.
+</p>
+<p>
+<a onclick="$('#tree-name_id').val('root_{$language}');$('#tree-name').val('root_{$language}');$('.kv-detail-container button[type=submit]').click()" class="btn btn-warning btn-lg">Create root-node for <b>{$language}</b></a>
+</p>
+HTML;
+
+            $js = <<<'JS'
+$(".kv-create-root").click();
+JS;
+
+            $this->getView()->registerJs($js, View::POS_LOAD);
             \Yii::$app->session->addFlash('warning', $msg);
         }
 
