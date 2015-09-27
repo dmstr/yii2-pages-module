@@ -26,6 +26,7 @@ Requirements
 ------------
 
 - URL manager from [codemix/yii2-localeurls](https://github.com/codemix/yii2-localeurls) configured in application
+- role based access control; `auth_items` for every `module_controller_action`
 
 Database
 --------
