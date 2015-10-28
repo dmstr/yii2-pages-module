@@ -19,10 +19,10 @@ $title = Inflector::titleize($this->context->module->id);
 // Wrapper templates
 $headerTemplate = <<< HTML
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-6" id="pages-detail-heading">
         {heading}
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" id="pages-detail-search">
         {search}
     </div>
 </div>
@@ -30,10 +30,10 @@ HTML;
 
 $mainTemplate = <<< HTML
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4" id="pages-detail-wrapper">
         {wrapper}
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8" id="pages-detail-panel">
         {detail}
     </div>
 </div>
