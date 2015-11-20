@@ -273,7 +273,7 @@ if ($node->hasRoute()) {
                     ],
                     'data' => Tree::optsRoute(),
                     'options' => [
-                        #'placeholder' => Yii::t('app', 'Select route'),
+                        'placeholder' => Yii::t('app', 'Select route'),
                         'multiple' => false,
                     ],
                     'pluginOptions' => [
