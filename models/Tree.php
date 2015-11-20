@@ -58,10 +58,10 @@ class Tree extends \kartik\tree\models\Tree
     const VISIBLE = 1;
     const NOT_VISIBLE = 0;
 
-
     const COLLAPSED = 1;
     const NOT_COLLAPSED = 0;
 
+    const ROOT_NODE = 1;
 
     /**
      * Attribute names
