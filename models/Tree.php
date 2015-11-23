@@ -61,7 +61,7 @@ class Tree extends \kartik\tree\models\Tree
     const COLLAPSED = 1;
     const NOT_COLLAPSED = 0;
 
-    const ROOT_NODE = 1;
+    const ROOT_NODE_LVL = 0;
 
     /**
      * Attribute names
