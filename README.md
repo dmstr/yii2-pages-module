@@ -31,7 +31,7 @@ Requirements
 Database
 --------
 ```
-fig run web ./yii migrate \
+./yii migrate \
     --disableLookup=1 \
     --migrationPath=@vendor/dmstr/yii2-pages-module/migrations
 ```
