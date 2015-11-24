@@ -2,6 +2,8 @@ php:
   command: 'sh -c "sh /app/src/init.sh; php-fpm"'
   image: phundament/app:latest
   environment:
+    APP_NAME: widgets-testing
+    APP_TITLE: 'dmstr/yii2-widgets TESTING'
     YII_ENV: 'test'
     DB_PORT_3306_TCP_ADDR: testpages_mariadb_1
     DB_PORT_3306_TCP_PORT: 3306
