@@ -1,0 +1,36 @@
+php:
+  command: 'sh -c "sh /app/src/init.sh; php-fpm"'
+  image: phundament/app:latest
+  environment:
+    APP_NAME: pages-testing
+    APP_TITLE: 'dmstr/yii2-pages TESTING'
+    YII_ENV: 'test'
+    DB_PORT_3306_TCP_ADDR: testpages_mariadb_1
+    DB_PORT_3306_TCP_PORT: 3306
+    DB_ENV_MYSQL_ROOT_PASSWORD: secretadmin
+  volumes:
+    - /app
+    - ../:/app/vendor/dmstr/yii2-pages-module
+    - ../tests/_config/local.php:/app/src/config/local.php
+
+nginx:
+  command: 'sh -c "sed -i \"s/phpfpm/testpages_php_1/\" /etc/nginx/nginx.conf; /root/run.sh"'
+  image: schmunk42/nginx:1.9
+  volumes_from:
+    - php
+  ports:
+    - '80'
+
+mariadb:
+  image: 'tutum/mariadb:10.1'
+  ports:
+    - '3306'
+  environment:
+    MARIADB_PASS: secretadmin
+
+seleniumfirefox:
+  image: 'selenium/standalone-firefox-debug:2.48.2'
+  expose:
+      - '4444'
+  ports:
+      - '5900'

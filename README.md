@@ -31,7 +31,7 @@ Requirements
 Database
 --------
 ```
-fig run web ./yii migrate \
+./yii migrate \
     --disableLookup=1 \
     --migrationPath=@vendor/dmstr/yii2-pages-module/migrations
 ```
@@ -75,6 +75,19 @@ $localizedRoot = 'root_' . \Yii::$app->language;
 - save
 
 Now you should be able to see the page in your `Nav` widget in the frontend of your application.
+
+
+Testing
+-------
+
+Requirements:
+
+ - Docker >=1.9.1
+
+Codeception is run via "Potemkin"-Phundament.
+
+    cd tests
+    sh test.sh
  
 
 Ressources
