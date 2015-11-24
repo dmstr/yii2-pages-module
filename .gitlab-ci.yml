@@ -1,0 +1,20 @@
+before_script:
+    - export CI_APP_VOLUME=$CI_PROJECT_DIR
+    - export CI_REPORTS_PATH=/volume1/Servers/storage/internal-30/ci-reports/projects/${CI_PROJECT_ID}/builds/${CI_BUILD_ID}
+    - export COMPOSE_PROJECT_NAME=testpages
+    - export
+
+test:
+    script:
+        - mv tests/docker-compose.ci.override.yml tests/docker-compose.override.yml
+        - cd tests
+        - set +e
+        - sh test.sh; export TESTS_EXIT_CODE=$?
+        - set -e
+        - docker-compose --x-networking kill && docker-compose --x-networking rm -fv
+        - wait
+        - docker network rm $COMPOSE_PROJECT_NAME
+        - sshpass -p "$SFTP_PASS" ssh  -o StrictHostKeyChecking=no sftp@192.168.23.17 "mkdir -p ${CI_REPORTS_PATH}"
+        - sshpass -p "$SFTP_PASS" scp -r ${CI_APP_VOLUME}/tests/_output/* sftp@192.168.23.17:${CI_REPORTS_PATH}
+        - exit $TESTS_EXIT_CODE
+    stage: test
