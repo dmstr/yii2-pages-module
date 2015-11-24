@@ -11,6 +11,8 @@ $title = Inflector::titleize($this->context->module->id);
 
 ?>
 
+<h2>Pages</h2>
+
 <?php
 /**
  * Output TreeView widget
