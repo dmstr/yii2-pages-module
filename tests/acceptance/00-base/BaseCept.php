@@ -11,6 +11,6 @@ $loginPage->login('admin', 'admin');
 $I->amGoingTo('try to view and create pages');
 $I->amOnPage('/pages');
 
-$I->see('Pages', 'h2');
+$I->see('Pages', 'h1');
 #$I->see('Widgets-Module', 'h1');
 $I->makeScreenshot('success-pages-index');
