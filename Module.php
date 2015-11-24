@@ -67,6 +67,17 @@ class Module extends \yii\base\Module
         ];
     }
 
+    public function init(){
+        parent::init();
+
+        // add routes from settings module
+        $routes = explode("\n",\Yii::$app->settings->get('pages.availableRoutes'));
+        foreach($routes AS $route) {
+            $this->availableRoutes[$route] = $route;
+        }
+
+    }
+
     public function getLocalizedRootNode()
     {
         $localizedRoot = 'root_' . \Yii::$app->language;
