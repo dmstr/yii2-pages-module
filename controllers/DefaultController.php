@@ -36,13 +36,6 @@ class DefaultController extends Controller
     public function behaviors()
     {
         return [
-            'HttpCache' => [
-                'class' => 'yii\filters\HttpCache',
-                'only' => ['page'],
-                'lastModified' => function ($action, $params) {
-                    return time();
-                },
-            ],
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
@@ -134,10 +127,6 @@ JS;
             // Register default SEO meta tags
             $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords]);
             $this->view->registerMetaTag(['name' => 'description', 'content' => $page->default_meta_description]);
-
-            if (\Yii::$app->user->isGuest) {
-                Yii::$app->response->headers->set('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + (getenv("HTTP_EXPIRES") !== null ? getenv("HTTP_EXPIRES") : 0)));
-            }
 
             // Render view
             return $this->render($page->view, ['page' => $page]);
