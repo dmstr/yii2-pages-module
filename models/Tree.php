@@ -381,7 +381,7 @@ class Tree extends \kartik\tree\models\Tree
 
                 $itemTemplate = [
                     'label'       => ($page->icon) ? '<i class="' . $page->icon . '"></i> ' . $page->name : $page->name,
-                    'url'         => ($page->createUrl()) ? $page->createUrl() : '',
+                    'url'         => $page->createUrl(),
                     'linkOptions' => $pageOptions,
                 ];
                 $item         = $itemTemplate;
