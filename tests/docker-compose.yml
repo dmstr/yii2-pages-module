@@ -5,6 +5,7 @@ php:
     APP_NAME: pages-testing
     APP_TITLE: 'dmstr/yii2-pages TESTING'
     YII_ENV: 'test'
+    YII_DEBUG: 1
     DB_PORT_3306_TCP_ADDR: testpages_mariadb_1
     DB_PORT_3306_TCP_PORT: 3306
     DB_ENV_MYSQL_ROOT_PASSWORD: secretadmin
@@ -29,7 +30,7 @@ mariadb:
     MARIADB_PASS: secretadmin
 
 seleniumfirefox:
-  image: 'selenium/standalone-firefox-debug:2.48.2'
+  image: 'selenium/standalone-firefox-debug:2.47.1'
   expose:
       - '4444'
   ports:

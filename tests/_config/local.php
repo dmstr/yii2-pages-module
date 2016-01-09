@@ -7,9 +7,9 @@ return [
         '@tests' => '@vendor/dmstr/yii2-pages-module/tests'
     ],
     'components' => [
-        'db' => [
+        /*'db' => [
             'tablePrefix' => '',
-        ],
+        ],*/
     ],
     'modules' => [
         'pages' => [
