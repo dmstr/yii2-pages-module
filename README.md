@@ -112,3 +112,7 @@ Ressources
 ----------
 
 tbd
+
+---
+
+Built by [dmstr](http://diemeisterei.de)
