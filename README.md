@@ -3,6 +3,13 @@ Yii2 Page Manager
 
 Application sitemap and navigation manager module for Yii 2.0 Framework
 
+Requirements
+------------
+
+- URL manager from [codemix/yii2-localeurls](https://github.com/codemix/yii2-localeurls) configured in application
+- role based access control; `auth_items` for every `module_controller_action`
+
+
 Installation
 ------------
 
@@ -22,19 +29,30 @@ or add
 
 to the require section of your `composer.json` file.
 
-Requirements
-------------
+Setup
+-----
 
-- URL manager from [codemix/yii2-localeurls](https://github.com/codemix/yii2-localeurls) configured in application
-- role based access control; `auth_items` for every `module_controller_action`
-
-Database
---------
+Run migrations
 ```
 ./yii migrate \
     --disableLookup=1 \
     --migrationPath=@vendor/dmstr/yii2-pages-module/migrations
 ```
+
+Enable module in application configuration
+
+    'pages' => [
+        'class' => 'dmstr\modules\pages\Module',
+        'layout' => '@admin-views/layouts/main',
+        'availableRoutes' => [
+            '/site/index' => '/site/index',
+        ],
+    ],
+
+
+Use settings module to configure additional controllers
+
+- Add one controller route per line to section `pages`, key `availableRoutes`
 
 Usage
 -----

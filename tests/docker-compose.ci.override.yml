@@ -5,5 +5,3 @@ php:
  volumes:
     - ${CI_APP_VOLUME}/:/app/vendor/dmstr/yii2-pages-module
     - ${CI_APP_VOLUME}/tests/_config/local.php:/app/src/config/local.php
-nginx:
-  command: 'sh -c "sed -i \"s/phpfpm/${COMPOSE_PROJECT_NAME}_php_1/\" /etc/nginx/nginx.conf; /root/run.sh"'

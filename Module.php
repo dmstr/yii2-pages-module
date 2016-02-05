@@ -28,14 +28,9 @@ class Module extends \yii\base\Module
 
     public $pagesWithChildrenHasUrl = false;
 
-    public $availableRoutes = [
-        '/pages/default/page' => '/pages/default/page',
-        '/site/index' => '/site/index',
-    ];
-    public $availableViews = [
-        '@vendor/dmstr/yii2-widgets-module/example-views/default.php' => 'Default',
-        '@vendor/dmstr/yii2-widgets-module/example-views/column1.php' => 'One Column (with container)'
-    ];
+    public $availableRoutes = [];
+    
+    public $availableViews = [];
 
 
     /**
@@ -65,6 +60,19 @@ class Module extends \yii\base\Module
                 ]
             ]
         ];
+    }
+
+    public function init()
+    {
+        parent::init();
+
+        // add routes from settings module
+        if (\Yii::$app->hasModule('settings')) {
+            $routes = explode("\n", \Yii::$app->settings->get('pages.availableRoutes'));
+            foreach ($routes AS $route) {
+                $this->availableRoutes[$route] = $route;
+            }
+        }
     }
 
     public function getLocalizedRootNode()
