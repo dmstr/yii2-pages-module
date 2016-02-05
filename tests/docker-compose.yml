@@ -1,7 +1,7 @@
 version: '2'
+
 services:
   nginx:
-    #command: 'sh -c "sed -i \"s/phpfpm/php/\" /etc/nginx/nginx.conf; /root/run.sh"'
     image: schmunk42/nginx:1.9
     volumes_from:
       - phpfpm
@@ -14,7 +14,6 @@ services:
       - internal
 
   phpfpm:
-    #command: 'sh -c "sh /app/src/setup.sh; php-fpm"'
     image: phundament/app:4.0.2
     working_dir: /app/vendor/dmstr/yii2-pages-module
     depends_on:
