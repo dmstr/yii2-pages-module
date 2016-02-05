@@ -8,7 +8,7 @@ return [
     ],
     'components' => [
         'db' => [
-            'tablePrefix' => '',
+            'tablePrefix' => 'app_',
         ],
     ],
     'modules' => [

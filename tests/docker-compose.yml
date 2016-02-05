@@ -1,36 +1,59 @@
-php:
-  command: 'sh -c "sh /app/src/init.sh; php-fpm"'
-  image: phundament/app:latest
-  environment:
-    APP_NAME: pages-testing
-    APP_TITLE: 'dmstr/yii2-pages TESTING'
-    YII_ENV: 'test'
-    DB_PORT_3306_TCP_ADDR: testpages_mariadb_1
-    DB_PORT_3306_TCP_PORT: 3306
-    DB_ENV_MYSQL_ROOT_PASSWORD: secretadmin
-  volumes:
-    - /app
-    - ../:/app/vendor/dmstr/yii2-pages-module
-    - ../tests/_config/local.php:/app/src/config/local.php
+version: '2'
+services:
+  nginx:
+    #command: 'sh -c "sed -i \"s/phpfpm/php/\" /etc/nginx/nginx.conf; /root/run.sh"'
+    image: schmunk42/nginx:1.9
+    volumes_from:
+      - phpfpm
+    ports:
+      - '80'
+    depends_on:
+      - phpfpm
+    networks:
+      - frontend
+      - internal
 
-nginx:
-  command: 'sh -c "sed -i \"s/phpfpm/testpages_php_1/\" /etc/nginx/nginx.conf; /root/run.sh"'
-  image: schmunk42/nginx:1.9
-  volumes_from:
-    - php
-  ports:
-    - '80'
+  phpfpm:
+    #command: 'sh -c "sh /app/src/setup.sh; php-fpm"'
+    image: phundament/app:4.0.2
+    working_dir: /app/vendor/dmstr/yii2-pages-module
+    depends_on:
+      - mariadb
+      - seleniumfirefox
+    environment:
+      APP_NAME: pages-testing
+      APP_TITLE: 'dmstr/yii2-pages TESTING'
+      YII_ENV: 'test'
+      DB_PORT_3306_TCP_ADDR: mariadb
+      DB_PORT_3306_TCP_PORT: 3306
+      DB_ENV_MYSQL_ROOT_PASSWORD: secretadmin
+    volumes:
+      - /app
+      - ../:/app/vendor/dmstr/yii2-pages-module
+      - ../tests/_config/local.php:/app/src/config/local.php
+    networks:
+      - internal
 
-mariadb:
-  image: 'tutum/mariadb:10.1'
-  ports:
-    - '3306'
-  environment:
-    MARIADB_PASS: secretadmin
+  mariadb:
+    image: 'tutum/mariadb:10.1'
+    ports:
+      - '3306'
+    environment:
+      MARIADB_PASS: secretadmin
+    networks:
+      - internal
 
-seleniumfirefox:
-  image: 'selenium/standalone-firefox-debug:2.48.2'
-  expose:
-      - '4444'
-  ports:
-      - '5900'
+  seleniumfirefox:
+    image: 'selenium/standalone-firefox-debug:2.48.2'
+    expose:
+        - '4444'
+    ports:
+        - '5900'
+    networks:
+      - internal
+
+networks:
+  frontend:
+    driver: bridge
+  internal:
+    driver: bridge
