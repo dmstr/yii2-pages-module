@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
  */
 class PagesAsset extends AssetBundle
 {
-    public $sourcePath = __DIR__.'/less';
+    public $sourcePath = '@vendor/dmstr/yii2-pages-module/assets/less';
     public $css = [
         'module.less'
     ];
