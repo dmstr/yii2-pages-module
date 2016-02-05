@@ -10,7 +10,7 @@ test:
         - set +e
         - sh test.sh; export TESTS_EXIT_CODE=$?
         - set -e
-        - docker-compose --x-networking kill && docker-compose --x-networking rm -fv
+        - docker-compose kill && docker-compose rm -fv
         - wait
         - docker network rm $COMPOSE_PROJECT_NAME
         - exit $TESTS_EXIT_CODE
