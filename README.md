@@ -3,6 +3,7 @@ Yii2 Page Manager
 
 Application sitemap and navigation manager module for Yii 2.0 Framework
 
+
 Requirements
 ------------
 
@@ -29,6 +30,7 @@ or add
 
 to the require section of your `composer.json` file.
 
+
 Setup
 -----
 
@@ -53,6 +55,7 @@ Enable module in application configuration
 Use settings module to configure additional controllers
 
 - Add one controller route per line to section `pages`, key `availableRoutes`
+
 
 Usage
 -----
