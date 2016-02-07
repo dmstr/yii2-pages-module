@@ -15,7 +15,6 @@ services:
 
   phpfpm:
     image: phundament/app:4.0.2
-    working_dir: /app/vendor/dmstr/yii2-pages-module
     depends_on:
       - mariadb
       - seleniumfirefox

@@ -7,6 +7,6 @@ export COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME:-testpages}
 docker-compose up -d & wait
 docker-compose ps
 
-docker-compose run php sh /app/src/setup.sh
+docker-compose run phpfpm sh /app/src/setup.sh
 
-docker-compose run php codecept run -c /app/vendor/dmstr/yii2-pages-module/codeception.yml
+docker-compose run phpfpm codecept run -c /app/vendor/dmstr/yii2-pages-module/codeception.yml
