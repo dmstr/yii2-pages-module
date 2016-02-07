@@ -11,75 +11,60 @@ use yii\db\Migration;
 
 class m150309_153255_create_tree_manager_table extends Migration
 {
-    // Use safeUp/safeDown to run migration code within a transaction
-    public function safeUp()
+    public function up()
     {
-        $this->execute(
-            "
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-
--- -----------------------------------------------------
--- Table `dmstr_page`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `dmstr_page` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique tree node identifier',
-  `root` INT(11) NULL DEFAULT NULL COMMENT 'Tree root identifier',
-  `lft` INT(11) NOT NULL COMMENT 'Nested set left property',
-  `rgt` INT(11) NOT NULL COMMENT 'Nested set right property',
-  `lvl` SMALLINT(5) NOT NULL COMMENT 'Nested set level / depth',
-  `page_title` VARCHAR(255) NULL COMMENT 'The page title',
-  `name` VARCHAR(60) NOT NULL COMMENT 'The tree node name / label',
-  `name_id` VARCHAR(255) NOT NULL COMMENT 'The unique name_id',
-  `slug` VARCHAR(255) NULL COMMENT 'The auto generated slugged name_id',
-  `route` VARCHAR(255) NULL COMMENT 'The controller/view route',
-  `view` VARCHAR(255) NULL COMMENT 'The view to render through the given route',
-  `default_meta_keywords` VARCHAR(255) NULL COMMENT 'SEO - meta keywords - comma seperated',
-  `default_meta_description` TEXT NULL COMMENT 'SEO - meta description',
-  `request_params` TEXT NULL COMMENT 'JSON - request params',
-  `owner` INT(11) NULL COMMENT 'The owner user id how created the page node',
-  `access_owner` INT(11) NULL DEFAULT NULL,
-  `access_domain` VARCHAR(8) NULL DEFAULT NULL,
-  `access_read` VARCHAR(255) NULL DEFAULT NULL,
-  `access_update` VARCHAR(255) NULL DEFAULT NULL,
-  `access_delete` VARCHAR(255) NULL DEFAULT NULL,
-  `icon` VARCHAR(255) NULL DEFAULT NULL COMMENT 'The icon to use for the node',
-  `icon_type` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Icon Type: 1 = CSS Class, 2 = Raw Markup',
-  `active` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is active (will be set to false on deletion)',
-  `selected` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is selected/checked by default',
-  `disabled` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is enabled',
-  `readonly` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is read only (unlike disabled - will allow toolbar actions)',
-  `visible` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is visible',
-  `collapsed` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is collapsed by default',
-  `movable_u` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is movable one position up',
-  `movable_d` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is movable one position down',
-  `movable_l` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is movable to the left (from sibling to parent)',
-  `movable_r` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is movable to the right (from sibling to child)',
-  `removable` TINYINT(1) NOT NULL DEFAULT '1' COMMENT 'Whether the node is removable (any children below will be moved as siblings before deletion)',
-  `removable_all` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Whether the node is removable along with descendants',
-  `created_at` DATETIME NULL,
-  `updated_at` DATETIME NULL,
-  PRIMARY KEY (`id`),
-  INDEX `tbl_tree_NK1` (`root` ASC),
-  INDEX `tbl_tree_NK2` (`lft` ASC),
-  INDEX `tbl_tree_NK3` (`rgt` ASC),
-  INDEX `tbl_tree_NK4` (`lvl` ASC),
-  INDEX `tbl_tree_NK5` (`active` ASC),
-  UNIQUE INDEX `name_id_UNIQUE` (`name_id` ASC))
-ENGINE = InnoDB
-AUTO_INCREMENT = 1
-DEFAULT CHARACTER SET = utf8;
-
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-"
+        $this->createTable(
+            'dmstr_page',
+            [
+                'id' => $this->primaryKey(),
+                'root' => $this->integer()->notNull(),
+                'lft' => $this->integer()->notNull(),
+                'rgt' => $this->integer()->notNull(),
+                'lvl' => $this->smallInteger()->notNull(),
+                'page_title' => $this->string(255),
+                'name' => $this->string(60)->notNull(),
+                'name_id' => $this->string(255)->notNull(),
+                'slug' => $this->string(255),
+                'route' => $this->string(255),
+                'view' => $this->string(255),
+                'default_meta_keywords' => $this->string(255),
+                'default_meta_description' => $this->text(),
+                'request_params' => $this->text(),
+                'owner' => $this->integer()->defaultValue(null),
+                'access_owner' => $this->integer()->defaultValue(null),
+                'access_domain' => $this->string(8)->defaultValue(null),
+                'access_read' => $this->string(255)->defaultValue(null),
+                'access_update' => $this->string(255)->defaultValue(null),
+                'access_delete' => $this->string(255)->defaultValue(null),
+                'icon' => $this->string(255)->defaultValue(null),
+                'icon_type' => $this->smallInteger()->defaultValue(1),
+                'active' => $this->smallInteger()->defaultValue(1),
+                'selected' => $this->smallInteger()->defaultValue(0),
+                'disabled' => $this->smallInteger()->defaultValue(0),
+                'readonly' => $this->smallInteger()->defaultValue(0),
+                'visible' => $this->smallInteger()->defaultValue(1),
+                'collapsed' => $this->smallInteger()->defaultValue(0),
+                'movable_u' => $this->smallInteger()->defaultValue(1),
+                'movable_d' => $this->smallInteger()->defaultValue(1),
+                'movable_l' => $this->smallInteger()->defaultValue(1),
+                'movable_r' => $this->smallInteger()->defaultValue(1),
+                'removable' => $this->smallInteger()->defaultValue(1),
+                'removable_all' => $this->smallInteger()->defaultValue(0),
+                'created_at' => $this->timestamp(),
+                'updated_at' => $this->timestamp(),
+            ]
         );
+
+        $this->createIndex('tbl_tree_NK1', 'dmstr_page', 'root');
+        $this->createIndex('tbl_tree_NK2', 'dmstr_page', 'lft');
+        $this->createIndex('tbl_tree_NK3', 'dmstr_page', 'rgt');
+        $this->createIndex('tbl_tree_NK4', 'dmstr_page', 'lvl');
+        $this->createIndex('tbl_tree_NK5', 'dmstr_page', 'active');
+
+        $this->createIndex('name_id_UNIQUE', 'dmstr_page', 'name_id', true);
     }
 
-    public function safeDown()
+    public function down()
     {
         $this->dropTable('dmstr_page');
     }
