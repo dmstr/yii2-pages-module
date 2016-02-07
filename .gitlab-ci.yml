@@ -1,6 +1,8 @@
 before_script:
     - export CI_APP_VOLUME=$CI_PROJECT_DIR
     - export COMPOSE_PROJECT_NAME=testpages
+    - mv tests/docker-compose.ci.override.yml tests/docker-compose.override.yml
+    - cd tests
 
 stages:
   - test
@@ -9,8 +11,6 @@ stages:
 test:
     stage: test
     script:
-        - mv tests/docker-compose.ci.override.yml tests/docker-compose.override.yml
-        - cd tests
         - set +e
         - sh test.sh; export TESTS_EXIT_CODE=$?
         - set -e
