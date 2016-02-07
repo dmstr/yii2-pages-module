@@ -17,7 +17,7 @@ test:
         - exit $TESTS_EXIT_CODE
     artifacts:
         paths:
-          - ${CI_APP_VOLUME}/tests/_output/
+          - tests/_output/
 
 cleanup:
     stage: cleanup
