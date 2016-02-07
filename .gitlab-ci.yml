@@ -1,6 +1,7 @@
 before_script:
+    - export BUILD_PREFIX=buildref${CI_BUILD_REF}$(echo ${CI_BUILD_REF_NAME} | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
     - export CI_APP_VOLUME=$CI_PROJECT_DIR
-    - export COMPOSE_PROJECT_NAME=testpages
+    - export COMPOSE_PROJECT_NAME=${BUILD_PREFIX}yii2pages
     - mv tests/docker-compose.ci.override.yml tests/docker-compose.override.yml
     - cd tests
 
