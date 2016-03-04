@@ -72,6 +72,11 @@ class Module extends \yii\base\Module
             foreach ($routes AS $route) {
                 $this->availableRoutes[$route] = $route;
             }
+
+            $views = explode("\n", \Yii::$app->settings->get('pages.availableViews'));
+            foreach ($views AS $view) {
+                $this->availableViews[$view] = $view;
+            }
         }
     }
 
