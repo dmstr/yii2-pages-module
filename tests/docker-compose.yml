@@ -21,7 +21,8 @@ services:
     environment:
       APP_NAME: pages-testing
       APP_TITLE: 'dmstr/yii2-pages TESTING'
-      YII_ENV: 'test'
+      YII_ENV: 'dev'
+      YII_DEBUG: 'true'
       DB_PORT_3306_TCP_ADDR: mariadb
       DB_PORT_3306_TCP_PORT: 3306
       DB_ENV_MYSQL_ROOT_PASSWORD: secretadmin
