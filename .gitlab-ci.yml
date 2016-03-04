@@ -13,7 +13,9 @@ test:
   stage: test
   script:
     - set +e
-    - sh test.sh; export TESTS_EXIT_CODE=$?
+    - docker-compose up -d
+    - docker-compose run YII_ENV=test codecept run -c /app/vendor/dmstr/yii2-pages-module/codeception.yml
+    - TESTS_EXIT_CODE=$?
     - set -e
     - exit $TESTS_EXIT_CODE
   artifacts:
