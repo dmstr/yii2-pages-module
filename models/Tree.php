@@ -18,21 +18,21 @@ use yii\helpers\Url;
 /**
  * This is the tree model class, extended from \kartik\tree\models\Tree
  *
- * @property string  $page_title
- * @property string  $name_id
- * @property string  $slug
- * @property string  $route
- * @property string  $view
- * @property string  $default_meta_keywords
- * @property string  $default_meta_description
- * @property string  $request_params
+ * @property string $page_title
+ * @property string $name_id
+ * @property string $slug
+ * @property string $route
+ * @property string $view
+ * @property string $default_meta_keywords
+ * @property string $default_meta_description
+ * @property string $request_params
  * @property integer $access_owner
- * @property string  $access_domain
- * @property string  $access_read
- * @property string  $access_update
- * @property string  $access_delete
- * @property string  $created_at
- * @property string  $updated_at
+ * @property string $access_domain
+ * @property string $access_read
+ * @property string $access_update
+ * @property string $access_delete
+ * @property string $created_at
+ * @property string $updated_at
  *
  */
 class Tree extends \kartik\tree\models\Tree
@@ -101,10 +101,10 @@ class Tree extends \kartik\tree\models\Tree
             parent::behaviors(),
             [
                 [
-                    'class'              => TimestampBehavior::className(),
+                    'class' => TimestampBehavior::className(),
                     'createdAtAttribute' => 'created_at',
                     'updatedAtAttribute' => 'updated_at',
-                    'value'              => new Expression('NOW()'),
+                    'value' => new Expression('NOW()'),
                 ]
             ]
         );
@@ -240,83 +240,15 @@ class Tree extends \kartik\tree\models\Tree
      */
     public function createUrl($additionalParams = [])
     {
-        $leave = Tree::find()->where(['id' => $this->id])->one();
+        return Url::toRoute(
+            [
+                '/'.$this->route,
 
-        if ($leave === null) {
-            Yii::error("Tree node with id=" . $this->id . " not found.");
-            return null;
-        }
-
-        // TODO merged request and additional params, URL rule has therefore to be updated/extended
-        if ($leave->route !== null) {
-
-            if ($additionalParams) {
-                // merge with $params
-            }
-            return self::getSluggedUrl($leave);
-        } elseif ($leave->route !== null) {
-            return \Yii::$app->urlManager->createUrl([$leave->route]);
-        }
-    }
-
-    /**
-     * Check if a tree route and view are set
-     *
-     * @return bool
-     */
-    public function hasRoute()
-    {
-        if (!empty($this->route) && !empty($this->view)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * get relative url from tree leave
-     *
-     * @param $leave
-     *
-     * @return null|string
-     */
-    public static function getSluggedUrl($leave)
-    {
-	    if (
-		    (
-			    !isset(\Yii::$app->modules['pages']) ||
-			    (is_array(\Yii::$app->modules['pages']) && (!isset(\Yii::$app->modules['pages']['pagesWithChildrenHasUrl']) || !\Yii::$app->modules['pages']['pagesWithChildrenHasUrl'])) ||
-			    (is_object(\Yii::$app->modules['pages']) && !\Yii::$app->modules['pages']->pagesWithChildrenHasUrl)
-	        ) &&
-		    $leave->children(1)->one())
-	    {
-	        // pages with children do not get an URL
-            return null;
-	    }
-
-        if ($leave->route) {
-
-            // TODO provide all parents in URL
-            // provide first parent for URL creation
-            $parent      = $leave->parents(1)->one();
-            $parentLeave = false;
-
-            if ($parent) {
-                if ($parent->lvl != '0') {
-                    $parentLeave = Inflector::slug($parent->name);
-                }
-            }
-            return Url::toRoute(
-                [
-                    $leave->route,
-                    'id'          => $leave->id,
-                    'pageName'    => Inflector::slug($leave->page_title),
-                    'parentLeave' => $parentLeave,
-                ]
-            );
-        } else {
-            return null;
-        }
+                'id' => $this->id,
+                'pageName' => Inflector::slug($this->page_title),
+                'parentLeave' => $this->parents(1)->one() ? $this->parents(1)->one()->page_title : null,
+            ]
+        );
     }
 
     /**
@@ -339,15 +271,15 @@ class Tree extends \kartik\tree\models\Tree
             return [];
         }
 
-	    /**
-	     * @var $leaves Tree[]
-	     */
+        /**
+         * @var $leaves Tree[]
+         */
 
         // Get all leaves from this root node
         $leavesQuery = $rootNode->children()->andWhere(
             [
-                Tree::ATTR_ACTIVE        => Tree::ACTIVE,
-                Tree::ATTR_VISIBLE       => Tree::VISIBLE,
+                Tree::ATTR_ACTIVE => Tree::ACTIVE,
+                Tree::ATTR_VISIBLE => Tree::VISIBLE,
                 Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
         );
@@ -367,7 +299,7 @@ class Tree extends \kartik\tree\models\Tree
 
         // tree mapping and leave stack
         $treeMap = [];
-        $stack   = [];
+        $stack = [];
 
         if (count($leaves) > 0) {
 
@@ -376,15 +308,15 @@ class Tree extends \kartik\tree\models\Tree
                 // prepare node identifiers
                 $pageOptions = [
                     'data-page-id' => $page->id,
-                    'data-lvl'     => $page->lvl,
+                    'data-lvl' => $page->lvl,
                 ];
 
                 $itemTemplate = [
-                    'label'       => ($page->icon) ? '<i class="' . $page->icon . '"></i> ' . $page->name : $page->name,
-                    'url'         => $page->createUrl(),
+                    'label' => ($page->icon) ? '<i class="'.$page->icon.'"></i> '.$page->name : $page->name,
+                    'url' => $page->createUrl(),
                     'linkOptions' => $pageOptions,
                 ];
-                $item         = $itemTemplate;
+                $item = $itemTemplate;
 
                 // Count items in stack
                 $counter = count($stack);
@@ -398,17 +330,17 @@ class Tree extends \kartik\tree\models\Tree
                 // Stack is now empty (check root again)
                 if ($counter == 0) {
                     // assign root node
-                    $i           = count($treeMap);
+                    $i = count($treeMap);
                     $treeMap[$i] = $item;
-                    $stack[]     = &$treeMap[$i];
+                    $stack[] = &$treeMap[$i];
                 } else {
                     if (!isset($stack[$counter - 1]['items'])) {
                         $stack[$counter - 1]['items'] = [];
                     }
                     // add the node to parent node
-                    $i                                = count($stack[$counter - 1]['items']);
+                    $i = count($stack[$counter - 1]['items']);
                     $stack[$counter - 1]['items'][$i] = $item;
-                    $stack[]                          = &$stack[$counter - 1]['items'][$i];
+                    $stack[] = &$stack[$counter - 1]['items'][$i];
                 }
             }
         }

@@ -82,9 +82,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <small>#{$node->id}</small></h2></div>";
 
-if ($node->hasRoute()) {
-    $currentLanguage = \Yii::$app->language;
-    \Yii::$app->language = $node->access_domain;
     echo "<div class='pull-right'>";
     echo Html::a(
         'Open',
@@ -97,8 +94,6 @@ if ($node->hasRoute()) {
         ]
     );
     echo "</div>";
-    \Yii::$app->language = $currentLanguage;
-}
 ?>
 
 
@@ -338,7 +333,7 @@ if ($node->hasRoute()) {
                     ]
                 )->textInput(
                     [
-                        'value' => Tree::getSluggedUrl($node),
+                        'value' => $node->createUrl(),
                         'disabled' => true
                     ]
                 )->label(false)->hint(
