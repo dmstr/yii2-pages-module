@@ -2,7 +2,7 @@ version: '2'
 
 services:
   nginx:
-    image: schmunk42/nginx:1.9
+    image: phundament/nginx-one:1.9
     volumes_from:
       - phpfpm
     ports:
@@ -14,17 +14,18 @@ services:
       - internal
 
   phpfpm:
-    image: phundament/app:4.0.2
+    image: phundament/app:4.2.0-rc1
     depends_on:
       - mariadb
       - seleniumfirefox
     environment:
       APP_NAME: pages-testing
-      APP_TITLE: 'dmstr/yii2-pages TESTING'
-      YII_ENV: 'dev'
-      YII_DEBUG: 'true'
+      APP_TITLE: 'dmstr/yii2-pages TESTING v2'
+      YII_ENV: 'prod'
+      YII_DEBUG: 'false'
       DB_PORT_3306_TCP_ADDR: mariadb
       DB_PORT_3306_TCP_PORT: 3306
+      DB_ENV_MYSQL_ROOT_USER: root
       DB_ENV_MYSQL_ROOT_PASSWORD: secretadmin
     volumes:
       - /app
@@ -34,16 +35,25 @@ services:
       - internal
 
   mariadb:
-    image: 'tutum/mariadb:10.1'
+    image: 'percona:5.6'
     ports:
       - '3306'
     environment:
-      MARIADB_PASS: secretadmin
+      MYSQL_ROOT_PASSWORD: secretadmin
     networks:
       - internal
 
   seleniumfirefox:
-    image: 'selenium/standalone-firefox-debug:2.48.2'
+    image: 'selenium/standalone-firefox-debug:2.52.0'
+    expose:
+        - '4444'
+    ports:
+        - '5900'
+    networks:
+      - internal
+
+  seleniumchrome:
+    image: 'selenium/standalone-chrome-debug:2.52.0'
     expose:
         - '4444'
     ports:

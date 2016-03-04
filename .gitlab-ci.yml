@@ -1,27 +1,39 @@
 before_script:
   - export BUILD_PREFIX=buildref${CI_BUILD_REF}$(echo ${CI_BUILD_REF_NAME} | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
-  - export CI_APP_VOLUME=$CI_PROJECT_DIR
   - export COMPOSE_PROJECT_NAME=${BUILD_PREFIX}yii2pages
-  - mv tests/docker-compose.ci.override.yml tests/docker-compose.override.yml
   - cd tests
 
 stages:
   - test
+  - report
   - cleanup
 
 test:
   stage: test
   script:
     - set +e
-    - sh test.sh; export TESTS_EXIT_CODE=$?
+    - docker-compose up -d
+    - docker-compose run --rm phpfpm setup.sh
+    - docker-compose run --rm phpfpm sh -c "YII_ENV=test codecept clean -c /app/vendor/dmstr/yii2-pages-module/codeception.yml"
+    - docker-compose run --rm phpfpm sh -c "YII_ENV=test codecept run --html=_report.html -c /app/vendor/dmstr/yii2-pages-module/codeception.yml unit"; TESTS_EXIT_CODE=$?
+    - docker-compose run --rm phpfpm sh -c "YII_ENV=test codecept run --html=_report.html -c /app/vendor/dmstr/yii2-pages-module/codeception.yml acceptance prod"; TESTS_EXIT_CODE=$?
     - set -e
+    - mv _output /tmp/${BUILD_PREFIX}
     - exit $TESTS_EXIT_CODE
+
+report:
+  stage: report
+  script:
+    - mv /tmp/${BUILD_PREFIX} _output
   artifacts:
     paths:
       - tests/_output/
+  when: always
 
 cleanup:
   stage: cleanup
   script:
     - docker-compose kill && docker-compose rm -fv
+    - docker-compose down --rmi local --volumes
   when: always
+

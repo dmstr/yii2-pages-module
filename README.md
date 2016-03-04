@@ -121,7 +121,7 @@ Start test stack
 
  Run a bash in the container
  
-    docker-compose run phpfpm bash
+    docker-compose run --rm phpfpm bash
 
 Setup
     
