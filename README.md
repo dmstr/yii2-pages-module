@@ -104,6 +104,8 @@ Now you should be able to see the page in your `Nav` widget in the frontend of y
 
 #### Anchors
 
+*available since 0.12.0-beta1*
+
 :construction_worker: A workaround for creating anchor links is to define a route, like `/en/mysite-2` in the settings module.
 On a node you can attach an anchor by using *Advanced URL settings*, with `{'#':'myanchor'}`.
 
