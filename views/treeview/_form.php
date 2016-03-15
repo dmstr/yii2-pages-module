@@ -1,4 +1,7 @@
 <?php
+
+namespace dmstr\modules\pages\views\treeview;
+
 /**
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
  * @package yii2-tree-manager
@@ -9,12 +12,14 @@ use dmstr\modules\pages\models\Tree;
 use kartik\form\ActiveForm;
 use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
+use yii\bootstrap\Collapse;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
+use Yii;
 
 /**
- * @var yii\web\View $this
+ * @var \yii\web\View $this
  * @var kartik\form\ActiveForm $form
  * @var $node dmstr\modules\pages\models\Tree
  */
@@ -304,7 +309,36 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
                 ]
             )->label(false); ?>
         </div>
+
     </div>
+
+    <?php $this->beginBlock('request_params') ?>
+    <div class="row">
+        <div class="col-xs-12">
+            <?= $form->field(
+                $node,
+                'request_params',
+                [
+                    'addon' => ['prepend' => ['content' => Inflector::titleize('request_params')]]
+                ]
+            )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model'=>$node,'attribute'=>'request_params'])->label(false) ?>
+        </div>
+    </div>
+    <?php $this->endBlock() ?>
+
+    <?php
+    echo Collapse::widget(
+        [
+            'items' => [
+                // equivalent to the above
+                [
+                    'label' => 'Advanced URL settings',
+                    'content' => $this->blocks['request_params'],
+                ],
+            ]
+        ]
+    );
+    ?>
 
     <h4><?= Yii::t('kvtree', 'SEO') ?></h4>
     <div class="row">

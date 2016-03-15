@@ -13,6 +13,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
+use yii\helpers\Json;
 use yii\helpers\Url;
 
 /**
@@ -240,15 +241,19 @@ class Tree extends \kartik\tree\models\Tree
      */
     public function createUrl($additionalParams = [])
     {
-        return Url::toRoute(
-            [
-                '/'.$this->route,
+        $route = [
+            '/'.$this->route,
 
-                'id' => $this->id,
-                'pageName' => Inflector::slug($this->page_title),
-                'parentLeave' => $this->parents(1)->one() ? $this->parents(1)->one()->page_title : null,
-            ]
-        );
+            'id' => $this->id,
+            'pageName' => Inflector::slug($this->page_title),
+            'parentLeave' => $this->parents(1)->one() ? $this->parents(1)->one()->page_title : null,
+        ];
+
+        if (Json::decode($this->request_params)) {
+            $route = ArrayHelper::merge($route, Json::decode($this->request_params));
+        }
+
+        return Url::toRoute($route);
     }
 
     /**
