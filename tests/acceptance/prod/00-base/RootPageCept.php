@@ -1,5 +1,5 @@
 <?php
-use tests\_pages\LoginPage;
+use dmstr\modules\pages\tests\_pages\LoginPage;
 
 $I = new AcceptanceTester($scenario);
 $I->wantTo('ensure that Pages works');

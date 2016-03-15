@@ -125,7 +125,7 @@ Start test stack
 
 Setup
     
-    $ sh src/setup.sh
+    $ setup.sh
     
 Run the tests
     

@@ -14,12 +14,13 @@ services:
       - internal
 
   phpfpm:
-    image: phundament/app:4.2.0-rc1
+    image: phundament/app:4.2.0
+    working_dir: /app/vendor/dmstr/yii2-pages-module
     depends_on:
       - mariadb
       - seleniumfirefox
     environment:
-      APP_NAME: pages-testing
+      APP_NAME: pages_test
       APP_TITLE: 'dmstr/yii2-pages TESTING v2'
       YII_ENV: 'prod'
       YII_DEBUG: 'false'
