@@ -102,13 +102,22 @@ $localizedRoot = 'root_' . \Yii::$app->language;
 
 Now you should be able to see the page in your `Nav` widget in the frontend of your application.
 
+#### Anchors
+
+*available since 0.12.0-beta1*
+
+:construction_worker: A workaround for creating anchor links is to define a route, like `/en/mysite-2` in the settings module.
+On a node you can attach an anchor by using *Advanced URL settings*, with `{'#':'myanchor'}`.
+
+It is recommended to create a new entry in *Tree* mode.
 
 Testing
 -------
 
 Requirements:
 
- - Docker >=1.9.1
+ - docker >=1.9.1
+ - docker-compose >= 1.6.2
 
 Codeception is run via "Potemkin"-Phundament.
 
@@ -125,11 +134,11 @@ Start test stack
 
 Setup
     
-    $ sh src/setup.sh
+    $ setup.sh
     
 Run the tests
     
-    $ YII_ENV=test codecept run -c /app/vendor/dmstr/yii2-pages-module/codeception.yml
+    $ YII_ENV=test codecept run unit,acceptance
 
 Ressources
 ----------
