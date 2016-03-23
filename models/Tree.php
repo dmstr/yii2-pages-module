@@ -263,7 +263,7 @@ class Tree extends \kartik\tree\models\Tree
      *
      * @return array
      */
-    public static function getMenuItems($rootName)
+    public static function getMenuItems($rootName, $checkUserPermissions = false)
     {
         // Get root node by name
         $rootCondition['name_id'] = $rootName;
@@ -320,6 +320,9 @@ class Tree extends \kartik\tree\models\Tree
                     'label' => ($page->icon) ? '<i class="'.$page->icon.'"></i> '.$page->name : $page->name,
                     'url' => $page->createUrl(),
                     'linkOptions' => $pageOptions,
+                    'visible' => ($checkUserPermissions) ?
+                        Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]) :
+                        true,
                 ];
                 $item = $itemTemplate;
 

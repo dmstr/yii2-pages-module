@@ -70,12 +70,12 @@ class Module extends \yii\base\Module
         if (\Yii::$app->hasModule('settings')) {
             $routes = explode("\n", \Yii::$app->settings->get('pages.availableRoutes'));
             foreach ($routes AS $route) {
-                $this->availableRoutes[$route] = $route;
+                $this->availableRoutes[trim($route)] = trim($route);
             }
 
             $views = explode("\n", \Yii::$app->settings->get('pages.availableViews'));
             foreach ($views AS $view) {
-                $this->availableViews[$view] = $view;
+                $this->availableViews[trim($view)] = trim($view);
             }
         }
     }
