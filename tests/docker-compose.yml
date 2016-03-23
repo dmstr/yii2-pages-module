@@ -14,13 +14,13 @@ services:
       - internal
 
   phpfpm:
-    image: phundament/app:4.2.0-rc2
+    image: phundament/app:4.2.0
     working_dir: /app/vendor/dmstr/yii2-pages-module
     depends_on:
       - db
       - seleniumfirefox
     environment:
-      APP_NAME: pages-testing
+      APP_NAME: pages
       APP_TITLE: 'dmstr/yii2-pages TESTING v2'
       YII_ENV: 'prod'
       YII_DEBUG: 'false'
@@ -46,15 +46,6 @@ services:
 
   seleniumfirefox:
     image: 'selenium/standalone-firefox-debug:2.52.0'
-    expose:
-        - '4444'
-    ports:
-        - '5900'
-    networks:
-      - internal
-
-  seleniumchrome:
-    image: 'selenium/standalone-chrome-debug:2.52.0'
     expose:
         - '4444'
     ports:
