@@ -14,9 +14,8 @@ test:
     - set +e
     - docker-compose up -d
     - docker-compose run --rm phpfpm setup.sh
-    - docker-compose run --rm phpfpm sh -c "YII_ENV=test codecept clean -c /app/vendor/dmstr/yii2-pages-module/codeception.yml"
-    - docker-compose run --rm -e YII_ENV=test phpfpm codecept run --html=_report.html unit; TESTS_EXIT_CODE=$?
-    - docker-compose run --rm -e YII_ENV=test phpfpm codecept run --html=_report.html acceptance prod"; TESTS_EXIT_CODE=$?
+    - docker-compose run --rm phpfpm codecept clean
+    - docker-compose run --rm -e YII_ENV=test phpfpm codecept run --html=_report.html unit,acceptance; TESTS_EXIT_CODE=$?
     - set -e
     - mv _output /tmp/${BUILD_PREFIX}
     - exit $TESTS_EXIT_CODE
