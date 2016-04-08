@@ -11,7 +11,6 @@ namespace dmstr\modules\pages\controllers;
 
 use dmstr\modules\pages\models\Tree;
 use Yii;
-use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
@@ -20,39 +19,13 @@ use yii\web\View;
 /**
  * Class DefaultController
  * @package dmstr\modules\pages\controllers
- * @author $Author
+ * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
 class DefaultController extends Controller
 {
     /**
-     * @var boolean whether to enable CSRF validation for the actions in this controller.
-     * CSRF validation is enabled only when both this property and [[Request::enableCsrfValidation]] are true.
+     * @return mixed
      */
-    public $enableCsrfValidation = false;
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'matchCallback' => function ($rule, $action) {
-                            return \Yii::$app->user->can(
-                                $this->module->id . '_' . $this->id . '_' . $action->id,
-                                ['route' => true]
-                            );
-                        },
-                    ]
-                ]
-            ]
-        ];
-    }
-
     public function actionIndex()
     {
 

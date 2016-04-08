@@ -70,6 +70,7 @@ class Tree extends \kartik\tree\models\Tree
     const ATTR_ID = 'id';
     const ATTR_NAME_ID = 'name_id';
     const ATTR_ACCESS_DOMAIN = 'access_domain';
+    const ATTR_ROOT = 'root';
     const ATTR_ROUTE = 'route';
     const ATTR_VIEW = 'view';
     const ATTR_REQUEST_PARAMS = 'request_params';
@@ -163,6 +164,7 @@ class Tree extends \kartik\tree\models\Tree
                 ],
                 [
                     [
+                        'root',
                         'access_owner',
                     ],
                     'integer',

@@ -9,40 +9,19 @@
 
 namespace dmstr\modules\pages\controllers;
 
-
 use dmstr\modules\pages\models\Tree;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 
+/**
+ * Class TestController
+ * @package dmstr\modules\pages\controllers
+ * @author $Author
+ */
 class TestController extends Controller
 {
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'matchCallback' => function ($rule, $action) {
-                            return \Yii::$app->user->can(
-                                $this->module->id.'_'.$this->id.'_'.$action->id,
-                                ['route' => true]
-                            );
-                        },
-                    ]
-                ]
-            ]
-        ];
-    }
-
     public function actionIndex()
     {
-        $tree = Tree::getMenuItems('root_'.\Yii::$app->language);
+        $tree = Tree::getMenuItems('root_' . \Yii::$app->language);
         return $this->render('index', ['tree' => $tree]);
     }
 }
