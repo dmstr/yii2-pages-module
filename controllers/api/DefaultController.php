@@ -2,10 +2,11 @@
 
 namespace dmstr\modules\pages\controllers\api;
 
-use dmstr\modules\pages\models\Tree;
-
 /**
  * This is the class for REST controller "DefaultController".
+ *
+ * @package dmstr\modules\pages
+ * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
 class DefaultController extends \yii\rest\ActiveController
 {
