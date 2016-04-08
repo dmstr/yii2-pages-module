@@ -1,0 +1,69 @@
+<?php
+
+namespace dmstr\modules\pages\controllers\api;
+
+use dmstr\modules\pages\models\Tree;
+
+/**
+ * This is the class for REST controller "DefaultController".
+ */
+class DefaultController extends \yii\rest\ActiveController
+{
+    /**
+     * The limit for the \yii\data\ActiveDataProvider
+     */
+    const QUERY_LIMIT = 2000;
+
+    public $modelClass = 'dmstr\modules\pages\models\Tree';
+
+    /**
+     * @inheritdoc
+     */
+    public function actions()
+    {
+        return [
+            /**
+             * Supported $_GET params for /pages/api/default/index
+             *
+             * @param dmstr\modules\pages\models\Tree::ATTR_ID
+             * @param dmstr\modules\pages\models\Tree::ATTR_NAME_ID
+             * @param dmstr\modules\pages\models\Tree::ATTR_ROOT
+             * @param dmstr\modules\pages\models\Tree::ATTR_ACCESS_DOMAIN
+             */
+            'index' => [
+                'class'               => 'yii\rest\IndexAction',
+                'modelClass'          => $this->modelClass,
+                'checkAccess'         => [$this, 'checkAccess'],
+                'prepareDataProvider' => function () {
+
+                    /* @var $modelClass \yii\db\BaseActiveRecord */
+                    $modelClass = $this->modelClass;
+
+                    $query = $modelClass::find();
+
+                    if (isset($_GET[$modelClass::ATTR_ID])) {
+                        $query->andFilterWhere([$modelClass::ATTR_ID => $_GET[$modelClass::ATTR_ID]]);
+                    }
+                    if (isset($_GET[$modelClass::ATTR_NAME_ID])) {
+                        $query->andFilterWhere([$modelClass::ATTR_NAME_ID => $_GET[$modelClass::ATTR_NAME_ID]]);
+                    }
+                    if (isset($_GET[$modelClass::ATTR_ROOT])) {
+                        $query->andFilterWhere([$modelClass::ATTR_ROOT => $_GET[$modelClass::ATTR_ROOT]]);
+                    }
+                    if (isset($_GET[$modelClass::ATTR_ACCESS_DOMAIN])) {
+                        $query->andFilterWhere([$modelClass::ATTR_ACCESS_DOMAIN => $_GET[$modelClass::ATTR_ACCESS_DOMAIN]]);
+                    }
+
+                    return new \yii\data\ActiveDataProvider(
+                        [
+                            'query'      => $query,
+                            'pagination' => [
+                                'pageSize' => self::QUERY_LIMIT,
+                            ],
+                        ]
+                    );
+                }
+            ]
+        ];
+    }
+}
