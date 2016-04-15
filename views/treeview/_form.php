@@ -116,7 +116,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
                 [
                     'addon' => ['prepend' => ['content' => 'Name ID']]
                 ]
-            )->textInput()->label(false) ?>
+            )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
         </div>
         <div class="col-sm-3">
             <?= $form->field($node, 'visible')->checkbox() ?>
@@ -235,31 +235,28 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
 
     <h4><?= Yii::t('kvtree', 'Route') ?></h4>
     <div class="row">
-        <div class="col-sm-6">
-            <?= $form->field($node, Tree::ATTR_ACCESS_DOMAIN)->widget(
-                \kartik\select2\Select2::classname(),
+
+        <div class="col-xs-12 col-sm-6">
+            <?= $form->field(
+                $node,
+                Tree::ATTR_DOMAIN_ID,
                 [
-                    'name' => Html::getInputName($node, Tree::ATTR_ACCESS_DOMAIN),
-                    'model' => $node,
-                    'attribute' => Tree::ATTR_ACCESS_DOMAIN,
-                    'addon' => [
-                        'prepend' => [
-                            'content' => 'Access Domain'
-                        ],
-                    ],
-                    'data' => Tree::optsAccessDomain(),
-                    'options' => [
-                        'id' => 'tree-access_domain',
-                        'multiple' => false,
-                    ],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ]
+                    'addon' => ['prepend' => ['content' => 'Domain ID']]
                 ]
-            )->label(false);
-            ?>
+            )->textInput()->label(false) ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-xs-12 col-sm-6">
+            <?= $form->field(
+                $node,
+                Tree::ATTR_ACCESS_DOMAIN,
+                [
+                    'addon' => ['prepend' => ['content' => 'Access Domain']]
+                ]
+            )->textInput(['disabled' => true])->label(false) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
             <?= $form->field($node, Tree::ATTR_ROUTE)->widget(
                 \kartik\select2\Select2::classname(),
                 [
@@ -283,9 +280,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
             )->label(false);
             ?>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12 col-sm-6">
             <?= $form->field($node, Tree::ATTR_VIEW)->widget(
                 \kartik\select2\Select2::classname(),
                 [
@@ -352,7 +347,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
             )->textInput($inputOpts)->label(false) ?>
         </div>
     </div>
-    <?php if ($node->createUrl() != null) : ?>
+    <?php if ($node->route && $node->createUrl() !== null) : ?>
         <div class="row">
             <div class="col-xs-12 col-lg-12">
                 <?= $form->field(

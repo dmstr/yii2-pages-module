@@ -23,8 +23,8 @@ $I->wait(3); // only for selenium
 $I->see('General');
 $I->see('Route');
 
-$I->fillField('#tree-name_id','root_en');
-$I->fillField('#tree-name','root_en');
+$I->fillField('#tree-domain_id','root');
+$I->fillField('#tree-name','Home');
 
 $I->click('Save');
 $I->wait(2);
@@ -37,7 +37,6 @@ $I->wait(1);
 $I->click('.kv-create');
 $I->wait(2);
 
-$I->fillField('#tree-name_id',uniqid('node-'));
 $I->fillField('#tree-name',uniqid('node-'));
 $I->click('Save');
 $I->wait(2);

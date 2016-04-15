@@ -27,7 +27,7 @@ class DefaultController extends \yii\rest\ActiveController
              * Supported $_GET params for /pages/api/default/index
              *
              * @param dmstr\modules\pages\models\Tree::ATTR_ID
-             * @param dmstr\modules\pages\models\Tree::ATTR_NAME_ID
+             * @param dmstr\modules\pages\models\Tree::ATTR_DOMAIN_ID
              * @param dmstr\modules\pages\models\Tree::ATTR_ROOT
              * @param dmstr\modules\pages\models\Tree::ATTR_ACCESS_DOMAIN
              */
@@ -45,14 +45,16 @@ class DefaultController extends \yii\rest\ActiveController
                     if (isset($_GET[$modelClass::ATTR_ID])) {
                         $query->andFilterWhere([$modelClass::ATTR_ID => $_GET[$modelClass::ATTR_ID]]);
                     }
-                    if (isset($_GET[$modelClass::ATTR_NAME_ID])) {
-                        $query->andFilterWhere([$modelClass::ATTR_NAME_ID => $_GET[$modelClass::ATTR_NAME_ID]]);
+                    if (isset($_GET[$modelClass::ATTR_DOMAIN_ID]) && isset($_GET[$modelClass::ATTR_ACCESS_DOMAIN])) {
+                        $query->andFilterWhere(
+                            [$modelClass::ATTR_DOMAIN_ID => $_GET[$modelClass::ATTR_DOMAIN_ID]]
+                        );
+                        $query->andFilterWhere(
+                            [$modelClass::ATTR_ACCESS_DOMAIN => $_GET[$modelClass::ATTR_ACCESS_DOMAIN]]
+                        );
                     }
                     if (isset($_GET[$modelClass::ATTR_ROOT])) {
                         $query->andFilterWhere([$modelClass::ATTR_ROOT => $_GET[$modelClass::ATTR_ROOT]]);
-                    }
-                    if (isset($_GET[$modelClass::ATTR_ACCESS_DOMAIN])) {
-                        $query->andFilterWhere([$modelClass::ATTR_ACCESS_DOMAIN => $_GET[$modelClass::ATTR_ACCESS_DOMAIN]]);
                     }
 
                     return new \yii\data\ActiveDataProvider(

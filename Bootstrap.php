@@ -43,7 +43,7 @@ class Bootstrap implements BootstrapInterface
         $app->urlManager->addRules(
             [
                 // pages default page route
-                '<parentLeave:[a-zA-Z0-9_\-\.]*>/<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
+                '<parentLeave:[a-zA-Z0-9_\- \.]*>/<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
                 '<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
             ],
             true

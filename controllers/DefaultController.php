@@ -28,9 +28,9 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-
         if (!$this->module->getLocalizedRootNode()) {
-            $language = \Yii::$app->language;
+            $language = mb_strtolower(\Yii::$app->language);
+            $rootNodePrefix = Tree::ROOT_NODE_PREFIX;
 
             $msg = <<<HTML
 <b>Localized root-node missing</b>
@@ -38,7 +38,7 @@ class DefaultController extends Controller
 Please create a new root-node for the current language.
 </p>
 <p>
-<a onclick="$('#tree-name_id').val('root_{$language}');$('#tree-name').val('root_{$language}');$('.kv-detail-container button[type=submit]').click()" class="btn btn-warning btn-lg">Create root-node for <b>{$language}</b></a>
+<a onclick="$('#tree-domain_id').val('{$rootNodePrefix}');$('#tree-name').val('{$rootNodePrefix}_{$language}');$('.kv-detail-container button[type=submit]').click()" class="btn btn-warning btn-lg">Create root-node for <b>{$language}</b></a>
 </p>
 HTML;
 

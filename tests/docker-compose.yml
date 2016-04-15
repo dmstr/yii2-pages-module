@@ -21,6 +21,7 @@ services:
       - seleniumfirefox
     environment:
       APP_NAME: pages
+      APP_MIGRATION_LOOKUP: '@vendor/dmstr/yii2-pages-module/tests/migrations'
       APP_TITLE: 'dmstr/yii2-pages TESTING v2'
       YII_ENV: 'prod'
       YII_DEBUG: 'false'

@@ -15,7 +15,7 @@ modules:
             url: http://nginx:80/
             browser: firefox
             port: 4444
-            window_size: 1024x768
+            window_size: 1280x768
 env:
     chrome:
          modules:

@@ -3,6 +3,9 @@ Yii2 Page Manager
 
 Application sitemap and navigation manager module for Yii 2.0 Framework
 
+**:warning: Breaking changes in 0.14.0 :warning:**
+
+`data structure` and `public properties` are updated and query menu items from now on via `domain_id`
 
 Requirements
 ------------
@@ -19,13 +22,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer require dmstr/yii2-pages-module "*"
+composer require dmstr/yii2-pages-module "^0.14.0"
 ```
 
 or add
 
 ```
-"dmstr/yii2-pages-module": "*"
+"dmstr/yii2-pages-module": "^0.14.0"
 ```
 
 to the require section of your `composer.json` file.
@@ -69,24 +72,22 @@ Usage
 
 *find a root node / leave node*
 
-by `name_id`
+by `domain_id` i.e. `root` 
 
 ```
-$localizedRoot = 'root_' . \Yii::$app->language;
-$menuItems = \dmstr\modules\pages\models\Tree::getMenuItems($localizedRoot);
+$menuItems = \dmstr\modules\pages\models\Tree::getMenuItems('root');
 ```
 
 *use for example with bootstrap Navbar*
 
 ```
-$localizedRoot = 'root_' . \Yii::$app->language;
     echo yii\bootstrap\Nav::widget(
         [
             'options'         => ['class' => 'navbar-nav navbar-right'],
             'activateItems'   => false,
             'encodeLabels'    => false,
             'activateParents' => true,
-            'items'           => Tree::getMenuItems($localizedRoot),
+            'items'           => Tree::getMenuItems('root'),
         ]
     );
 ```
@@ -95,7 +96,7 @@ $localizedRoot = 'root_' . \Yii::$app->language;
 
 - visit `/pages` to create a root-node for your current application language.
 - click the *tree* icon
-- enter `root_LANG` as *Name ID* and *Name* and save
+- enter `name identifier (no spaces and special chars)` as *Domain ID* and *Menu name* and save
 - create child node
 - assign name, title, language and route/view
 - save
