@@ -298,6 +298,10 @@ class Tree extends \kartik\tree\models\Tree
             $route = ArrayHelper::merge($route, Json::decode($this->request_params));
         }
 
+        if (!empty($additionalParams)) {
+            $route = ArrayHelper::merge($route, $additionalParams);
+        }
+
         return Url::toRoute($route);
     }
 
