@@ -19,6 +19,7 @@ use yii\helpers\Url;
 /**
  * This is the tree model class, extended from \kartik\tree\models\Tree
  *
+ * @property string $name
  * @property string $page_title
  * @property string $name_id
  * @property string $domain_id
@@ -73,6 +74,7 @@ class Tree extends \kartik\tree\models\Tree
      * Attribute names
      */
     const ATTR_ID = 'id';
+    const ATTR_NAME = 'name';
     const ATTR_DOMAIN_ID = 'domain_id';
     const ATTR_ACCESS_DOMAIN = 'access_domain';
     const ATTR_ROOT = 'root';
@@ -145,6 +147,7 @@ class Tree extends \kartik\tree\models\Tree
                 ],
                 [
                     [
+                        'name',
                         'domain_id',
                     ],
                     'required'
@@ -290,11 +293,11 @@ class Tree extends \kartik\tree\models\Tree
         $route = [
             '/' . $this->route,
             'id'          => $this->id,
-            'pageName'    => ($this->page_title)
-                ? Inflector::slug($this->page_title)
+            'pageName'    => ($this->name)
+                ? Inflector::slug($this->name)
                 : '',
             'parentLeave' => ($this->parents(1)->one())
-                ? Inflector::slug($this->parents(1)->one()->page_title)
+                ? Inflector::slug($this->parents(1)->one()->name)
                 : null,
         ];
 
