@@ -290,8 +290,12 @@ class Tree extends \kartik\tree\models\Tree
         $route = [
             '/' . $this->route,
             'id'          => $this->id,
-            'pageName'    => Inflector::slug($this->page_title),
-            'parentLeave' => $this->parents(1)->one() ? $this->parents(1)->one()->page_title : null,
+            'pageName'    => ($this->page_title)
+                ? Inflector::slug($this->page_title)
+                : '',
+            'parentLeave' => ($this->parents(1)->one())
+                ? Inflector::slug($this->parents(1)->one()->page_title)
+                : null,
         ];
 
         if (Json::decode($this->request_params)) {
