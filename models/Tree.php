@@ -296,7 +296,7 @@ class Tree extends \kartik\tree\models\Tree
             'pageName'    => ($this->name)
                 ? Inflector::slug($this->name)
                 : '',
-            'parentLeave' => ($this->parents(1)->one())
+            'parentLeave' => ($this->parents(1)->one() && !$this->parents(1)->one()->isRoot())
                 ? Inflector::slug($this->parents(1)->one()->name)
                 : null,
         ];
