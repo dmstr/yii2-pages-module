@@ -2,13 +2,10 @@
 
 namespace _;
 
-/* @var $this yii\web\View */
+/* @var $tree \dmstr\modules\pages\models\Tree */
 
 use dmstr\modules\pages\models\Tree;
-use kartik\tree\TreeView;
-use kartik\tree\TreeViewInput;
 use yii\bootstrap\Nav;
-use yii\helpers\Inflector;
 use yii\helpers\VarDumper;
 
 ?>
@@ -16,19 +13,19 @@ use yii\helpers\VarDumper;
     <h1>Pages</h1>
     <h2>Test</h2>
 
-<?php
+    <?php
 
 echo Nav::widget(
     [
-        'options' => ['class' => 'navbar-nav'],
+        'options'      => ['class' => 'navbar-nav'],
         'encodeLabels' => false,
-        'items' => \dmstr\modules\pages\models\Tree::getMenuItems('root_'.\Yii::$app->language),
+        'items'        => Tree::getMenuItems(Tree::ROOT_NODE_PREFIX),
     ]
 );
 ?>
 
-<hr>
+    <hr>
 
-<?php
+    <?php
 VarDumper::dump($tree, 10, true);
 ?>
