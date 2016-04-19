@@ -45,13 +45,11 @@ class DefaultController extends \yii\rest\ActiveController
                     if (isset($_GET[$modelClass::ATTR_ID])) {
                         $query->andFilterWhere([$modelClass::ATTR_ID => $_GET[$modelClass::ATTR_ID]]);
                     }
-                    if (isset($_GET[$modelClass::ATTR_DOMAIN_ID]) && isset($_GET[$modelClass::ATTR_ACCESS_DOMAIN])) {
-                        $query->andFilterWhere(
-                            [$modelClass::ATTR_DOMAIN_ID => $_GET[$modelClass::ATTR_DOMAIN_ID]]
-                        );
-                        $query->andFilterWhere(
-                            [$modelClass::ATTR_ACCESS_DOMAIN => $_GET[$modelClass::ATTR_ACCESS_DOMAIN]]
-                        );
+                    if (isset($_GET[$modelClass::ATTR_DOMAIN_ID])) {
+                        $query->andFilterWhere([$modelClass::ATTR_DOMAIN_ID => $_GET[$modelClass::ATTR_DOMAIN_ID]]);
+                    }
+                    if (isset($_GET[$modelClass::ATTR_ACCESS_DOMAIN])) {
+                        $query->andFilterWhere([$modelClass::ATTR_ACCESS_DOMAIN => $_GET[$modelClass::ATTR_ACCESS_DOMAIN]]);
                     }
                     if (isset($_GET[$modelClass::ATTR_ROOT])) {
                         $query->andFilterWhere([$modelClass::ATTR_ROOT => $_GET[$modelClass::ATTR_ROOT]]);
