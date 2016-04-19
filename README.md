@@ -129,17 +129,24 @@ Start test stack
     
     docker-compose up -d
 
+Run tests
+
+    docker-compose run -e YII_ENV=test phpfpm codecept run unit,acceptance
+
+### Development
+
  Run a bash in the container
  
     docker-compose run --rm phpfpm bash
-
-Setup
-    
-    $ setup.sh
     
 Run the tests
     
     $ YII_ENV=test codecept run unit,acceptance
+
+Manual setup
+    
+    $ setup.sh
+
 
 Ressources
 ----------
