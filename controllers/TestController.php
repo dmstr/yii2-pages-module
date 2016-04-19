@@ -21,7 +21,7 @@ class TestController extends Controller
 {
     public function actionIndex()
     {
-        $tree = Tree::getMenuItems('root_' . \Yii::$app->language);
+        $tree = Tree::getMenuItems(Tree::ROOT_NODE_PREFIX);
         return $this->render('index', ['tree' => $tree]);
     }
 }
