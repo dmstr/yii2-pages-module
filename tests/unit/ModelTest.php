@@ -10,9 +10,19 @@ class DbTestCase extends \yii\codeception\DbTestCase
     public $appConfig = '/app/vendor/dmstr/yii2-pages-module/tests/_config/unit.php';
 
     // tests
-    public function testInit()
+    public function testRootNode()
     {
-        $this->assertFalse(false);
+        $root = new Tree;
+        $root->id = 999;
+        #$root->domain_id = 'test-root-node';
+        $root->domain_id = 'root2';
+        $root->name = 'I am a Root-Node';
+        $root->makeRoot();
+        $root->save();
+        $this->assertSame($root->errors, [], 'Root node has errors');
+
+        $root->removeNode();
+        $this->assertSame($root->errors, [], 'Root node has errors');
     }
 
     public function testMenuItems()
