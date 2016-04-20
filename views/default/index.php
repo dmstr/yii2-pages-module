@@ -3,7 +3,6 @@
 
 use dmstr\modules\pages\models\Tree;
 use kartik\tree\TreeView;
-use kartik\tree\TreeViewInput;
 use yii\helpers\Inflector;
 
 $title = Inflector::titleize($this->context->module->id);
@@ -15,7 +14,7 @@ $title = Inflector::titleize($this->context->module->id);
 
 <?php
 /**
- * Output TreeView widget
+ * Output TreeView widget.
  */
 
 // Wrapper templates
@@ -51,8 +50,8 @@ echo TreeView::widget(
         'isAdmin' => true,
         'softDelete' => false,
         'displayValue' => 1,
-        'wrapperTemplate' => "{header}{footer}{tree}",
-        'headingOptions' => ['label' => $title . '-Module'],
+        'wrapperTemplate' => '{header}{footer}{tree}',
+        'headingOptions' => ['label' => $title.'-Module'],
         'treeOptions' => ['style' => 'height:600px'],
         'headerTemplate' => $headerTemplate,
         'mainTemplate' => $mainTemplate,

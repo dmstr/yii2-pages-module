@@ -17,9 +17,9 @@ use yii\helpers\VarDumper;
 
 echo Nav::widget(
     [
-        'options'      => ['class' => 'navbar-nav'],
+        'options' => ['class' => 'navbar-nav'],
         'encodeLabels' => false,
-        'items'        => Tree::getMenuItems(Tree::ROOT_NODE_PREFIX),
+        'items' => Tree::getMenuItems(Tree::ROOT_NODE_PREFIX),
     ]
 );
 ?>

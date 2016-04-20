@@ -1,12 +1,12 @@
 <?php
 /**
  * @link http://www.diemeisterei.de/
+ *
  * @copyright Copyright (c) 2015 diemeisterei GmbH, Stuttgart
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use yii\db\Migration;
 
 class m150309_153255_create_tree_manager_table extends Migration

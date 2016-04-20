@@ -1,6 +1,7 @@
 <?php
 /**
  * @link http://www.diemeisterei.de/
+ *
  * @copyright Copyright (c) 2015 diemeisterei GmbH, Stuttgart
  *
  * For the full copyright and license information, please view the LICENSE
@@ -17,7 +18,7 @@ use yii\helpers\Json;
 use yii\helpers\Url;
 
 /**
- * This is the tree model class, extended from \kartik\tree\models\Tree
+ * This is the tree model class, extended from \kartik\tree\models\Tree.
  *
  * @property string $name
  * @property string $page_title
@@ -29,19 +30,18 @@ use yii\helpers\Url;
  * @property string $default_meta_keywords
  * @property string $default_meta_description
  * @property string $request_params
- * @property integer $access_owner
+ * @property int $access_owner
  * @property string $access_domain
  * @property string $access_read
  * @property string $access_update
  * @property string $access_delete
  * @property string $created_at
  * @property string $updated_at
- *
  */
 class Tree extends \kartik\tree\models\Tree
 {
     /**
-     * Constants useful for frontend actions
+     * Constants useful for frontend actions.
      */
     const ICON_TYPE_CSS = 1;
     const ICON_TYPE_RAW = 2;
@@ -65,13 +65,13 @@ class Tree extends \kartik\tree\models\Tree
     const NOT_COLLAPSED = 0;
 
     /**
-     * The root node domain_id prefix and level identifier
+     * The root node domain_id prefix and level identifier.
      */
     const ROOT_NODE_PREFIX = 'root';
     const ROOT_NODE_LVL = 0;
 
     /**
-     * Attribute names
+     * Attribute names.
      */
     const ATTR_ID = 'id';
     const ATTR_NAME = 'name';
@@ -91,13 +91,14 @@ class Tree extends \kartik\tree\models\Tree
     const ATTR_COLLAPSED = 'collapsed';
 
     /**
-     * Virtual attribute generated from "domain_id"_"access_domain"
-     * @var $string
+     * Virtual attribute generated from "domain_id"_"access_domain".
+     *
+     * @var
      */
     public $name_id;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -105,9 +106,10 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      *
      * Use yii\behaviors\TimestampBehavior for created_at and updated_at attribute
+     *
      * @return array
      */
     public function behaviors()
@@ -116,17 +118,17 @@ class Tree extends \kartik\tree\models\Tree
             parent::behaviors(),
             [
                 [
-                    'class'              => TimestampBehavior::className(),
+                    'class' => TimestampBehavior::className(),
                     'createdAtAttribute' => 'created_at',
                     'updatedAtAttribute' => 'updated_at',
-                    'value'              => new Expression('NOW()'),
-                ]
+                    'value' => new Expression('NOW()'),
+                ],
             ]
         );
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -137,20 +139,20 @@ class Tree extends \kartik\tree\models\Tree
                     ['domain_id', 'access_domain'],
                     'unique',
                     'targetAttribute' => ['domain_id', 'access_domain'],
-                    'message'         => \Yii::t('app', 'Combination domain_id and access_domain must be unique!')
+                    'message' => \Yii::t('app', 'Combination domain_id and access_domain must be unique!'),
                 ],
                 [
                     [
                         'domain_id',
                     ],
-                    'validateNoSpecialChars'
+                    'validateNoSpecialChars',
                 ],
                 [
                     [
                         'name',
                         'domain_id',
                     ],
-                    'required'
+                    'required',
                 ],
                 [
                     [
@@ -166,28 +168,28 @@ class Tree extends \kartik\tree\models\Tree
                         'access_delete',
                     ],
                     'string',
-                    'max' => 255
+                    'max' => 255,
                 ],
                 [
                     [
                         'default_meta_description',
                     ],
                     'string',
-                    'max' => 160
+                    'max' => 160,
                 ],
                 [
                     [
                         'access_domain',
                     ],
                     'string',
-                    'max' => 8
+                    'max' => 8,
                 ],
                 [
                     [
                         'access_domain',
                     ],
                     'default',
-                    'value' => mb_strtolower(\Yii::$app->language)
+                    'value' => mb_strtolower(\Yii::$app->language),
                 ],
                 [
                     [
@@ -195,7 +197,7 @@ class Tree extends \kartik\tree\models\Tree
                         'access_owner',
                     ],
                     'integer',
-                    'integerOnly' => true
+                    'integerOnly' => true,
                 ],
                 [
                     [
@@ -215,19 +217,19 @@ class Tree extends \kartik\tree\models\Tree
                         'created_at',
                         'updated_at',
                     ],
-                    'safe'
+                    'safe',
                 ],
             ]
         );
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function afterFind()
     {
         parent::afterFind();
-        $this->setNameId($this->domain_id . '_' . $this->access_domain);
+        $this->setNameId($this->domain_id.'_'.$this->access_domain);
     }
 
     /**
@@ -261,11 +263,13 @@ class Tree extends \kartik\tree\models\Tree
     public static function optsAccessDomain()
     {
         $availableLanguages[mb_strtolower(Yii::$app->language)] = Yii::$app->language;
+
         return $availableLanguages;
     }
 
     /**
-     * Get all configured
+     * Get all configured.
+     *
      * @return array list of options
      */
     public static function optsView()
@@ -291,9 +295,9 @@ class Tree extends \kartik\tree\models\Tree
     public function createUrl($additionalParams = [])
     {
         $route = [
-            '/' . $this->route,
-            'id'          => $this->id,
-            'pageName'    => ($this->name)
+            '/'.$this->route,
+            'id' => $this->id,
+            'pageName' => ($this->name)
                 ? Inflector::slug($this->name)
                 : '',
             'parentLeave' => ($this->parents(1)->one() && !$this->parents(1)->one()->isRoot())
@@ -322,10 +326,10 @@ class Tree extends \kartik\tree\models\Tree
     public static function getMenuItems($domainId, $checkUserPermissions = false)
     {
         // Get root node by domain id
-        $rootCondition['domain_id']     = $domainId;
+        $rootCondition['domain_id'] = $domainId;
         $rootCondition['access_domain'] = mb_strtolower(\Yii::$app->language);
         if (!Yii::$app->user->can('pages')) {
-            $rootCondition[Tree::ATTR_DISABLED] = Tree::NOT_DISABLED;
+            $rootCondition[self::ATTR_DISABLED] = self::NOT_DISABLED;
         }
         $rootNode = self::findOne($rootCondition);
 
@@ -333,22 +337,22 @@ class Tree extends \kartik\tree\models\Tree
             return [];
         }
 
-        /**
+        /*
          * @var $leaves Tree[]
          */
 
         // Get all leaves from this root node
         $leavesQuery = $rootNode->children()->andWhere(
             [
-                Tree::ATTR_ACTIVE        => Tree::ACTIVE,
-                Tree::ATTR_VISIBLE       => Tree::VISIBLE,
-                Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
+                self::ATTR_ACTIVE => self::ACTIVE,
+                self::ATTR_VISIBLE => self::VISIBLE,
+                self::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
         );
         if (!Yii::$app->user->can('pages')) {
             $leavesQuery->andWhere(
                 [
-                    Tree::ATTR_DISABLED => Tree::NOT_DISABLED,
+                    self::ATTR_DISABLED => self::NOT_DISABLED,
                 ]
             );
         }
@@ -361,27 +365,26 @@ class Tree extends \kartik\tree\models\Tree
 
         // tree mapping and leave stack
         $treeMap = [];
-        $stack   = [];
+        $stack = [];
 
         if (count($leaves) > 0) {
-
             foreach ($leaves as $page) {
 
                 // prepare node identifiers
                 $pageOptions = [
                     'data-page-id' => $page->id,
-                    'data-lvl'     => $page->lvl,
+                    'data-lvl' => $page->lvl,
                 ];
 
                 $itemTemplate = [
-                    'label'       => ($page->icon) ? '<i class="' . $page->icon . '"></i> ' . $page->name : $page->name,
-                    'url'         => $page->createUrl(),
+                    'label' => ($page->icon) ? '<i class="'.$page->icon.'"></i> '.$page->name : $page->name,
+                    'url' => $page->createUrl(),
                     'linkOptions' => $pageOptions,
-                    'visible'     => ($checkUserPermissions) ?
+                    'visible' => ($checkUserPermissions) ?
                         Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]) :
                         true,
                 ];
-                $item         = $itemTemplate;
+                $item = $itemTemplate;
 
                 // Count items in stack
                 $counter = count($stack);
@@ -389,31 +392,33 @@ class Tree extends \kartik\tree\models\Tree
                 // Check on different levels
                 while ($counter > 0 && $stack[$counter - 1]['linkOptions']['data-lvl'] >= $item['linkOptions']['data-lvl']) {
                     array_pop($stack);
-                    $counter--;
+                    --$counter;
                 }
 
                 // Stack is now empty (check root again)
                 if ($counter == 0) {
                     // assign root node
-                    $i           = count($treeMap);
+                    $i = count($treeMap);
                     $treeMap[$i] = $item;
-                    $stack[]     = &$treeMap[$i];
+                    $stack[] = &$treeMap[$i];
                 } else {
                     if (!isset($stack[$counter - 1]['items'])) {
                         $stack[$counter - 1]['items'] = [];
                     }
                     // add the node to parent node
-                    $i                                = count($stack[$counter - 1]['items']);
+                    $i = count($stack[$counter - 1]['items']);
                     $stack[$counter - 1]['items'][$i] = $item;
-                    $stack[]                          = &$stack[$counter - 1]['items'][$i];
+                    $stack[] = &$stack[$counter - 1]['items'][$i];
                 }
             }
         }
+
         return array_filter($treeMap);
     }
 
     /**
-     * Get virtual name_id
+     * Get virtual name_id.
+     *
      * @return string
      */
     public function getNameId()
@@ -422,7 +427,7 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * Generate and Set virtual attribute name_id
+     * Generate and Set virtual attribute name_id.
      *
      * @param mixed $name_id
      */

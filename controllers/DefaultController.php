@@ -1,24 +1,23 @@
 <?php
 /**
  * @link http://www.diemeisterei.de/
+ *
  * @copyright Copyright (c) 2015 diemeisterei GmbH, Stuttgart
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace dmstr\modules\pages\controllers;
 
 use dmstr\modules\pages\models\Tree;
-use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\View;
 
 /**
- * Class DefaultController
- * @package dmstr\modules\pages\controllers
+ * Class DefaultController.
+ *
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
 class DefaultController extends Controller
@@ -54,13 +53,14 @@ JS;
     }
 
     /**
-     * renders a page view from the database
+     * renders a page view from the database.
      *
      * @param $id
      * @param null $pageName
      * @param null $parentLeave
      *
      * @return string
+     *
      * @throws HttpException
      */
     public function actionPage($id, $pageName = null, $parentLeave = null)
@@ -104,7 +104,7 @@ JS;
             // Render view
             return $this->render($page->view, ['page' => $page]);
         } else {
-            throw new HttpException(404, \Yii::t('app', 'Page not found.') . ' [ID: ' . $id . ']');
+            throw new HttpException(404, \Yii::t('app', 'Page not found.').' [ID: '.$id.']');
         }
     }
 }
