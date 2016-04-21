@@ -50,7 +50,7 @@ class DbTestCase extends \yii\codeception\DbTestCase
                 $this->assertSame($buildNameId, $page->name_id, 'NameID was not set proberly');
             }
         } else {
-            return $this->assertNotEmpty($pages, 'No Page not found!');
+            return $this->assertNotEmpty($pages, 'No Pages found!');
         }
     }
 
