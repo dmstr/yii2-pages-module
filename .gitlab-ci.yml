@@ -18,6 +18,10 @@ test:
     - mv _output /tmp/${BUILD_PREFIX}
     - exit $TESTS_EXIT_CODE
 
+lint:
+  script:
+    - docker-compose run --rm phpfpm /app/vendor/bin/php-cs-fixer fix --format=txt -v --dry-run .
+
 report:
   stage: report
   script:
