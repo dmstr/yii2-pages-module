@@ -13,10 +13,16 @@ test:
   script:
     - set +e
     - docker-compose up -d
+    - docker-compose run --rm phpfpm setup.sh
     - docker-compose run --rm -e YII_ENV=test phpfpm codecept run --html=_report.html acceptance,unit; TESTS_EXIT_CODE=$?
     - set -e
     - mv _output /tmp/${BUILD_PREFIX}
     - exit $TESTS_EXIT_CODE
+
+lint:
+  script:
+    - docker-compose run --rm phpfpm /app/vendor/bin/php-cs-fixer fix --format=txt -v --dry-run .
+  allow_failure: true
 
 report:
   stage: report

@@ -5,25 +5,24 @@ namespace dmstr\modules\pages\controllers\api;
 /**
  * This is the class for REST controller "DefaultController".
  *
- * @package dmstr\modules\pages
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
 class DefaultController extends \yii\rest\ActiveController
 {
     /**
-     * The limit for the \yii\data\ActiveDataProvider
+     * The limit for the \yii\data\ActiveDataProvider.
      */
     const QUERY_LIMIT = 2000;
 
     public $modelClass = 'dmstr\modules\pages\models\Tree';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function actions()
     {
         return [
-            /**
+            /*
              * Supported $_GET params for /pages/api/default/index
              *
              * @param dmstr\modules\pages\models\Tree::ATTR_ID
@@ -32,9 +31,9 @@ class DefaultController extends \yii\rest\ActiveController
              * @param dmstr\modules\pages\models\Tree::ATTR_ACCESS_DOMAIN
              */
             'index' => [
-                'class'               => 'yii\rest\IndexAction',
-                'modelClass'          => $this->modelClass,
-                'checkAccess'         => [$this, 'checkAccess'],
+                'class' => 'yii\rest\IndexAction',
+                'modelClass' => $this->modelClass,
+                'checkAccess' => [$this, 'checkAccess'],
                 'prepareDataProvider' => function () {
 
                     /* @var $modelClass \yii\db\BaseActiveRecord */
@@ -57,14 +56,14 @@ class DefaultController extends \yii\rest\ActiveController
 
                     return new \yii\data\ActiveDataProvider(
                         [
-                            'query'      => $query,
+                            'query' => $query,
                             'pagination' => [
                                 'pageSize' => self::QUERY_LIMIT,
                             ],
                         ]
                     );
-                }
-            ]
+                },
+            ],
         ];
     }
 }

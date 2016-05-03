@@ -1,17 +1,17 @@
 <?php
 /**
  * @link http://www.diemeisterei.de/
+ *
  * @copyright Copyright (c) 2015 diemeisterei GmbH, Stuttgart
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 
 /* @var $this yii\web\View */
-$this->title                   = $page->page_title;
+$this->title = $page->page_title;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
