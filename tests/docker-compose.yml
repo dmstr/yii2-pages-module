@@ -15,7 +15,7 @@ services:
 
   phpfpm:
     image: phundament/app:4.2.0
-    command: 'run.sh'
+    #TODO: review CI startup --- command: 'run.sh'
     working_dir: /app/vendor/dmstr/yii2-pages-module
     depends_on:
       - db
