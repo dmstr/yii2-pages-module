@@ -22,6 +22,7 @@ test:
 lint:
   script:
     - docker-compose run --rm phpfpm /app/vendor/bin/php-cs-fixer fix --format=txt -v --dry-run .
+  allow_failure: true
 
 report:
   stage: report
