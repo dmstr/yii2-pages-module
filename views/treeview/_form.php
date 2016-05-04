@@ -240,7 +240,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
                 $node,
                 Tree::ATTR_DOMAIN_ID,
                 [
-                    'addon' => ['prepend' => ['content' => 'Domain ID']],
+                    'addon' => ['prepend' => ['content' => 'Local Domain ID']],
                 ]
             )->textInput()->label(false) ?>
         </div>
@@ -251,7 +251,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
                 [
                     'addon' => ['prepend' => ['content' => 'Access Domain']],
                 ]
-            )->textInput(['disabled' => true])->label(false) ?>
+            )->dropDownList(Tree::optsAccessDomain())->label(false) ?>
         </div>
     </div>
     <div class="row">

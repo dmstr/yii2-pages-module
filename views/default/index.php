@@ -44,9 +44,15 @@ $mainTemplate = <<< HTML
 </div>
 HTML;
 
+
 echo TreeView::widget(
     [
-        'query' => Tree::find()->addOrderBy('root, lft')->andWhere([Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language]),
+        'query' => Tree::find()->addOrderBy('root, lft')->andWhere([
+            Tree::ATTR_ACCESS_DOMAIN => [
+                \Yii::$app->language,
+                (Yii::$app->user->can('pages.createGlobalPages')?Tree::ACCESS_DOMAIN_GLOBAL:'')
+            ]
+        ]),
         'isAdmin' => true,
         'softDelete' => false,
         'displayValue' => 1,
