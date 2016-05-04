@@ -334,7 +334,7 @@ class Tree extends \kartik\tree\models\Tree
     {
         // Get root node by domain id
         $rootCondition['domain_id'] = $domainId;
-        $rootCondition['access_domain'] = mb_strtolower(\Yii::$app->language);
+        $rootCondition['access_domain'] = [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)];
         if (!Yii::$app->user->can('pages')) {
             $rootCondition[self::ATTR_DISABLED] = self::NOT_DISABLED;
         }
@@ -353,7 +353,7 @@ class Tree extends \kartik\tree\models\Tree
             [
                 self::ATTR_ACTIVE => self::ACTIVE,
                 self::ATTR_VISIBLE => self::VISIBLE,
-                self::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
+                self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)],
             ]
         );
         if (!Yii::$app->user->can('pages')) {
