@@ -50,7 +50,7 @@ echo TreeView::widget(
         'query' => Tree::find()->addOrderBy('root, lft')->andWhere([
             Tree::ATTR_ACCESS_DOMAIN => [
                 \Yii::$app->language,
-                (Yii::$app->user->can('pages.createGlobalPages')?Tree::ACCESS_DOMAIN_GLOBAL:'')
+                (Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION)?Tree::GLOBAL_ACCESS_DOMAIN:'')
             ]
         ]),
         'isAdmin' => true,

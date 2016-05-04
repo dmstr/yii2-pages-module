@@ -52,6 +52,19 @@ class Module extends \yii\base\Module
             foreach ($views as $view) {
                 $this->availableViews[trim($view)] = trim($view);
             }
+
+            if (\Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION)) {
+                $globalRoutes = explode("\n", \Yii::$app->settings->get('pages.availableGlobalRoutes'));
+                foreach ($globalRoutes as $route) {
+                    $this->availableRoutes[trim($route)] = trim($route);
+                }
+
+                $globalViews = explode("\n", \Yii::$app->settings->get('pages.availableGlobalViews'));
+                foreach ($globalViews as $view) {
+                    $this->availableViews[trim($view)] = trim($view);
+                }
+            }
+
         }
     }
 

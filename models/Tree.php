@@ -90,7 +90,8 @@ class Tree extends \kartik\tree\models\Tree
     const ATTR_VISIBLE = 'visible';
     const ATTR_COLLAPSED = 'collapsed';
 
-    const ACCESS_DOMAIN_GLOBAL = '*';
+    const GLOBAL_ACCESS_DOMAIN = '*';
+    const GLOBAL_ACCESS_PERMISSION = 'pages.globalAccess';
 
     /**
      * Virtual attribute generated from "domain_id"_"access_domain".
@@ -266,8 +267,8 @@ class Tree extends \kartik\tree\models\Tree
     {
         $availableLanguages[mb_strtolower(Yii::$app->language)] = Yii::$app->language;
 
-        if (Yii::$app->user->can('pages.createGlobalPages')) {
-            $availableLanguages[self::ACCESS_DOMAIN_GLOBAL] = "GLOBAL";
+        if (Yii::$app->user->can(self::GLOBAL_ACCESS_PERMISSION)) {
+            $availableLanguages[self::GLOBAL_ACCESS_DOMAIN] = "GLOBAL";
         }
 
         return $availableLanguages;
