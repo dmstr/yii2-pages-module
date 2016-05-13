@@ -242,7 +242,7 @@ class Tree extends \kartik\tree\models\Tree
     public function validateNoSpecialChars($attribute, $params)
     {
         // Check for whitespaces
-        if (preg_match("/^[a-z0-9_\\/\\'\"]+$/", $this->domain_id) == 0) {
+        if (preg_match("/^[a-z0-9_-]+$/", $this->domain_id) == 0) {
             $this->addError(
                 $attribute,
                 \Yii::t('app', '{0} should not contain any uppercase and special chars!', [$attribute])
