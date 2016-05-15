@@ -299,7 +299,7 @@ class Tree extends \kartik\tree\models\Tree
      *
      * @return null|string
      */
-    public function createUrl($additionalParams = [])
+    public function createRoute($additionalParams = [])
     {
         $route = [
             '/'.$this->route,
@@ -320,7 +320,11 @@ class Tree extends \kartik\tree\models\Tree
             $route = ArrayHelper::merge($route, $additionalParams);
         }
 
-        return Url::toRoute($route);
+        return $route;
+    }
+
+    public function createUrl($additionalParams = []){
+        return Url::to($this->createRoute($additionalParams));
     }
 
     /**
@@ -385,7 +389,7 @@ class Tree extends \kartik\tree\models\Tree
 
                 $itemTemplate = [
                     'label' => ($page->icon) ? '<i class="'.$page->icon.'"></i> '.$page->name : $page->name,
-                    'url' => $page->createUrl(),
+                    'url' => $page->createRoute(),
                     'linkOptions' => $pageOptions,
                     'visible' => ($checkUserPermissions) ?
                         Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]) :

@@ -31,4 +31,8 @@ bash:	 ##@docker open application development bash
 setup:	 ##@docker open application development bash
 	$(DOCKER_COMPOSE) run phpfpm yii db/create
 	$(DOCKER_COMPOSE) run phpfpm yii migrate
-	$(DOCKER_COMPOSE) run phpfpm yii user/create admin@example.com admin secret
+	$(DOCKER_COMPOSE) run phpfpm yii user/create admin@example.com admin
+	$(DOCKER_COMPOSE) run phpfpm yii user/password admin admin
+
+test:
+	$(DOCKER_COMPOSE) run -e YII_ENV=test phpfpm codecept run
