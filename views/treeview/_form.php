@@ -9,6 +9,8 @@ namespace dmstr\modules\pages\views\treeview;
  */
 
 use dmstr\modules\pages\models\Tree;
+use insolita\wgadminlte\Box;
+use insolita\wgadminlte\SmallBox;
 use kartik\form\ActiveForm;
 use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
@@ -82,41 +84,34 @@ echo Html::hiddenInput('softDelete', $softDelete);
 ?>
 <div class="vertical-spacer"></div>
 
-<?php
-
-echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <small>#{$node->id}</small></h2></div>";
-
-    echo "<div class='pull-right'>";
-    echo Html::a(
-        'Open',
-        Url::to($node->createUrl()),
-        [
-            'class' => 'btn '.($node->disabled ? 'btn-warning' : 'btn-success'),
-            'target' => '_blank',
-            'data-toggle' => 'tooltip',
-            'title' => Yii::t('kvtree', 'Go to frontend'),
-        ]
-    );
-    echo '</div>';
-?>
-
+<?= SmallBox::widget([
+    'head' => $node->name,
+    'text' => $node->createUrl(),
+    'icon' => 'fa fa-'.$node->icon,
+    'footer' => 'Open',
+    'footer_link' => $node->createUrl()
+]) ?>
 
 <div class="clearfix"></div>
 
-<h4><?= Yii::t('kvtree', 'General') ?></h4>
-
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
 
+    <?php Box::begin([
+        'title' => Yii::t('kvtree', 'General'),
+        'collapse'=>true]) ?>
+
     <div class="row">
-        <div class="col-sm-6">
+
+        <div class="col-xs-12 col-sm-6">
             <?= $form->field(
                 $node,
-                'name_id',
+                Tree::ATTR_DOMAIN_ID,
                 [
-                    'addon' => ['prepend' => ['content' => 'Name ID']],
+                    'addon' => ['prepend' => ['content' => 'Local Domain ID']],
                 ]
-            )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
+            )->textInput()->label(false) ?>
         </div>
+
         <div class="col-sm-3">
             <?= $form->field($node, 'visible')->checkbox() ?>
         </div>
@@ -149,7 +144,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
     <?php endif; ?>
 
 
-    <h4><?= Yii::t('kvtree', 'Menu') ?></h4>
+    <hr />
 
     <div class="row">
         <div class="col-sm-12">
@@ -167,7 +162,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
     </div>
 
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <?php if (isset($module->treeViewSettings['fontAwesome']) && $module->treeViewSettings['fontAwesome'] == true): ?>
                 <?= $form->field($node, $iconAttribute)->widget(
                     \kartik\select2\Select2::classname(),
@@ -202,7 +197,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
                 )->textInput($inputOpts)->label(false) ?>
             <?php endif; ?>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
             <?= $form->field($node, $iconTypeAttribute)->widget(
                 \kartik\select2\Select2::classname(),
                 [
@@ -232,18 +227,17 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
         </div>
     </div>
 
-    <h4><?= Yii::t('kvtree', 'Route') ?></h4>
+    <?php Box::end() ?>
+
+
+    <?php Box::begin([
+        'title' => Yii::t('kvtree', Yii::t('kvtree', 'Route')),
+        'collapse'=>true]) ?>
+
+
     <div class="row">
 
-        <div class="col-xs-12 col-sm-6">
-            <?= $form->field(
-                $node,
-                Tree::ATTR_DOMAIN_ID,
-                [
-                    'addon' => ['prepend' => ['content' => 'Local Domain ID']],
-                ]
-            )->textInput()->label(false) ?>
-        </div>
+
         <div class="col-xs-12 col-sm-6">
             <?= $form->field(
                 $node,
@@ -252,6 +246,16 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
                     'addon' => ['prepend' => ['content' => 'Access Domain']],
                 ]
             )->dropDownList(Tree::optsAccessDomain())->label(false) ?>
+        </div>
+
+        <div class="col-sm-6">
+            <?= $form->field(
+                $node,
+                'name_id',
+                [
+                    'addon' => ['prepend' => ['content' => 'Name ID']],
+                ]
+            )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
         </div>
     </div>
     <div class="row">
@@ -320,21 +324,26 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
     </div>
     <?php $this->endBlock() ?>
 
-    <?php
-    echo Collapse::widget(
-        [
-            'items' => [
-                // equivalent to the above
-                [
-                    'label' => 'Advanced URL settings',
-                    'content' => $this->blocks['request_params'],
-                ],
-            ],
-        ]
-    );
-    ?>
 
-    <h4><?= Yii::t('kvtree', 'SEO') ?></h4>
+    <?php Box::end() ?>
+
+
+    <?php Box::begin([
+        'title' => Yii::t('kvtree', Yii::t('kvtree', 'Advanced')),
+        'collapse'=>true,
+        'collapseDefault'=>true]) ?>
+
+    <?= $this->blocks['request_params'] ?>
+
+    <?php Box::end() ?>
+
+
+    <?php Box::begin([
+        'title' => Yii::t('kvtree', Yii::t('kvtree', 'SEO')),
+        'collapse'=>true,
+    'collapseDefault'=>false]) ?>
+
+
     <div class="row">
         <div class="col-xs-12">
             <?= $form->field(
@@ -400,6 +409,10 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
         </div>
     </div>
 
+    <?php Box::end() ?>
+
+
+
 
 <?php else : ?>
     <div class="row">
@@ -445,6 +458,7 @@ echo "<div class='pull-left'><h2><i class=\"{$node->icon}\"></i> {$node->name} <
         </div>
     </div>
 <?php endif; ?>
+
 
 <?php if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
     <div class="pull-left">

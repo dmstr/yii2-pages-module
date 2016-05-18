@@ -5,12 +5,10 @@ use dmstr\modules\pages\models\Tree;
 use kartik\tree\TreeView;
 use yii\helpers\Inflector;
 
-$title = Inflector::titleize($this->context->module->id);
+$this->title = Inflector::titleize($this->context->module->id);
 \dmstr\modules\pages\assets\PagesAsset::register($this);
 
 ?>
-
-    <h1>Pages</h1>
 
 <?php
 /**
@@ -37,9 +35,7 @@ $mainTemplate = <<< HTML
         </div>
     </div>
     <div class="col-md-8" id="pages-detail-panel">
-    <div class="box box-body">
         {detail}
-        <div>
     </div>
 </div>
 HTML;
@@ -57,7 +53,7 @@ echo TreeView::widget(
         'softDelete' => false,
         'displayValue' => 1,
         'wrapperTemplate' => '{header}{footer}{tree}',
-        'headingOptions' => ['label' => $title.'-Module'],
+        'headingOptions' => ['label' => 'Nodes'],
         'treeOptions' => ['style' => 'height:600px'],
         'headerTemplate' => $headerTemplate,
         'mainTemplate' => $mainTemplate,

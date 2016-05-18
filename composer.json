@@ -18,6 +18,7 @@
         "yiisoft/yii2": "^2.0.6",
         "kartik-v/yii2-tree-manager": "~1.0.3",
         "kartik-v/yii2-widget-select2": "^2.0.1",
+        "insolita/yii2-adminlte-widgets": "^1.1.4",
         "rmrevin/yii2-fontawesome": "~2.9",
         "devgroup/yii2-jsoneditor": "1.0.*",
         "dmstr/yii2-web": "~0.1"
