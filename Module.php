@@ -53,7 +53,7 @@ class Module extends \yii\base\Module
                 $this->availableViews[trim($view)] = trim($view);
             }
 
-            if (\Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION)) {
+            if (\Yii::$app->has('user') && \Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION)) {
                 $globalRoutes = explode("\n", \Yii::$app->settings->get('pages.availableGlobalRoutes'));
                 foreach ($globalRoutes as $route) {
                     $this->availableRoutes[trim($route)] = trim($route);
