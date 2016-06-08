@@ -64,6 +64,13 @@ Use settings module to configure additional controllers
 
 - Add one controller route per line to section `pages`, key `availableRoutes`
 
+### Settings
+
+- `pages.availableRoutes` - routes per access_domain (for non-admin users)
+- `pages.availableViews` - views per access_domain (for non-admin users)
+- `pages.availableGlobalRoutes` - global routes (for admin users)
+- `pages.availableGlobalViews` - global views(for admin users)
+
 
 Usage
 -----
