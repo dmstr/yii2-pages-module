@@ -17,7 +17,7 @@ class m150309_153255_create_tree_manager_table extends Migration
             'dmstr_page',
             [
                 'id' => $this->primaryKey(),
-                'root' => $this->integer()->notNull(),
+                'root' => $this->integer()->notNull()->defaultValue(0),
                 'lft' => $this->integer()->notNull(),
                 'rgt' => $this->integer()->notNull(),
                 'lvl' => $this->smallInteger()->notNull(),
@@ -50,8 +50,8 @@ class m150309_153255_create_tree_manager_table extends Migration
                 'movable_r' => $this->smallInteger()->defaultValue(1),
                 'removable' => $this->smallInteger()->defaultValue(1),
                 'removable_all' => $this->smallInteger()->defaultValue(0),
-                'created_at' => $this->timestamp(),
-                'updated_at' => $this->timestamp(),
+                'created_at' => $this->timestamp()->defaultExpression('NOW()'),
+                'updated_at' => $this->timestamp()->defaultExpression('NOW()'),
             ]
         );
 
