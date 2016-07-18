@@ -22,10 +22,13 @@ clean:
 	$(DOCKER_COMPOSE) down
 
 open:	 ##@docker open application web service in browser
-	$(OPEN_CMD) http://$(DOCKER_HOST_IP):$(shell $(DOCKER_COMPOSE) port nginx 80 | sed 's/[0-9.]*://')
+	$(OPEN_CMD) http://$(DOCKER_HOST_IP):$(shell $(DOCKER_COMPOSE) port nginx 80 | sed 's/[0-9.]*://')/pages
 
 open-db:	 ##@docker open application web service in browser
 	$(OPEN_CMD) mysql://root:secret@$(DOCKER_HOST_IP):$(shell $(DOCKER_COMPOSE) port db 3306/ | sed 's/[0-9.]*://')
+
+open-vnc:	 ##@test open application database service in browser
+	$(OPEN_CMD) vnc://x:secret@$(DOCKER_HOST_IP):$(shell $(DOCKER_COMPOSE) port seleniumfirefox 5900 | sed 's/[0-9.]*://')
 
 bash:	 ##@docker open application development bash
 	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test phpfpm bash

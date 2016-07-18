@@ -44,8 +44,11 @@ services:
       MYSQL_PASSWORD: test
 
   seleniumfirefox:
-    image: 'selenium/standalone-firefox-debug:2.52.0'
-    expose:
-        - '4444'
+    image: selenium/standalone-firefox-debug:2.53.0
+    # workaround for Docker Beta, see https://github.com/SeleniumHQ/docker-selenium/issues/227#issuecomment-224865735
+    dns: 8.8.4.4
+    environment:
+      - no_proxy=localhost
     ports:
-        - '5900'
+      - '4444'
+      - '5900'

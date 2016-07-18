@@ -4,6 +4,7 @@
 return [
     'id' => 'test',
     'basePath' => '/app/src',
+    'runtimePath' => '/app/runtime',
     'aliases' => [
         '@dmstr/modules/pages' => '@vendor/dmstr/yii2-pages-module',
         '@tests' => '@vendor/dmstr/yii2-pages-module/tests',
