@@ -11,6 +11,8 @@ else
 	DOCKER_HOST_IP  ?= 127.0.0.1
 endif
 
+all: up setup
+
 up:
 	$(DOCKER_COMPOSE) up -d
 
@@ -26,13 +28,10 @@ open-db:	 ##@docker open application web service in browser
 	$(OPEN_CMD) mysql://root:secret@$(DOCKER_HOST_IP):$(shell $(DOCKER_COMPOSE) port db 3306/ | sed 's/[0-9.]*://')
 
 bash:	 ##@docker open application development bash
-	$(DOCKER_COMPOSE) run phpfpm bash
+	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test phpfpm bash
 
 setup:	 ##@docker open application development bash
-	$(DOCKER_COMPOSE) run phpfpm yii db/create
-	$(DOCKER_COMPOSE) run phpfpm yii migrate
-	$(DOCKER_COMPOSE) run phpfpm yii user/create admin@example.com admin
-	$(DOCKER_COMPOSE) run phpfpm yii user/password admin admin
+	$(DOCKER_COMPOSE) run phpfpm yii migrate --migrationPath=@vendor/dmstr/yii2-pages-module/migrations
 
 test:
 	$(DOCKER_COMPOSE) run -e YII_ENV=test phpfpm codecept run
