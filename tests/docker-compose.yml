@@ -24,16 +24,17 @@ services:
       APP_NAME: pages
       APP_MIGRATION_LOOKUP: '@vendor/dmstr/yii2-pages-module/tests/migrations'
       APP_TITLE: 'dmstr/yii2-pages TESTING v2'
-      YII_ENV: 'prod'
-      YII_DEBUG: 'false'
-      DB_PORT_3306_TCP_ADDR: db
-      DB_PORT_3306_TCP_PORT: 3306
-      DB_ENV_MYSQL_ROOT_USER: root
-      DB_ENV_MYSQL_ROOT_PASSWORD: secretadmin
+      APP_CONFIG_FILE: '/app/vendor/dmstr/yii2-pages-module/tests/_config/local.php'
+      YII_ENV: 'dev'
+      YII_DEBUG: 1
+      GITHUB_API_TOKEN: ${GITHUB_API_TOKEN}
     volumes:
       - /app
       - ../:/app/vendor/dmstr/yii2-pages-module
-      - ../tests/_config/local.php:/app/src/config/local.php
+      - ./composer.json:/app/composer.json
+      - ./composer.lock:/app/composer.lock
+      #- ../tests/_config/local.php:/app/src/config/local.php
+      - ~/.composer/cache:/root/.composer/cache
     networks:
       - internal
 
@@ -43,6 +44,9 @@ services:
       - '3306'
     environment:
       MYSQL_ROOT_PASSWORD: secretadmin
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
     networks:
       - internal
 
