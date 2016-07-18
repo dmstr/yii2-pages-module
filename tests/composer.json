@@ -1,0 +1,17 @@
+{
+    "name": "dmstr/yii2-app",
+    "minimum-stability": "stable",
+    "require": {
+        "vlucas/phpdotenv": "2.*",
+        "yiisoft/yii2": "^2.0.8",
+        "yiisoft/yii2-bootstrap": "2.*",
+        "yiisoft/yii2-debug": "2.*",
+        "codemix/yii2-streamlog": "^1.0.0"
+    },
+    "extra": {
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
+    }
+}
