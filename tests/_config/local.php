@@ -1,41 +1,38 @@
 <?php
-require('/app/vendor/dmstr/yii2-pages-module/vendor/autoload.php');
+#require('/app/vendor/dmstr/yii2-pages-module/vendor/autoload.php');
 
-return yii\helpers\ArrayHelper::merge(
-    #require('/app/src/config/main.php'),
-    [],
-    [
-        'aliases' => [
-            '@dmstr/modules/pages' => '@vendor/dmstr/yii2-pages-module',
-            '@tests' => '@vendor/dmstr/yii2-pages-module/tests',
-            '@vendor/insolita' => '@dmstr/modules/pages/vendor/insolita',
-            '@vendor/bower/jsoneditor' => '@dmstr/modules/pages/vendor/bower/jsoneditor',
+return [
+    'id' => 'test',
+    'basePath' => '/app/src',
+    'aliases' => [
+        '@dmstr/modules/pages' => '@vendor/dmstr/yii2-pages-module',
+        '@tests' => '@vendor/dmstr/yii2-pages-module/tests',
+    ],
+    'components' => [
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=db;dbname=test',
+            'username' => 'test',
+            'password' => 'test',
+            'charset' => 'utf8',
+            'tablePrefix' => getenv('DATABASE_TABLE_PREFIX'),
+            'enableSchemaCache' => YII_ENV_PROD ? true : false,
         ],
-        'components' => [
-            'db' => [
-                'class' => 'yii\db\Connection',
-                'dsn' => 'mysql:host=db;dbname=test',
-                'username' => 'test',
-                'password' => 'test',
-                'charset' => 'utf8',
-                'tablePrefix' => getenv('DATABASE_TABLE_PREFIX'),
-                'enableSchemaCache' => YII_ENV_PROD ? true : false,
-            ],
-            'user' => [
-                'class' => 'dmstr\web\User',
-                #'enableAutoLogin' => true,
-                #'loginUrl' => ['/user/security/login'],
-                'identityClass' => 'dektrium\user\models\User',
-                #'rootUsers' => ['admin'],
-            ],
+        'user' => [
+            'class' => 'yii\web\User',
+            #'enableAutoLogin' => true,
+            #'loginUrl' => ['/user/security/login'],
+            'identityClass' => 'dektrium\user\models\User',
+            #'rootUsers' => ['admin'],
         ],
-        'modules' => [
-            'pages' => [
-                'class' => 'dmstr\modules\pages\Module',
-                #'layout' => '@admin-views/layouts/main',
-            ],
+    ],
+    'modules' => [
+        'pages' => [
+            'class' => 'dmstr\modules\pages\Module',
+            #'layout' => '@admin-views/layouts/main',
+        ],
 
-            'treemanager' =>
+        'treemanager' =>
             [
                 'class' => 'kartik\tree\Module',
                 #'layout' => '@admin-views/layouts/main',
@@ -45,11 +42,10 @@ return yii\helpers\ArrayHelper::merge(
                 ],
 
             ]
-        ],
-        'params' => [
-            'yii.migrations' => [
-                '@vendor/dmstr/yii2-pages-module/migrations'
-            ]
+    ],
+    'params' => [
+        'yii.migrations' => [
+            '@vendor/dmstr/yii2-pages-module/migrations'
         ]
     ]
-);
+];
