@@ -7,7 +7,7 @@ use dmstr\modules\pages\models\Tree;
 
 class ModelTestCase extends \Codeception\Test\Unit
 {
-    public $appConfig = '/app/vendor/dmstr/yii2-pages-module/tests/_config/unit.php';
+    public $appConfig = '/app/src/config/main.php';
 
     // tests
     public function testRootNode()

@@ -10,22 +10,22 @@ use yii\helpers\VarDumper;
 
 ?>
 
+<div class="container">
     <h1>Pages</h1>
     <h2>Test</h2>
 
-    <?php
+    <?= Nav::widget(
+        [
+            'options' => ['class' => 'navbar navbar-default'],
+            'encodeLabels' => false,
+            'items' => $tree,
+        ]
+    ) ?>
 
-echo Nav::widget(
-    [
-        'options' => ['class' => 'navbar-nav'],
-        'encodeLabels' => false,
-        'items' => Tree::getMenuItems(Tree::ROOT_NODE_PREFIX),
-    ]
-);
-?>
-
-    <hr>
+    <hr class="clearfix">
 
     <?php
-VarDumper::dump($tree, 10, true);
-?>
+    VarDumper::dump($tree, 10, true);
+    ?>
+
+</div>

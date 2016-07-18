@@ -9,9 +9,6 @@ services:
       - '80'
     depends_on:
       - phpfpm
-    networks:
-      - frontend
-      - internal
 
   phpfpm:
     build: .
@@ -35,8 +32,6 @@ services:
       - ./composer.lock:/app/composer.lock
       #- ../tests/_config/local.php:/app/src/config/local.php
       - ~/.composer/cache:/root/.composer/cache
-    networks:
-      - internal
 
   db:
     image: 'percona:5.6'
@@ -47,8 +42,6 @@ services:
       MYSQL_DATABASE: test
       MYSQL_USER: test
       MYSQL_PASSWORD: test
-    networks:
-      - internal
 
   seleniumfirefox:
     image: 'selenium/standalone-firefox-debug:2.52.0'
@@ -56,11 +49,3 @@ services:
         - '4444'
     ports:
         - '5900'
-    networks:
-      - internal
-
-networks:
-  frontend:
-    driver: bridge
-  internal:
-    driver: bridge

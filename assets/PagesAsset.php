@@ -18,4 +18,7 @@ class PagesAsset extends AssetBundle
     public $css = [
         'module.less',
     ];
+    public $depends = [
+        'rmrevin\yii\fontawesome\AssetBundle',
+    ];
 }
