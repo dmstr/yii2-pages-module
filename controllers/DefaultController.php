@@ -94,8 +94,8 @@ JS;
         $page = $pageQuery->one();
 
         if ($page !== null) {
-            // Set page title
-            $this->view->title = $page->page_title;
+            // Set page title, use name as fallback
+            $this->view->title = $page->page_title?:$page->name;
 
             // Register default SEO meta tags
             $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords]);
