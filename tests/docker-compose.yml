@@ -41,6 +41,8 @@ services:
 
   seleniumfirefox:
     image: selenium/standalone-firefox-debug:2.53.0
+    depends_on:
+      - db
     # workaround for Docker Beta, see https://github.com/SeleniumHQ/docker-selenium/issues/227#issuecomment-224865735
     dns: 8.8.4.4
     environment:
