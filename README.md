@@ -3,7 +3,7 @@ Yii2 Page Manager
 
 Application sitemap and navigation manager module for Yii 2.0 Framework
 
-**:warning: Breaking changes in 0.14.0 :warning:**
+**:warning: Breaking changes in 0.14.0 and 0.18.0**
 
 `data structure` and `public properties` are updated and query menu items from now on via `domain_id`
 
