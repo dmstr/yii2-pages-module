@@ -55,7 +55,7 @@ JS;
     /**
      * renders a page view from the database.
      *
-     * @param $id
+     * @param $pageId
      * @param null $pageName
      * @param null $parentLeave
      *
@@ -63,7 +63,7 @@ JS;
      *
      * @throws HttpException
      */
-    public function actionPage($id, $pageName = null, $parentLeave = null)
+    public function actionPage($pageId, $pageName = null, $parentLeave = null)
     {
         Url::remember();
         \Yii::$app->session['__crudReturnUrl'] = null;
@@ -75,7 +75,7 @@ JS;
         // @todo: improve handling, using also roles
         $pageQuery = Tree::find()->where(
             [
-                Tree::ATTR_ID => $id,
+                Tree::ATTR_ID => $pageId,
                 Tree::ATTR_ACTIVE => Tree::ACTIVE,
                 Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
@@ -104,7 +104,7 @@ JS;
             // Render view
             return $this->render($page->view, ['page' => $page]);
         } else {
-            throw new HttpException(404, \Yii::t('app', 'Page not found.').' [ID: '.$id.']');
+            throw new HttpException(404, \Yii::t('app', 'Page not found.').' [ID: '.$pageId.']');
         }
     }
 }
