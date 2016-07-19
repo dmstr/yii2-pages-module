@@ -13,9 +13,9 @@ class ModelTestCase extends \Codeception\Test\Unit
     public function testRootNode()
     {
         $root = new Tree;
-        $root->id = 999;
+        #$root->id = ran;
         #$root->domain_id = 'test-root-node';
-        $root->domain_id = 'root2';
+        $root->domain_id = 'root-'.md5($_SERVER['REQUEST_TIME']);
         $root->name = 'I am a Root-Node';
         $root->makeRoot();
         $root->save();
@@ -27,7 +27,7 @@ class ModelTestCase extends \Codeception\Test\Unit
 
     public function testMenuItems()
     {
-        $tree = Tree::getMenuItems(Tree::ROOT_NODE_PREFIX);
+        $tree = Tree::getMenuItems('root-'.md5($_SERVER['REQUEST_TIME']));
         Debug::debug($tree);
     }
 
@@ -39,7 +39,7 @@ class ModelTestCase extends \Codeception\Test\Unit
     {
         $pages = Tree::findAll(
             [
-                Tree::ATTR_DOMAIN_ID => Tree::ROOT_NODE_PREFIX,
+                Tree::ATTR_DOMAIN_ID => 'root-'.md5($_SERVER['REQUEST_TIME']),
                 Tree::ATTR_ACTIVE    => Tree::ACTIVE,
                 Tree::ATTR_VISIBLE   => Tree::VISIBLE,
             ]

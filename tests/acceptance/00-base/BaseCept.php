@@ -1,4 +1,7 @@
 <?php
+
+// @group optional
+
 use dmstr\modules\pages\tests\_pages\LoginPage;
 
 $I = new AcceptanceTester($scenario);

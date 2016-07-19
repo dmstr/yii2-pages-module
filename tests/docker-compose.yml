@@ -12,7 +12,6 @@ services:
 
   phpfpm:
     build: .
-    #TODO: review CI startup --- command: 'run.sh'
     working_dir: /app/vendor/dmstr/yii2-pages-module
     depends_on:
       - db
@@ -28,10 +27,7 @@ services:
     volumes:
       - /app
       - ../:/app/vendor/dmstr/yii2-pages-module
-      - ./composer.json:/app/composer.json
-      - ./composer.lock:/app/composer.lock
-      #- ../tests/_config/local.php:/app/src/config/local.php
-      - ~/.composer/cache:/root/.composer/cache
+      #- ~/.composer/cache:/root/.composer/cache
 
   db:
     image: 'percona:5.6'
