@@ -13,6 +13,8 @@ test:
   script:
     - set +e
     - docker-compose up -d
+    # workaround for missing retry
+    - sleep 3
     - make setup
     - docker-compose run --rm -e YII_ENV=test phpfpm codecept run --html=_report.html acceptance,unit; TESTS_EXIT_CODE=$?
     - set -e
