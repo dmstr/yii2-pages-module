@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace tests\_web;
+namespace dmstr\modules\pages\tests\_web;
 
 use yii\web\User;
 

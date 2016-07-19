@@ -19,7 +19,7 @@ return [
             'enableSchemaCache' => YII_ENV_PROD ? true : false,
         ],
         'user' => [
-            'class' => 'tests\_web\TestUser',
+            'class' => 'dmstr\modules\pages\tests\_web\TestUser',
             'identityClass' => 'dektrium\user\models\User',
         ],
     ],

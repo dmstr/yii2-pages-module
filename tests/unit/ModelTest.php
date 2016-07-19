@@ -47,7 +47,7 @@ class ModelTestCase extends \Codeception\Test\Unit
         if ($pages) {
             foreach ($pages as $page) {
                 $buildNameId = $page->domain_id . '_' . $page->access_domain;
-                $this->assertSame($buildNameId, $page->name_id, 'NameID was not set proberly');
+                $this->assertSame($buildNameId, $page->name_id, 'NameID was not set properly');
             }
         } else {
             return $this->assertNotEmpty($pages, 'No Pages found!');
