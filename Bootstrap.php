@@ -50,7 +50,7 @@ class Bootstrap implements BootstrapInterface
             [
                 // pages default page route
                 '<parentLeave:[a-zA-Z0-9_\- \.]*>/<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
-                '<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
+                'page/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
             ],
             true
         );

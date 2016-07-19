@@ -18,6 +18,16 @@ return [
             'tablePrefix' => getenv('DATABASE_TABLE_PREFIX'),
             'enableSchemaCache' => YII_ENV_PROD ? true : false,
         ],
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                ],
+            ],
+        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true
+        ],
         'user' => [
             'class' => 'dmstr\modules\pages\tests\_web\TestUser',
             'identityClass' => 'dektrium\user\models\User',
@@ -26,6 +36,13 @@ return [
     'modules' => [
         'pages' => [
             'class' => 'dmstr\modules\pages\Module',
+            'availableRoutes' => [
+                'pages/default/page' => 'pages/default/page'
+            ],
+            'availableViews' => [
+                '@dmstr/modules/pages/example-views/column1' => '@dmstr/modules/pages/example-views/column1'
+
+            ],
             #'layout' => '@admin-views/layouts/main',
         ],
 
