@@ -1,5 +1,5 @@
 .idea
 tests/_output
 vendor
-composer.lock
+./composer.lock
 migrations/workbench/dmstr_yii2-pages-module.mwb.bak
