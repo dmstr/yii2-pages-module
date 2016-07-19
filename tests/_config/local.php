@@ -1,5 +1,4 @@
 <?php
-#require('/app/vendor/dmstr/yii2-pages-module/vendor/autoload.php');
 
 return [
     'id' => 'test',
@@ -20,11 +19,8 @@ return [
             'enableSchemaCache' => YII_ENV_PROD ? true : false,
         ],
         'user' => [
-            'class' => 'yii\web\User',
-            #'enableAutoLogin' => true,
-            #'loginUrl' => ['/user/security/login'],
+            'class' => 'tests\_web\TestUser',
             'identityClass' => 'dektrium\user\models\User',
-            #'rootUsers' => ['admin'],
         ],
     ],
     'modules' => [
