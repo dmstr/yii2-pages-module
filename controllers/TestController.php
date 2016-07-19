@@ -21,7 +21,7 @@ class TestController extends Controller
 {
     public function actionIndex()
     {
-        $tree = Tree::getMenuItems('_TEST');
+        $tree = Tree::getMenuItems('_test');
 
         return $this->render('index', ['tree' => $tree]);
     }
