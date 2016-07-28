@@ -329,20 +329,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 
     <?php Box::begin([
-        'title' => Yii::t('kvtree', Yii::t('kvtree', 'Advanced')),
-        'collapse'=>true,
-        'collapseDefault'=>true]) ?>
-
-    <?= $this->blocks['request_params'] ?>
-
-    <?php Box::end() ?>
-
-
-    <?php Box::begin([
         'title' => Yii::t('kvtree', Yii::t('kvtree', 'SEO')),
         'collapse'=>true,
     'collapseDefault'=>false]) ?>
-
 
     <div class="row">
         <div class="col-xs-12">
@@ -411,6 +400,16 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
     <?php Box::end() ?>
 
+
+    <?php Box::begin([
+        'title' => Yii::t('kvtree', Yii::t('kvtree', 'Advanced')),
+        'collapse'=>true,
+        'collapse_remember'=>false,
+        'collapseDefault'=>true]) ?>
+
+    <?= $this->blocks['request_params'] ?>
+
+    <?php Box::end() ?>
 
 
 
