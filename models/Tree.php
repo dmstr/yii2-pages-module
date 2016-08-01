@@ -301,15 +301,21 @@ class Tree extends \kartik\tree\models\Tree
      */
     public function createRoute($additionalParams = [])
     {
+        if (!$this->route) {
+            return null;
+        }
+
+        $slug = ($this->page_title)
+            ? Inflector::slug($this->page_title)
+            : Inflector::slug($this->name);
+
+        $slugFolder = $this->resolvePagePath(true);
+
         $route = [
             '/'.$this->route,
             'pageId' => $this->id,
-            'pageSlug' => ($this->page_title)
-                ? Inflector::slug($this->page_title)
-                : Inflector::slug($this->name),
-            'parentLeave' => ($this->parents(1)->one() && !$this->parents(1)->one()->isRoot())
-                ? Inflector::slug($this->parents(1)->one()->name)
-                : null,
+            'pageSlug' => $slug,
+            'pagePath' => $slugFolder
         ];
 
         if (Json::decode($this->request_params)) {
@@ -446,5 +452,33 @@ class Tree extends \kartik\tree\models\Tree
     public function setNameId($name_id)
     {
         $this->name_id = $name_id;
+    }
+
+    protected function resolvePagePath($activeNode = false){
+
+        // return no path for root nodes
+        if (!$this->parents(1)->one()) {
+            return null;
+        }
+
+        // return no path for first level nodes
+        if ($activeNode && $this->parents(1)->one()->isRoot()) {
+            return null;
+        }
+
+        if (!$activeNode && $this->parents(1)->one()->isRoot()) {
+            // start-point for building path
+            $path = Inflector::slug(($this->page_title?:$this->name));
+        } else if (!$activeNode) {
+            // if not active, build up path
+            $path = $this->parents(1)->one()->resolvePagePath(false).'/'.Inflector::slug(($this->page_title?:$this->name));
+        } else if ($activeNode && !$this->parents(1)->one()->isRoot()) {
+            // building path finished
+            $path = $this->parents(1)->one()->resolvePagePath(false);
+        } else {
+            $path = null;
+        }
+
+        return $path;
     }
 }

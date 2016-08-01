@@ -9,6 +9,7 @@
 
 namespace dmstr\modules\pages;
 
+use dmstr\modules\pages\components\PageUrlRule;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
 
@@ -49,7 +50,10 @@ class Bootstrap implements BootstrapInterface
         $app->urlManager->addRules(
             [
                 // pages default page route
-                '<parentLeave:[a-zA-Z0-9_\- \.]*>/<pageName:[a-zA-Z0-9_\-\.]*>-<id:[0-9]*>' => 'pages/default/page',
+                ['class'=>PageUrlRule::className()],
+                'p/<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
+                'p/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
+                'page/<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
                 'page/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
             ],
             true
