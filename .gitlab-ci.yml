@@ -16,7 +16,7 @@ test:
     # workaround for missing retry
     - sleep 3
     - make setup
-    - docker-compose run --rm -e YII_ENV=test phpfpm codecept run --html=_report.html acceptance,unit; TESTS_EXIT_CODE=$?
+    - docker-compose run --rm -e YII_ENV=test phpfpm codecept run -x optional --html=_report.html acceptance,unit; TESTS_EXIT_CODE=$?
     - set -e
     - mv _output /tmp/${BUILD_PREFIX}
     - exit $TESTS_EXIT_CODE

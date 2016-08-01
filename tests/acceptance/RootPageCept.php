@@ -30,6 +30,8 @@ $I->fillField('#tree-name','Test');
 $I->click('Save');
 $I->waitForElementVisible('.kv-tree');
 $I->click('.kv-node-detail');
+
+$I->waitForElementVisible('#pages-detail-panel h3');
 $I->see('Test', '#pages-detail-panel h3');
 $I->makeScreenshot('success-pages-create-root');
 
