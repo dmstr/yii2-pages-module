@@ -174,6 +174,14 @@ class Tree extends \kartik\tree\models\Tree
                     'max' => 255,
                 ],
                 [
+                    'view',
+                    'required',
+                    'when' => function ($model) {
+                        return $model->route == '/pages/default/page';
+                    },
+                    'message' => 'Route /pages/default/page requires a view.'
+                ],
+                [
                     [
                         'default_meta_description',
                     ],
