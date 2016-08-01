@@ -95,7 +95,7 @@ JS;
 
         if ($page !== null) {
             // Set page title, use name as fallback
-            $this->view->title = $page->page_title?:$page->name;
+            $this->view->title = $page->page_title ?: $page->name;
 
             // Register default SEO meta tags
             $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords]);
@@ -104,7 +104,24 @@ JS;
             // Render view
             return $this->render($page->view, ['page' => $page]);
         } else {
-            throw new HttpException(404, \Yii::t('app', 'Page not found.').' [ID: '.$pageId.']');
+            if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
+                \Yii::trace('Resolved fallback URL for '.$fallbackPage->id, __METHOD__);
+                return $this->redirect($fallbackPage->createUrl(['language' => $fallbackPage->access_domain]));
+            } else {
+                throw new HttpException(404, \Yii::t('app', 'Page not found.').' [ID: '.$pageId.']');
+            }
         }
+    }
+
+
+    /**
+     * @return array
+     */
+    private function resolveFallbackPage($pageId)
+    {
+        $original = Tree::find()->where(['id' => $pageId])->one();
+        $fallback = Tree::find()->where(['domain_id' => $original->domain_id, 'access_domain' => \Yii::$app->language])
+            ->one();
+        return $fallback;
     }
 }
