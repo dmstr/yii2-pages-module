@@ -18,10 +18,11 @@ class PageUrlRule extends Object implements UrlRuleInterface
     public function createUrl($manager, $route, $params)
     {
         if ($route === 'pages/default/page') {
-            $pagePath = ($params['pagePath'])?$params['pagePath'].'/':'';
-            
+            $pagePath = (isset($params['pagePath']))?$params['pagePath'].'/':'';
+
             return 'p/'.$pagePath.$params['pageSlug'].'-'.$params['pageId'].'.html';
         }
+
         return false;  // this rule does not apply
     }
 
