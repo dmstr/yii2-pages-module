@@ -102,22 +102,13 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
     <div class="row">
 
-        <div class="col-xs-12 col-sm-6">
-            <?= $form->field(
-                $node,
-                Tree::ATTR_DOMAIN_ID,
-                [
-                    'addon' => ['prepend' => ['content' => 'Local Domain ID']],
-                ]
-            )->textInput()->label(false) ?>
-        </div>
-
         <div class="col-sm-3">
             <?= $form->field($node, 'visible')->checkbox() ?>
         </div>
         <div class="col-sm-3">
             <?= $form->field($node, 'disabled')->checkbox() ?>
         </div>
+
     </div>
 
     <?php
@@ -143,9 +134,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     <?php endif; ?>
 
-
-    <hr />
-
     <div class="row">
         <div class="col-sm-12">
 
@@ -158,7 +146,24 @@ echo Html::hiddenInput('softDelete', $softDelete);
             )->textInput($inputOpts)->label(false) ?>
         </div>
 
-
+        <div class="col-xs-12 col-sm-6">
+            <?= $form->field(
+                $node,
+                Tree::ATTR_DOMAIN_ID,
+                [
+                    'addon' => ['prepend' => ['content' => 'Local Domain ID']],
+                ]
+            )->textInput()->label(false) ?>
+        </div>
+        <div class="col-sm-6">
+            <?= $form->field(
+                $node,
+                'name_id',
+                [
+                    'addon' => ['prepend' => ['content' => 'Name ID']],
+                ]
+            )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
+        </div>
     </div>
 
     <div class="row">
@@ -248,17 +253,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
             )->dropDownList(Tree::optsAccessDomain())->label(false) ?>
         </div>
 
-        <div class="col-sm-6">
-            <?= $form->field(
-                $node,
-                'name_id',
-                [
-                    'addon' => ['prepend' => ['content' => 'Name ID']],
-                ]
-            )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
-        </div>
-    </div>
-    <div class="row">
+
         <div class="col-xs-12 col-sm-6">
             <?= $form->field($node, Tree::ATTR_ROUTE)->widget(
                 \kartik\select2\Select2::classname(),
@@ -283,7 +278,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
             )->label(false);
             ?>
         </div>
-        <div class="col-xs-12 col-sm-6">
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
             <?= $form->field($node, Tree::ATTR_VIEW)->widget(
                 \kartik\select2\Select2::classname(),
                 [
@@ -334,6 +331,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
     'collapseDefault'=>false]) ?>
 
     <div class="row">
+
+
+
         <div class="col-xs-12">
             <?= $form->field(
                 $node,
