@@ -24,7 +24,9 @@ services:
       YII_ENV: 'dev'
       YII_DEBUG: 1
       GITHUB_API_TOKEN: ${GITHUB_API_TOKEN}
-      DB_ENV_MYSQL_ROOT_PASSWORD: secretadmin
+      DB_ENV_MYSQL_DATABASE: test
+      DB_ENV_MYSQL_USER: test
+      DB_ENV_MYSQL_PASSWORD: test
     volumes:
       - /app
       - ../:/app/vendor/dmstr/yii2-pages-module
