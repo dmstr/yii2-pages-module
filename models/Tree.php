@@ -465,24 +465,25 @@ class Tree extends \kartik\tree\models\Tree
     protected function resolvePagePath($activeNode = false){
 
         // return no path for root nodes
-        if (!$this->parents(1)->one()) {
+        $parent = $this->parents(1)->one();
+        if (!$parent) {
             return null;
         }
 
         // return no path for first level nodes
-        if ($activeNode && $this->parents(1)->one()->isRoot()) {
+        if ($activeNode && $parent->isRoot()) {
             return null;
         }
 
-        if (!$activeNode && $this->parents(1)->one()->isRoot()) {
+        if (!$activeNode && $parent->isRoot()) {
             // start-point for building path
             $path = Inflector::slug(($this->page_title?:$this->name));
         } else if (!$activeNode) {
             // if not active, build up path
-            $path = $this->parents(1)->one()->resolvePagePath(false).'/'.Inflector::slug(($this->page_title?:$this->name));
-        } else if ($activeNode && !$this->parents(1)->one()->isRoot()) {
+            $path = $parent->resolvePagePath(false).'/'.Inflector::slug(($this->page_title?:$this->name));
+        } else if ($activeNode && !$parent->isRoot()) {
             // building path finished
-            $path = $this->parents(1)->one()->resolvePagePath(false);
+            $path = $parent->resolvePagePath(false);
         } else {
             $path = null;
         }
