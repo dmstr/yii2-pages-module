@@ -108,7 +108,7 @@ JS;
                 \Yii::trace('Resolved fallback URL for '.$fallbackPage->id, __METHOD__);
                 return $this->redirect($fallbackPage->createUrl(['language' => $fallbackPage->access_domain]));
             } else {
-                throw new HttpException(404, \Yii::t('app', 'Page not found.').' [ID: '.$pageId.']');
+                throw new HttpException(404, \Yii::t('pages', 'Page not found.').' [ID: '.$pageId.']');
             }
         }
     }

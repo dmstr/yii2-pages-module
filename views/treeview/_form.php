@@ -183,7 +183,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                         'data' => FA::getConstants(true),
                         'options' => [
                             'id' => 'tree-'.$iconAttribute,
-                            'placeholder' => Yii::t('app', 'Type to autocomplete'),
+                            'placeholder' => Yii::t('pages', 'Type to autocomplete'),
                             'multiple' => false,
                         ],
                         'pluginOptions' => [
@@ -220,7 +220,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     ],
                     'options' => [
                             'id' => 'tree-'.$iconTypeAttribute,
-                            'placeholder' => Yii::t('app', 'Select'),
+                            'placeholder' => Yii::t('pages', 'Select'),
                             'multiple' => false,
                         ] + $inputOpts,
                     'pluginOptions' => [
@@ -268,7 +268,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     ],
                     'data' => Tree::optsRoute(),
                     'options' => [
-                        'placeholder' => Yii::t('app', 'Select route'),
+                        'placeholder' => Yii::t('pages', 'Select route'),
                         'multiple' => false,
                     ],
                     'pluginOptions' => [
@@ -295,7 +295,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'data' => Tree::optsView(),
                     'options' => [
                         'id' => 'tree-views',
-                        'placeholder' => Yii::t('app', 'Type to autocomplete'),
+                        'placeholder' => Yii::t('pages', 'Type to autocomplete'),
                         'multiple' => false,
                     ],
                     'pluginOptions' => [
