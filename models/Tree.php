@@ -100,6 +100,7 @@ class Tree extends \kartik\tree\models\Tree
      */
     public $name_id;
 
+
     /**
      * {@inheritdoc}
      */
@@ -126,6 +127,7 @@ class Tree extends \kartik\tree\models\Tree
                     'updatedAtAttribute' => 'updated_at',
                     'value' => new Expression('NOW()'),
                 ],
+                'bedezign\yii2\audit\AuditTrailBehavior'
             ]
         );
     }

@@ -26,7 +26,8 @@
         "insolita/yii2-adminlte-widgets": "^1.1.4",
         "rmrevin/yii2-fontawesome": "~2.9",
         "devgroup/yii2-jsoneditor": "1.0.*",
-        "dmstr/yii2-web": "~0.1"
+        "dmstr/yii2-web": "~0.1",
+        "bedezign/yii2-audit": "^1.0"
     },
     "autoload": {
         "psr-4": {
