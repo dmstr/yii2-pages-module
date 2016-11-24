@@ -51,14 +51,30 @@ Configuration
 
 Enable module in application configuration
 
-    'pages' => [
-        'class' => 'dmstr\modules\pages\Module',
-        'layout' => '@admin-views/layouts/main',
-        'availableRoutes' => [
-            '/site/index' => '/site/index',
-        ],
-    ],
-
+```
+'pages' => [
+	'class' => 'dmstr\modules\pages\Module',
+	'layout' => '@admin-views/layouts/main',
+	'roles' => ['Admin', 'Editor'],
+	'pagesWithChildrenHasUrl' => false,
+	'availableRoutes' => [
+		'site/index' => 'Index Route',
+	],
+	'availableViews' => [
+		'@app/views/site/index.php' => 'Index View',
+	],
+],
+...
+// if used want a url suffix, e.g. '.html', add Url rules for that
+'urlManager' => [
+	...
+	'rules' => [
+		'<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
+		'<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
+	],
+	...
+],
+```
 
 Use settings module to configure additional controllers
 
