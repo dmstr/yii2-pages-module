@@ -71,6 +71,11 @@ class Tree extends \kartik\tree\models\Tree
     const ROOT_NODE_LVL = 0;
 
     /**
+     * The default page route
+     */
+    const DEFAULT_PAGE_ROUTE = '/pages/default/page';
+
+    /**
      * Attribute names.
      */
     const ATTR_ID = 'id';
@@ -96,13 +101,13 @@ class Tree extends \kartik\tree\models\Tree
     /**
      * Virtual attribute generated from "domain_id"_"access_domain".
      *
-     * @var
+     * @var string
      */
     public $name_id;
 
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function tableName()
     {
@@ -110,7 +115,7 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      *
      * Use yii\behaviors\TimestampBehavior for created_at and updated_at attribute
      *
@@ -133,7 +138,7 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
@@ -179,9 +184,9 @@ class Tree extends \kartik\tree\models\Tree
                     'view',
                     'required',
                     'when' => function ($model) {
-                        return $model->route == '/pages/default/page';
+                        return $model->route == self::DEFAULT_PAGE_ROUTE;
                     },
-                    'message' => 'Route /pages/default/page requires a view.'
+                    'message' => 'Route ' . self::DEFAULT_PAGE_ROUTE . ' requires a view.'
                 ],
                 [
                     [
@@ -237,7 +242,7 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function afterFind()
     {
@@ -260,10 +265,12 @@ class Tree extends \kartik\tree\models\Tree
         }
     }
 
-    /**^
+    /**
      * Override isDisabled method if you need as shown in the
      * example below. You can override similarly other methods
      * like isActive, isMovable etc.
+     *
+     * @return bool
      */
     public function isDisabled()
     {
@@ -285,7 +292,7 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * Get all configured.
+     * Get all configured views
      *
      * @return array list of options
      */
@@ -295,9 +302,9 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * TODO which routes will be provided by default ?
+     * Get all configured routs
      *
-     * @return array
+     * @return array list of options
      */
     public static function optsRoute()
     {
@@ -315,15 +322,22 @@ class Tree extends \kartik\tree\models\Tree
             return null;
         }
 
-        $slug = ($this->page_title)
-            ? Inflector::slug($this->page_title)
-            : Inflector::slug($this->name);
+        $pageId = null;
+        $slug = null;
+        $slugFolder = null;
 
-        $slugFolder = $this->resolvePagePath(true);
+        // us this params only for the default page route
+        if ($this->route === self::DEFAULT_PAGE_ROUTE) {
+            $pageId = $this->id;
+            $slug = ($this->page_title)
+                ? Inflector::slug($this->page_title)
+                : Inflector::slug($this->name);
+            $slugFolder = $this->resolvePagePath(true);
+        }
 
         $route = [
             '/'.$this->route,
-            'pageId' => $this->id,
+            'pageId' => $pageId,
             'pageSlug' => $slug,
             'pagePath' => $slugFolder
         ];
@@ -339,7 +353,13 @@ class Tree extends \kartik\tree\models\Tree
         return $route;
     }
 
-    public function createUrl($additionalParams = []){
+    /**
+     * @param array $additionalParams
+     *
+     * @return string
+     */
+    public function createUrl($additionalParams = [])
+    {
         return Url::to($this->createRoute($additionalParams));
     }
 
@@ -464,6 +484,11 @@ class Tree extends \kartik\tree\models\Tree
         $this->name_id = $name_id;
     }
 
+    /**
+     * @param bool|false $activeNode
+     *
+     * @return null|string
+     */
     protected function resolvePagePath($activeNode = false){
 
         // return no path for root nodes
