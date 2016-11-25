@@ -37,4 +37,4 @@ setup:	 ##@docker open application development bash
 	$(DOCKER_COMPOSE) run phpfpm yii migrate --migrationPath=@vendor/dmstr/yii2-pages-module/migrations --interactive=0
 
 run-tests:
-	$(DOCKER_COMPOSE) run -e YII_ENV=test phpfpm codecept run unit
+	$(DOCKER_COMPOSE) run -e YII_ENV=test phpfpm codecept run -x optional
