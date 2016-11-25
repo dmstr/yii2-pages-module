@@ -220,7 +220,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
         </div>
         <?php Box::end() ?>
-        <?php if ($pagesModule->pagesWithChildrenHasUrl === true || $node->isLeaf() || $node->isNewRecord) : ?>
+        <?php if ($node->isRoot() || $node->isLeaf() || $node->isNewRecord || $pagesModule->pagesWithChildrenHasUrl === true) : ?>
             <?php Box::begin(
                 [
                     'title'    => Yii::t('kvtree', Yii::t('kvtree', 'Route')),
