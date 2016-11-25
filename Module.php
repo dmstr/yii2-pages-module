@@ -35,6 +35,8 @@ class Module extends \yii\base\Module
     public $roles = [];
 
     /**
+     * Only leave nodes has pages behind. Set this to 'true' to have all nodes as pages
+     * 
      * @var bool
      */
     public $pagesWithChildrenHasUrl = false;
