@@ -14,11 +14,9 @@ use insolita\wgadminlte\SmallBox;
 use kartik\form\ActiveForm;
 use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
-use yii\bootstrap\Collapse;
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
-use yii\helpers\Url;
-use Yii;
 
 /*
  * @var \yii\web\View $this
@@ -41,20 +39,12 @@ $isAdmin = ($isAdmin == true || $isAdmin === 'true');
 if (empty($parentKey)) {
     $parent = $node->parents(1)->one();
     $parentKey = empty($parent) ? '' : Html::getAttributeValue($parent, $keyAttribute);
-} elseif ($parentKey == 'root') {
-    $parent = '';
-} else {
-    $parent = $modelClass::findOne($parentKey);
 }
 
-$parentName = empty($parent) ? '' : $parent->$nameAttribute.' &raquo; ';
 $inputOpts = [];
 $flagOptions = ['class' => 'kv-parent-flag'];
 
-if ($node->isNewRecord) {
-    $name = Yii::t('kvtree', 'Untitled');
-} else {
-    $name = $node->$nameAttribute;
+if (!$node->isNewRecord) {
     if ($node->isReadonly()) {
         $inputOpts['readonly'] = true;
     }
@@ -96,49 +86,16 @@ echo Html::hiddenInput('softDelete', $softDelete);
     'footer_link' => $nodeUrl
 ]) ?>
 <?php endif; ?>
-
 <div class="clearfix"></div>
 
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
 
-    <?php Box::begin([
-        'title' => Yii::t('kvtree', 'General'),
-        'collapse'=>true]) ?>
-
-    <div class="row">
-
-        <div class="col-sm-3">
-            <?= $form->field($node, 'visible')->checkbox() ?>
-        </div>
-        <div class="col-sm-3">
-            <?= $form->field($node, 'disabled')->checkbox() ?>
-        </div>
-
-    </div>
-
-    <?php
-    /**
-     * @TODO: remove hidden form fields (eg. active and selected are required to exist)
-     */
-    if ($isAdmin): ?>
-        <div class="row">
-            <div class="col-sm-3 hide">
-                <?= $form->field($node, 'active')->checkbox() ?>
-                <?= $form->field($node, 'selected')->checkbox() ?>
-                <?= $form->field($node, 'collapsed')->checkbox($flagOptions) ?>
-                <?= $form->field($node, 'readonly')->checkbox() ?>
-                <?= $form->field($node, 'removable')->checkbox() ?>
-                <?= $form->field($node, 'removable_all')->checkbox($flagOptions) ?>
-            </div>
-            <div class="col-sm-3 hide">
-                <?= $form->field($node, 'movable_u')->checkbox() ?>
-                <?= $form->field($node, 'movable_d')->checkbox() ?>
-                <?= $form->field($node, 'movable_l')->checkbox() ?>
-                <?= $form->field($node, 'movable_r')->checkbox() ?>
-            </div>
-        </div>
-    <?php endif; ?>
-
+    <?php Box::begin(
+        [
+            'title'    => Yii::t('kvtree', 'General'),
+            'collapse' => true
+        ]
+    ) ?>
     <div class="row">
         <div class="col-sm-12">
 
@@ -170,7 +127,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
             )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
         </div>
     </div>
-
     <div class="row">
         <div class="col-sm-6">
             <?php if (isset($module->treeViewSettings['fontAwesome']) && $module->treeViewSettings['fontAwesome'] == true): ?>
@@ -236,18 +192,38 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ?>
         </div>
     </div>
-
     <?php Box::end() ?>
 
-
-    <?php Box::begin([
-        'title' => Yii::t('kvtree', Yii::t('kvtree', 'Route')),
-        'collapse'=>true]) ?>
-
-
+    <?php Box::begin(
+        [
+            'title'           => Yii::t('kvtree', 'Options'),
+            'collapse'          => true,
+            'collapse_remember' => false,
+            'collapseDefault'   => true
+        ]
+    ) ?>
     <div class="row">
+        <div class="col-xs-12 col-sm-2">
+            <?= $form->field($node, 'visible')->checkbox() ?>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+            <?= $form->field($node, 'disabled')->checkbox() ?>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+            <?= $form->field($node, 'collapsed')->checkbox($flagOptions) ?>
+        </div>
+    </div>
+    <?php Box::end() ?>
 
-
+    <?php Box::begin(
+        [
+            'title'    => Yii::t('kvtree', Yii::t('kvtree', 'Route')),
+            'collapse'          => true,
+            'collapse_remember' => false,
+            'collapseDefault'   => false
+        ]
+    ) ?>
+    <div class="row">
         <div class="col-xs-12 col-sm-6">
             <?= $form->field(
                 $node,
@@ -257,8 +233,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 ]
             )->dropDownList(Tree::optsAccessDomain())->label(false) ?>
         </div>
-
-
         <div class="col-xs-12 col-sm-6">
             <?= $form->field($node, Tree::ATTR_ROUTE)->widget(
                 \kartik\select2\Select2::classname(),
@@ -325,20 +299,17 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     </div>
     <?php $this->endBlock() ?>
-
-
     <?php Box::end() ?>
 
-
-    <?php Box::begin([
-        'title' => Yii::t('kvtree', Yii::t('kvtree', 'SEO')),
-        'collapse'=>true,
-    'collapseDefault'=>false]) ?>
-
+    <?php Box::begin(
+        [
+            'title'           => Yii::t('kvtree', Yii::t('kvtree', 'SEO')),
+            'collapse'          => true,
+            'collapse_remember' => false,
+            'collapseDefault'   => false
+        ]
+    ) ?>
     <div class="row">
-
-
-
         <div class="col-xs-12">
             <?= $form->field(
                 $node,
@@ -347,6 +318,26 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'addon' => ['prepend' => ['content' => Inflector::titleize('page_title')]],
                 ]
             )->textInput($inputOpts)->label(false) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <?= $form->field(
+                $node,
+                'default_meta_keywords',
+                [
+                    'addon' => ['prepend' => ['content' => 'Keywords']],
+                ]
+            )->textInput()->label(false) ?>
+        </div>
+        <div class="col-xs-12 col-lg-12">
+            <?= $form->field(
+                $node,
+                'default_meta_description',
+                [
+                    'addon' => ['prepend' => ['content' => 'Description']],
+                ]
+            )->textarea(['rows' => 5])->label(false) ?>
         </div>
     </div>
     <?php if ($node->route && $nodeUrl !== null) : ?>
@@ -382,41 +373,19 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
         </div>
     <?php endif; ?>
-    <div class="row">
-        <div class="col-xs-12 col-lg-12">
-            <?= $form->field(
-                $node,
-                'default_meta_keywords',
-                [
-                    'addon' => ['prepend' => ['content' => 'Keywords']],
-                ]
-            )->textInput()->label(false) ?>
-        </div>
-        <div class="col-xs-12 col-lg-12">
-            <?= $form->field(
-                $node,
-                'default_meta_description',
-                [
-                    'addon' => ['prepend' => ['content' => 'Description']],
-                ]
-            )->textarea(['rows' => 5])->label(false) ?>
-        </div>
-    </div>
-
     <?php Box::end() ?>
 
-
-    <?php Box::begin([
-        'title' => Yii::t('kvtree', Yii::t('kvtree', 'Advanced')),
-        'collapse'=>true,
-        'collapse_remember'=>false,
-        'collapseDefault'=>true]) ?>
+    <?php Box::begin(
+        [
+            'title'             => Yii::t('kvtree', Yii::t('kvtree', 'Advanced')),
+            'collapse'          => true,
+            'collapse_remember' => false,
+            'collapseDefault'   => true
+        ]
+    ) ?>
 
     <?= $this->blocks['request_params'] ?>
-
     <?php Box::end() ?>
-
-
 
 <?php else : ?>
     <div class="row">
@@ -462,18 +431,18 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     </div>
 <?php endif; ?>
-
-
 <?php if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
-    <div class="pull-left">
-        <?= Html::submitButton(
-            '<i class="glyphicon glyphicon-floppy-disk"></i> '.Yii::t('kvtree', 'Save'),
-            ['class' => 'btn btn-primary']
-        ) ?>
-        <?= Html::resetButton(
-            '<i class="glyphicon glyphicon-repeat"></i> '.Yii::t('kvtree', 'Reset'),
-            ['class' => 'btn btn-default']
-        ) ?>
+    <div class="row">
+        <div class="col-xs-12">
+            <?= Html::submitButton(
+                '<i class="glyphicon glyphicon-floppy-disk"></i> '.Yii::t('kvtree', 'Save'),
+                ['class' => 'btn btn-primary']
+            ) ?>
+            <?= Html::resetButton(
+                '<i class="glyphicon glyphicon-repeat"></i> '.Yii::t('kvtree', 'Reset'),
+                ['class' => 'btn btn-default']
+            ) ?>
+        </div>
     </div>
 <?php endif; ?>
 
