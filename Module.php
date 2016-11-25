@@ -23,20 +23,34 @@ class Module extends \yii\base\Module
     use AccessBehaviorTrait;
 
     /**
+     * The name of this module
+     */
+    const NAME = 'pages';
+
+    /**
      * @var array the list of rights that are allowed to access this module.
      *            If you modify, you also need to enable authManager.
      *            http://www.yiiframework.com/doc-2.0/guide-security-authorization.html
      */
     public $roles = [];
 
+    /**
+     * @var bool
+     */
     public $pagesWithChildrenHasUrl = false;
 
+    /**
+     * @var array
+     */
     public $availableRoutes = [];
 
-    public $availableViews = [];
-
     /**
-     * {@inheritdoc}
+     * @var array
+     */
+    public $availableViews = [];
+    
+    /**
+     * @inheritdoc
      */
     public function init()
     {
@@ -65,7 +79,6 @@ class Module extends \yii\base\Module
                     $this->availableViews[trim($view)] = trim($view);
                 }
             }
-
         }
     }
 
