@@ -9,6 +9,7 @@
  */
 namespace dmstr\modules\pages\controllers;
 
+use dmstr\modules\pages\assets\PagesAsset;
 use dmstr\modules\pages\models\Tree;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -16,8 +17,8 @@ use yii\web\HttpException;
 use yii\web\View;
 
 /**
- * Class DefaultController.
- *
+ * Class DefaultController
+ * @package dmstr\modules\pages\controllers
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
 class DefaultController extends Controller
@@ -48,6 +49,11 @@ JS;
             $this->getView()->registerJs($js, View::POS_LOAD);
             \Yii::$app->session->addFlash('warning', $msg);
         }
+
+        /**
+         * Register the pages asset bundle
+         */
+        PagesAsset::register($this->view);
 
         return $this->render('index');
     }
