@@ -73,6 +73,9 @@ $form = ActiveForm::begin(['action' => $action]);
 // Get tree manager module
 $module = TreeView::module();
 
+// create node Url
+$nodeUrl = $node->createUrl();
+
 // In case you are extending this form, it is mandatory to set
 // all these hidden inputs as defined below.
 echo Html::hiddenInput("Tree[{$keyAttribute}]", $node->id);
@@ -84,13 +87,15 @@ echo Html::hiddenInput('softDelete', $softDelete);
 ?>
 <div class="vertical-spacer"></div>
 
+<?php if ($nodeUrl !== null) : ?>
 <?= SmallBox::widget([
     'head' => $node->name,
-    'text' => $node->createUrl(),
+    'text' => $nodeUrl,
     'icon' => 'fa fa-'.$node->icon,
     'footer' => 'Open',
-    'footer_link' => $node->createUrl()
+    'footer_link' => $nodeUrl
 ]) ?>
+<?php endif; ?>
 
 <div class="clearfix"></div>
 
@@ -344,7 +349,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
             )->textInput($inputOpts)->label(false) ?>
         </div>
     </div>
-    <?php if ($node->route && $node->createUrl() !== null) : ?>
+    <?php if ($node->route && $nodeUrl !== null) : ?>
         <div class="row">
             <div class="col-xs-12 col-lg-12">
                 <?= $form->field(
@@ -359,7 +364,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     ]
                 )->textInput(
                     [
-                        'value' => $node->createUrl(),
+                        'value' => $nodeUrl,
                         'disabled' => true,
                     ]
                 )->label(false)->hint(
