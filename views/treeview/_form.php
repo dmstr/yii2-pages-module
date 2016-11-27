@@ -9,7 +9,6 @@ namespace dmstr\modules\pages\views\treeview;
  */
 
 use dmstr\modules\pages\models\Tree;
-use dmstr\modules\pages\Module;
 use insolita\wgadminlte\Box;
 use insolita\wgadminlte\SmallBox;
 use kartik\form\ActiveForm;
@@ -23,7 +22,6 @@ use yii\helpers\Inflector;
  * @var $this  \yii\web\View
  * @var $form \kartik\form\ActiveForm
  * @var $node \dmstr\modules\pages\models\Tree
- * @var $pagesModule \dmstr\modules\pages\Module
  */
 
 $this->registerJs(
@@ -64,9 +62,6 @@ $form = ActiveForm::begin(['action' => $action]);
 
 // Get tree manager module
 $treeViewModule = TreeView::module();
-
-// Get the pages module
-$pagesModule = \Yii::$app->getModule(Module::NAME);
 
 // create node Url
 $nodeUrl = $node->createUrl();
@@ -220,7 +215,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
         </div>
         <?php Box::end() ?>
-        <?php if ($node->isRoot() || $node->isLeaf() || $node->isNewRecord || $pagesModule->pagesWithChildrenHasUrl === true) : ?>
+        <?php if ($node->isPage()) : ?>
             <?php Box::begin(
                 [
                     'title'    => Yii::t('kvtree', Yii::t('kvtree', 'Route')),

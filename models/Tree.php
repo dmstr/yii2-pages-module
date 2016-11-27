@@ -9,6 +9,7 @@
  */
 namespace dmstr\modules\pages\models;
 
+use dmstr\modules\pages\Module;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -105,6 +106,10 @@ class Tree extends \kartik\tree\models\Tree
      */
     public $name_id;
 
+    /**
+     * @var Module
+     */
+    private $_module;
 
     /**
      * @inheritdoc
@@ -135,6 +140,17 @@ class Tree extends \kartik\tree\models\Tree
                 'bedezign\yii2\audit\AuditTrailBehavior'
             ]
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+
+        // get the pages module instance
+        $this->_module = \Yii::$app->getModule(Module::NAME);
     }
 
     /**
@@ -516,5 +532,24 @@ class Tree extends \kartik\tree\models\Tree
         }
 
         return $path;
+    }
+
+    /**
+     * Conditions for a full page object
+     *
+     * @return bool
+     */
+    public function isPage()
+    {
+        switch(true) {
+            case $this->isRoot():
+            case $this->isLeaf():
+            case $this->isNewRecord:
+            case $this->_module->pagesWithChildrenHasUrl:
+                return true;
+                break;
+            default:
+                return false;
+        }
     }
 }
