@@ -203,7 +203,7 @@ class Tree extends \kartik\tree\models\Tree
                     'view',
                     'required',
                     'when' => function ($model) {
-                        return $model->route == self::DEFAULT_PAGE_ROUTE;
+                        return strstr($model->route, self::DEFAULT_PAGE_ROUTE);
                     },
                     'message' => 'Route ' . self::DEFAULT_PAGE_ROUTE . ' requires a view.'
                 ],
