@@ -9,7 +9,7 @@
 
 namespace dmstr\modules\pages\components;
 
-use dmstr\modules\pages\models\Tree;
+use \dmstr\modules\pages\models\Tree;
 use yii\web\UrlRuleInterface;
 use yii\base\Object;
 
