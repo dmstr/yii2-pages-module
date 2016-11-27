@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\web\HttpException;
 
 /**
  * This is the tree model class, extended from \kartik\tree\models\Tree.
@@ -109,7 +110,7 @@ class Tree extends \kartik\tree\models\Tree
     /**
      * @var Module
      */
-    private $_module;
+    public $module;
 
     /**
      * @inheritdoc
@@ -149,8 +150,10 @@ class Tree extends \kartik\tree\models\Tree
     {
         parent::init();
 
-        // get the pages module instance
-        $this->_module = \Yii::$app->getModule(Module::NAME);
+        // set the pages module instance
+        if (null === $this->module = \Yii::$app->getModule(Module::NAME)) {
+            throw new HttpException(404, 'Module "' . Module::NAME . '" not found in ' . __METHOD__);
+        }
     }
 
     /**
@@ -545,7 +548,7 @@ class Tree extends \kartik\tree\models\Tree
             case $this->isRoot():
             case $this->isLeaf():
             case $this->isNewRecord:
-            case $this->_module->pagesWithChildrenHasUrl:
+            case $this->module->pagesWithChildrenHasUrl:
                 return true;
                 break;
             default:
