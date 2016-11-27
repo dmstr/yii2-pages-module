@@ -20,7 +20,6 @@ use yii\base\Object;
  */
 class PageUrlRule extends Object implements UrlRuleInterface
 {
-
     /**
      * @param \yii\web\UrlManager $manager
      * @param string $route
@@ -30,7 +29,7 @@ class PageUrlRule extends Object implements UrlRuleInterface
      */
     public function createUrl($manager, $route, $params)
     {
-        if ($route === ltrim(Tree::DEFAULT_PAGE_ROUTE, '/')) {
+        if ($route === Tree::DEFAULT_PAGE_ROUTE) {
 
             /**
              * Build page url

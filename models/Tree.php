@@ -75,7 +75,7 @@ class Tree extends \kartik\tree\models\Tree
     /**
      * The default page route
      */
-    const DEFAULT_PAGE_ROUTE = '/pages/default/page';
+    const DEFAULT_PAGE_ROUTE = 'pages/default/page';
 
     /**
      * Attribute names.
@@ -346,7 +346,7 @@ class Tree extends \kartik\tree\models\Tree
         $slugFolder = null;
 
         // us this params only for the default page route
-        if ($this->route === self::DEFAULT_PAGE_ROUTE) {
+        if (strstr($this->route, self::DEFAULT_PAGE_ROUTE)) {
             $pageId = $this->id;
             $slug = ($this->page_title)
                 ? Inflector::slug($this->page_title)
