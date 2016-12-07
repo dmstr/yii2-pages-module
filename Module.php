@@ -42,6 +42,13 @@ class Module extends \yii\base\Module
     public $pagesWithChildrenHasUrl = false;
 
     /**
+     * alias for the pages/default/page action
+     *
+     * @var string
+     */
+    public $defaultPageLayout = '@app/views/layouts/main';
+
+    /**
      * @var array
      */
     public $availableRoutes = [];

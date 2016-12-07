@@ -75,7 +75,7 @@ JS;
         \Yii::$app->session['__crudReturnUrl'] = null;
 
         // Set layout
-        $this->layout = '@app/views/layouts/main';
+        $this->layout = $this->module->defaultPageLayout;
 
         // Get active Tree object, allow access to invisible pages
         // @todo: improve handling, using also roles

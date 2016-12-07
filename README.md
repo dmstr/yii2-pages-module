@@ -56,6 +56,7 @@ Enable module in application configuration
 	'class' => 'dmstr\modules\pages\Module',
 	'layout' => '@admin-views/layouts/main',
 	'roles' => ['Admin', 'Editor'],
+	'defaultPageLayout' => '@app/modules/frontend/layouts/main',
 	'pagesWithChildrenHasUrl' => false,
 	'availableRoutes' => [
 		'site/index' => 'Index Route',
