@@ -75,7 +75,7 @@ class Tree extends \kartik\tree\models\Tree
     /**
      * The default page route
      */
-    const DEFAULT_PAGE_ROUTE = 'pages/default/page';
+    const DEFAULT_PAGE_ROUTE = '/pages/default/page';
 
     /**
      * Attribute names.
@@ -171,10 +171,10 @@ class Tree extends \kartik\tree\models\Tree
                     'message' => \Yii::t('pages', 'Combination domain_id and access_domain must be unique!'),
                 ],
                 [
-                    [
-                        'domain_id',
-                    ],
-                    'validateNoSpecialChars',
+                    'domain_id',
+                    'match',
+                    'pattern' => '/^[a-z0-9_-]+$/',
+                    'message' => \Yii::t('pages', '{0} should not contain any uppercase and special chars!', ['{attribute}'])
                 ],
                 [
                     [
@@ -198,6 +198,23 @@ class Tree extends \kartik\tree\models\Tree
                     ],
                     'string',
                     'max' => 255,
+                ],
+                [
+                    'route',
+                    'match',
+                    'pattern' => '@^/[^/]@i',
+                    'message' => \Yii::t('pages', '{0} should begin with one slash!', ['{attribute}'])
+                ],
+                [
+                    'view',
+                    'required',
+                    'when' => function ($model) {
+                        return $model->route === self::DEFAULT_PAGE_ROUTE;
+                    },
+                    'whenClient' => 'function (attribute, value) {
+                        return $("#tree-route").find(":selected").val() == "' . self::DEFAULT_PAGE_ROUTE . '";
+                    }',
+                    'message' => 'Route ' . self::DEFAULT_PAGE_ROUTE . ' requires a view.'
                 ],
                 [
                     [
@@ -262,21 +279,6 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * @param $attribute
-     * @param $params
-     */
-    public function validateNoSpecialChars($attribute, $params)
-    {
-        // Check for whitespaces
-        if (preg_match("/^[a-z0-9_-]+$/", $this->domain_id) == 0) {
-            $this->addError(
-                $attribute,
-                \Yii::t('pages', '{0} should not contain any uppercase and special chars!', [$attribute])
-            );
-        }
-    }
-
-    /**
      * Override isDisabled method if you need as shown in the
      * example below. You can override similarly other methods
      * like isActive, isMovable etc.
@@ -338,7 +340,7 @@ class Tree extends \kartik\tree\models\Tree
         $slugFolder = null;
 
         // us this params only for the default page route
-        if (strstr($this->route, self::DEFAULT_PAGE_ROUTE)) {
+        if ($this->route === self::DEFAULT_PAGE_ROUTE) {
             $pageId = $this->id;
             $slug = ($this->page_title)
                 ? Inflector::slug($this->page_title)
@@ -347,7 +349,7 @@ class Tree extends \kartik\tree\models\Tree
         }
 
         $route = [
-            '/'.$this->route,
+            $this->route,
             'pageId' => $pageId,
             'pageSlug' => $slug,
             'pagePath' => $slugFolder
