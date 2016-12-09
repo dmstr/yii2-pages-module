@@ -165,6 +165,13 @@ class Tree extends \kartik\tree\models\Tree
             parent::rules(),
             [
                 [
+                    'domain_id',
+                    'default',
+                    'value' => function ($model) {
+                        return substr(Inflector::slug($model->name), 0, 32);
+                    }
+                ],
+                [
                     ['domain_id', 'access_domain'],
                     'unique',
                     'targetAttribute' => ['domain_id', 'access_domain'],
@@ -174,14 +181,8 @@ class Tree extends \kartik\tree\models\Tree
                     'domain_id',
                     'match',
                     'pattern' => '/^[a-z0-9_-]+$/',
-                    'message' => \Yii::t('pages', '{0} should not contain any uppercase and special chars!', ['{attribute}'])
-                ],
-                [
-                    [
-                        'name',
-                        'domain_id',
-                    ],
-                    'required',
+                    'message' => \Yii::t('pages', '{0} should not contain any uppercase and special chars!',
+                        ['{attribute}'])
                 ],
                 [
                     [
