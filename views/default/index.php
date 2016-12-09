@@ -24,12 +24,19 @@ $headerTemplate = <<< HTML
 </div>
 HTML;
 
+$settingsButton = \yii\helpers\Html::a(
+    'Pages Settings',
+    ['/settings', 'SettingSearch' => ['section' => 'pages']],
+    ['class' => 'btn btn-default']
+);
+
 $mainTemplate = <<< HTML
 <div class="row">
     <div class="col-md-4" id="pages-detail-wrapper">
         <div class="box boy-body">
         {wrapper}
         </div>
+        $settingsButton
     </div>
     <div class="col-md-8" id="pages-detail-panel">
         {detail}
@@ -57,7 +64,8 @@ echo TreeView::widget(
         'query' => $queryTree,
         'isAdmin' => true,
         'softDelete' => false,
-        'displayValue' => 1,
+        'displayValue' => true,
+        'showTooltips' => false,
         'wrapperTemplate' => '{header}{footer}{tree}',
         'headingOptions' => ['label' => 'Nodes'],
         'treeOptions' => ['style' => 'height:auto; min-height:400px'],

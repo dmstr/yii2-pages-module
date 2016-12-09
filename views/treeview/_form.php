@@ -81,6 +81,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <?= SmallBox::widget(
         [
             'head'        => $node->name,
+            'type' => SmallBox::TYPE_GRAY,
             'text'        => $nodeUrl,
             'icon'        => 'fa fa-' . $node->icon,
             'footer'      => 'Open',
@@ -98,7 +99,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ]
         ) ?>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-6">
 
                 <?= $form->field(
                     $node,
@@ -109,26 +110,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 )->textInput($inputOpts)->label(false) ?>
             </div>
 
-            <div class="col-xs-12 col-sm-6">
-                <?= $form->field(
-                    $node,
-                    Tree::ATTR_DOMAIN_ID,
-                    [
-                        'addon' => ['prepend' => ['content' => 'Local Domain ID']],
-                    ]
-                )->textInput()->label(false) ?>
-            </div>
-            <div class="col-sm-6">
-                <?= $form->field(
-                    $node,
-                    'name_id',
-                    [
-                        'addon' => ['prepend' => ['content' => 'Name ID']],
-                    ]
-                )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-sm-6">
                 <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] == true): ?>
                     <?= $form->field($node, $iconAttribute)->widget(
@@ -164,34 +145,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     )->textInput($inputOpts)->label(false) ?>
                 <?php endif; ?>
             </div>
-            <div class="col-sm-6">
-                <?= $form->field($node, $iconTypeAttribute)->widget(
-                    \kartik\select2\Select2::classname(),
-                    [
-                        'name' => 'Tree['.$iconTypeAttribute.']',
-                        'model' => $node,
-                        'attribute' => $iconTypeAttribute,
-                        'addon' => [
-                            'prepend' => [
-                                'content' => Inflector::titleize($iconTypeAttribute),
-                            ],
-                        ],
-                        'data' => [
-                            TreeView::ICON_CSS => 'CSS Suffix',
-                            TreeView::ICON_RAW => 'Raw Markup',
-                        ],
-                        'options' => [
-                                'id' => 'tree-'.$iconTypeAttribute,
-                                'placeholder' => Yii::t('pages', 'Select'),
-                                'multiple' => false,
-                            ] + $inputOpts,
-                        'pluginOptions' => [
-                            'allowClear' => false,
-                        ],
-                    ]
-                )->label(false);
-                ?>
-            </div>
+
         </div>
         <?php Box::end() ?>
 
@@ -215,13 +169,13 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
         </div>
         <?php Box::end() ?>
-        <?php if ($node->isPage()) : ?>
+        <?php if (true) : ?>
             <?php Box::begin(
                 [
                     'title'    => Yii::t('kvtree', Yii::t('kvtree', 'Route')),
                     'collapse'          => true,
                     'collapse_remember' => false,
-                    'collapseDefault'   => false
+                    'collapseDefault'   => !$node->isPage()
                 ]
             ) ?>
             <div class="row">
@@ -293,7 +247,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'title'           => Yii::t('kvtree', Yii::t('kvtree', 'SEO')),
                     'collapse'          => true,
                     'collapse_remember' => false,
-                    'collapseDefault'   => false
+                    'collapseDefault'   => !$node->isPage()
                 ]
             ) ?>
             <div class="row">
@@ -371,6 +325,52 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 ]
             ) ?>
             <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    <?= $form->field(
+                        $node,
+                        Tree::ATTR_DOMAIN_ID,
+                        [
+                            'addon' => ['prepend' => ['content' => 'Local Domain ID']],
+                        ]
+                    )->textInput()->label(false) ?>
+                </div>
+                <div class="col-sm-6">
+                    <?= $form->field(
+                        $node,
+                        'name_id',
+                        [
+                            'addon' => ['prepend' => ['content' => 'Name ID']],
+                        ]
+                    )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
+                </div>
+                <div class="col-sm-6">
+                    <?= $form->field($node, $iconTypeAttribute)->widget(
+                        \kartik\select2\Select2::classname(),
+                        [
+                            'name' => 'Tree['.$iconTypeAttribute.']',
+                            'model' => $node,
+                            'attribute' => $iconTypeAttribute,
+                            'addon' => [
+                                'prepend' => [
+                                    'content' => Inflector::titleize($iconTypeAttribute),
+                                ],
+                            ],
+                            'data' => [
+                                TreeView::ICON_CSS => 'CSS Suffix',
+                                TreeView::ICON_RAW => 'Raw Markup',
+                            ],
+                            'options' => [
+                                    'id' => 'tree-'.$iconTypeAttribute,
+                                    'placeholder' => Yii::t('pages', 'Select'),
+                                    'multiple' => false,
+                                ] + $inputOpts,
+                            'pluginOptions' => [
+                                'allowClear' => false,
+                            ],
+                        ]
+                    )->label(false);
+                    ?>
+                </div>
                 <div class="col-xs-12">
                     <?= $form->field(
                         $node,
@@ -433,11 +433,11 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <div class="col-xs-12">
             <?= Html::submitButton(
                 '<i class="glyphicon glyphicon-floppy-disk"></i> '.Yii::t('kvtree', 'Save'),
-                ['class' => 'btn btn-primary']
+                ['class' => 'btn btn-lg btn-primary']
             ) ?>
             <?= Html::resetButton(
                 '<i class="glyphicon glyphicon-repeat"></i> '.Yii::t('kvtree', 'Reset'),
-                ['class' => 'btn btn-default']
+                ['class' => 'btn btn-lg btn-default']
             ) ?>
         </div>
     </div>
