@@ -544,7 +544,6 @@ class Tree extends \kartik\tree\models\Tree
             case $this->isRoot():
             case $this->isLeaf():
             case $this->isNewRecord:
-            case $this->module->pagesWithChildrenHasUrl:
                 return true;
                 break;
             default:

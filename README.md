@@ -57,7 +57,6 @@ Enable module in application configuration
 	'layout' => '@admin-views/layouts/main',
 	'roles' => ['Admin', 'Editor'],
 	'defaultPageLayout' => '@app/modules/frontend/layouts/main',
-	'pagesWithChildrenHasUrl' => false,
 	'availableRoutes' => [
 		'site/index' => 'Index Route',
 	],
