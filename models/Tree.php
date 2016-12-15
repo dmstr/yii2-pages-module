@@ -442,7 +442,8 @@ class Tree extends \kartik\tree\models\Tree
                     'url' => $page->createRoute(),
                     'icon' => $page->icon,
                     'linkOptions' => $pageOptions,
-                    'visible' => ($checkUserPermissions) ?
+                    // always show node, if it's a folder (TODO add check permissions)
+                    'visible' => ($checkUserPermissions && $page->route) ?
                         Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]) :
                         true,
                 ];
