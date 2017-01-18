@@ -378,9 +378,10 @@ class Tree extends \kartik\tree\models\Tree
     }
 
     /**
-     * @return active and visible menu nodes for the current application language
+     * Build array with active and visible menu nodes for the current application language
      *
-     * @param $domainId the domain id of the root node
+     * @param string $domainId the domain id of the root node
+     * @param bool|false $checkUserPermissions weather to check permissions for the node leave routes
      *
      * @return array
      */
