@@ -168,7 +168,7 @@ class Tree extends \kartik\tree\models\Tree
                     'domain_id',
                     'default',
                     'value' => function ($model) {
-                        return substr(md5($model->name . rand(0,100000)), 0, 16);
+                        return uniqid();
                     }
                 ],
                 [
