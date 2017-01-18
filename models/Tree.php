@@ -168,7 +168,7 @@ class Tree extends \kartik\tree\models\Tree
                     'domain_id',
                     'default',
                     'value' => function ($model) {
-                        return substr(Inflector::slug($model->name), 0, 32);
+                        return substr(md5($model->name . rand(0,100000)), 0, 16);
                     }
                 ],
                 [
