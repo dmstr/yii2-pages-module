@@ -138,7 +138,6 @@ class Tree extends \kartik\tree\models\Tree
                     'updatedAtAttribute' => 'updated_at',
                     'value' => new Expression('NOW()'),
                 ],
-                'bedezign\yii2\audit\AuditTrailBehavior'
             ]
         );
     }
@@ -153,6 +152,11 @@ class Tree extends \kartik\tree\models\Tree
         // set the pages module instance
         if (null === $this->module = \Yii::$app->getModule(Module::NAME)) {
             throw new HttpException(404, 'Module "' . Module::NAME . '" not found in ' . __METHOD__);
+        }
+
+        // add AuditTrailBehavior
+        if (!YII_ENV_TEST) {
+            $this->attachBehavior('audit', 'bedezign\yii2\audit\AuditTrailBehavior');
         }
     }
 
