@@ -1,19 +1,34 @@
 actor: Tester
 paths:
-    tests: tests
-    log: tests/_output
-    data: tests/_data
-    helpers: tests/_support
+    tests: tests/codeception
+    log: tests/codeception/_output
+    data: tests/codeception/_data
+    support: tests/codeception/_support
+    envs: tests/codeception/_envs
 settings:
+    #shuffle: true
     bootstrap: _bootstrap.php
     colors: true
     memory_limit: 1024M
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed
 modules:
     config:
-        Db:
-            dsn: ''
-            user: ''
-            password: ''
-            dump: tests/_data/dump.sql
+        Yii2:
+            configFile: 'tests/codeception/_config/codeception-module.php'
+cleanup: false
 config:
-    test_entry_url: http://localhost:80/index.php
+    test_entry_url: http://web:80/index.php
+coverage:
+    enabled: true
+    c3_url: http://web/
+    remote: false
+    whitelist:
+        include:
+            - ../src/*.php
+            - ../vendor/dmstr/*.php
+            - ../vendor/hrzg/*.php
+        exclude:
+            - ../src/commands/*
+            - ../src/migrations/*

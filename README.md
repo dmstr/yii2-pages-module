@@ -22,13 +22,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer require dmstr/yii2-pages-module "^0.14.0"
+composer require dmstr/yii2-pages-module "*"
 ```
 
 or add
 
 ```
-"dmstr/yii2-pages-module": "^0.14.0"
+"dmstr/yii2-pages-module": "*"
 ```
 
 to the require section of your `composer.json` file.

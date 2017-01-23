@@ -1,0 +1,39 @@
+class_name: E2eTester
+modules:
+    enabled:
+        - \Helper\E2e
+        - WebDriver
+        - Asserts
+    config:
+        WebDriver:
+            browser: firefox
+            host: firefox
+            port: 4444
+            window_size: 1024x768
+            restart: true
+            url: http://web:80/
+env:
+    firefox:
+      modules:
+        config:
+          WebDriver:
+            browser: firefox
+            host: firefox
+    # Can be configured as Docker selenium container
+    chrome:
+      modules:
+        config:
+          WebDriver:
+            browser: chrome
+            host: chrome
+    # Can be configured from modern.ie and selenium java standalone driver
+    ie:
+      modules:
+        config:
+          WebDriver:
+            browser: 'internet explorer'
+            host: 192.168.99.1
+            port: 14444
+            window_size: 1024x768
+            restart: true
+            url: http://192.168.99.1:32779/

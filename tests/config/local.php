@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link http://www.diemeisterei.de/
+ * @copyright Copyright (c) 2016 diemeisterei GmbH, Stuttgart
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 $common = [
     'id'          => 'test',
@@ -29,12 +36,15 @@ $common = [
                 ],
             ],
         ],
+        'settings'    => [
+            'class' => '\pheme\settings\components\Settings'
+        ],
         'urlManager'  => [
             'class'                        => 'codemix\localeurls\UrlManager',
             'enablePrettyUrl'              => true,
             'showScriptName'               => getenv('YII_ENV_TEST') ? true : false,
-            'scriptUrl'                    => (PHP_SAPI === 'cli') ? '/' : null,
-            'enableDefaultLanguageUrlCode' => true,
+            'scriptUrl'                    => (PHP_SAPI === 'cli') ? '/' : '',
+            'enableDefaultLanguageUrlCode' => false,
             'baseUrl'                      => '/',
             'rules'                        => [
                 'site/login' => 'user/security/login'
@@ -49,8 +59,11 @@ $common = [
     ],
     'modules'     => [
         'pages'       => [
-            'class' => 'dmstr\modules\pages\Module',
-            'layout' => '@backend/views/layouts/main',
+            'class'  => 'dmstr\modules\pages\Module',
+            'layout' => '@app/views/layouts/main',
+        ],
+        'settings'    => [
+            'class' => '\pheme\settings\Module'
         ],
         'treemanager' => [
             'class'            => 'kartik\tree\Module',
@@ -71,24 +84,17 @@ $common = [
             '@vendor/pheme/yii2-settings/migrations',
             '@vendor/dmstr/yii2-prototype-module/src/migrations',
             '@vendor/dmstr/yii2-pages-module/migrations',
+            '@vendor/dmstr/yii2-pages-module/tests/migrations',
         ]
     ]
 ];
 
 $web = [
-    'components' => [
-        'settings' => [
-            'class' => '\pheme\settings\components\Settings'
-        ]
-    ],
-    'modules' => [
-        'audit' => [
+    'components' => [],
+    'modules'    => [
+        'audit'   => [
             'class' => '\bedezign\yii2\audit\Audit'
-        ],
-        'backend'          => [
-            'class'  => 'app\modules\backend\Backend',
-            'layout' => '@backend/views/layouts/main',
-        ],
+        ]
     ]
 ];
 

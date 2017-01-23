@@ -1,5 +1,8 @@
 FROM dmstr/yii2-app:0.4.0
 
-COPY composer.json composer.lock /app/
+# Missing directories
+RUN mkdir -p /app/src/migrations
 
-RUN composer install --prefer-dist
+# Composer
+COPY composer.* /app/
+RUN composer install --prefer-dist -o
