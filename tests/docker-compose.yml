@@ -30,7 +30,7 @@ services:
         volumes:
           - /app
           - ./..:/app/vendor/dmstr/yii2-pages-module
-          - ~/.composer/cache:/root/.composer/cache
+          #- ~/.composer/cache:/root/.composer/cache
             
     db:
         image: 'percona:5.6'
