@@ -56,7 +56,7 @@ build-tests: ##@test build codeception helper actions
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) codecept run unit
 
 run-tests: ##@test run codeception tests
-	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) codecept run
+	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) codecept run e2e,unit
 
 lint: ##@test run php cs-fixer
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) /app/vendor/bin/php-cs-fixer fix --format=txt -v --dry-run .
