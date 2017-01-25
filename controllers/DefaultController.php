@@ -62,14 +62,12 @@ JS;
      * renders a page view from the database.
      *
      * @param $pageId
-     * @param null $pageName
-     * @param null $parentLeave
      *
      * @return string
      *
      * @throws HttpException
      */
-    public function actionPage($pageId, $pageName = null, $parentLeave = null)
+    public function actionPage($pageId)
     {
         Url::remember();
         \Yii::$app->session['__crudReturnUrl'] = null;
@@ -119,14 +117,18 @@ JS;
         }
     }
 
-
     /**
      * @return array
      */
     private function resolveFallbackPage($pageId)
     {
         $original = Tree::find()->where(['id' => $pageId])->one();
-        $fallback = Tree::find()->where(['domain_id' => $original->domain_id, 'access_domain' => \Yii::$app->language])
+
+        if (empty($original)){
+              return false;
+        }
+        $fallback = Tree::find()
+            ->where(['domain_id' => $original->domain_id, 'access_domain' => \Yii::$app->language])
             ->one();
         return $fallback;
     }
