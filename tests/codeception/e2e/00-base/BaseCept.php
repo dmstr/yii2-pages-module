@@ -7,11 +7,11 @@ use dmstr\modules\pages\tests\codeception\_pages\LoginPage;
 $I = new E2eTester($scenario);
 $I->wantTo('ensure that Pages works');
 
-$I->expect('no access with guest user');
+$I->amGoingTo('login');
 $I->amOnPage('/de/pages');
 $I->seeElement('//form');
 $I->seeElement('input', ['name' => 'login-form[login]']);
-$I->makeScreenshot('pages-login');
+$I->makeScreenshot('view-login-page');
 
 $I->amGoingTo('try to login with correct credentials');
 $loginPage = new LoginPage();
