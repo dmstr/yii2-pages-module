@@ -51,6 +51,12 @@ class Bootstrap implements BootstrapInterface
             [
                 // pages default page route
                 ['class' => PageUrlRule::className()],
+                'p/<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
+                'p/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
+
+                // Backward compatibility
+                'page/<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
+                'page/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
                 '<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>' => 'pages/default/page',
                 '<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>' => 'pages/default/page',
             ],
