@@ -33,7 +33,7 @@ services:
           #- ~/.composer/cache:/root/.composer/cache
             
     db:
-        image: 'percona:5.6'
+        image: 'percona:5.7'
         env_file:
           - db.env
         ports:
@@ -42,7 +42,7 @@ services:
           MYSQL_ROOT_PASSWORD: secretadmin
 
     firefox:
-        image: selenium/standalone-firefox-debug:2.53.0
+        image: selenium/standalone-firefox-debug:2.53.1
         # workaround for Docker Beta, see https://github.com/SeleniumHQ/docker-selenium/issues/227#issuecomment-224865735
         dns: 8.8.4.4
         environment:
