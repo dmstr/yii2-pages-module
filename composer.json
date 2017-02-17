@@ -27,7 +27,7 @@
         "rmrevin/yii2-fontawesome": "~2.9",
         "devgroup/yii2-jsoneditor": "1.0.*",
         "dmstr/yii2-web": "~0.1",
-        "dmstr/yii2-db": "0.8.0-rc3 as 0.7.99",
+        "dmstr/yii2-db": "0.8.0-rc4 as 0.7.999",
         "bedezign/yii2-audit": "^1.0"
     },
     "autoload": {

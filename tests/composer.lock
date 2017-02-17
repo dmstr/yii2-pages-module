@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9ad481a129a60a4cf441485f295ec5c3",
-    "content-hash": "e2d6e4e60bd13aaf0ead03f2ab48c019",
+    "hash": "27808b350e05033002b7213ed5d7f478",
+    "content-hash": "e24d430507ba0ff2e568dc2d176cda42",
     "packages": [
         {
             "name": "2amigos/yii2-chartjs-widget",
@@ -1348,16 +1348,16 @@
         },
         {
             "name": "dmstr/yii2-db",
-            "version": "0.8.0-rc3",
+            "version": "0.8.0-rc4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmstr/yii2-db.git",
-                "reference": "8f4691a294e945f7f0c0dafbd0a684c620a74e3d"
+                "reference": "1fc944f35fb99ae3f064fc818a7b1932895a21f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmstr/yii2-db/zipball/8f4691a294e945f7f0c0dafbd0a684c620a74e3d",
-                "reference": "8f4691a294e945f7f0c0dafbd0a684c620a74e3d",
+                "url": "https://api.github.com/repos/dmstr/yii2-db/zipball/1fc944f35fb99ae3f064fc818a7b1932895a21f4",
+                "reference": "1fc944f35fb99ae3f064fc818a7b1932895a21f4",
                 "shasum": ""
             },
             "require": {
@@ -1390,7 +1390,7 @@
                 "extension",
                 "yii2"
             ],
-            "time": "2017-02-17 13:49:17"
+            "time": "2017-02-17 15:17:59"
         },
         {
             "name": "dmstr/yii2-helpers",
@@ -3719,9 +3719,9 @@
     "packages-dev": [],
     "aliases": [
         {
-            "alias": "0.7.99",
-            "alias_normalized": "0.7.99.0",
-            "version": "0.8.0.0-RC3",
+            "alias": "0.7.999",
+            "alias_normalized": "0.7.999.0",
+            "version": "0.8.0.0-RC4",
             "package": "dmstr/yii2-db"
         }
     ],
