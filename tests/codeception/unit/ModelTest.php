@@ -130,7 +130,8 @@ class ModelTestCase extends \Codeception\Test\Unit
     }
 
     /**
-     * remove a root node
+     * Test find records only for current access domain, feature from
+     * \dmstr\db\traits\ActiveRecordAccessTrait
      */
     public function testAccessDomainCheckOnFind()
     {
@@ -171,6 +172,34 @@ class ModelTestCase extends \Codeception\Test\Unit
 
         // expect true
         $this->assertNotNull($root, 'Root node "de" found from app language "de"');
+    }
+
+    /**
+     * Test update an attribute of a tree node
+     */
+    public function testUpdatePageNode()
+    {
+        // switch to app language 'de'
+        \Yii::$app->language = 'de';
+
+        // try to find the 'de' root from app language 'de'
+        $root = Tree::findOne(
+            [
+                Tree::ATTR_DOMAIN_ID     => Tree::ROOT_NODE_PREFIX,
+                Tree::ATTR_ACCESS_DOMAIN => 'de',
+            ]
+        );
+        // expect true
+        $this->assertNotNull($root, 'Root node "de" found from app language "de"');
+
+        /** @var Tree $root */
+        $root->purifyNodeIcons = false;
+        $root->encodeNodeNames = false;
+        $root->page_title = "Updated Page Title";
+        $root->save();
+
+        // expect true
+        $this->assertSame($root->page_title, 'Updated Page Title');
     }
 
     /**
