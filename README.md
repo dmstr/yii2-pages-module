@@ -126,6 +126,11 @@ $menuItems = \dmstr\modules\pages\models\Tree::getMenuItems('root');
 
 Now you should be able to see the page in your `Nav` widget in the frontend of your application.
 
+#### Traits
+
+- we use `\dmstr\db\traits\ActiveRecordAccessTrait` to have a check access behavior on active record level
+
+
 #### Anchors
 
 *available since 0.12.0-beta1*
@@ -150,26 +155,12 @@ Codeception is run via "Potemkin"-Phundament.
 
 Start test stack    
     
-    docker-compose up -d
+    make all
 
 Run tests
 
-    docker-compose run -e YII_ENV=test phpfpm codecept run unit,acceptance
-
-### Development
-
- Run a bash in the container
- 
-    docker-compose run --rm phpfpm bash
+    make run-tests
     
-Run the tests
-    
-    $ YII_ENV=test codecept run unit,acceptance
-
-Manual setup
-    
-    $ setup.sh
-
 
 Ressources
 ----------
