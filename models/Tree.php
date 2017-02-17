@@ -1,4 +1,5 @@
 <?php
+namespace dmstr\modules\pages\models;
 /**
  * @link http://www.diemeisterei.de/
  *
@@ -7,19 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace dmstr\modules\pages\models;
 
-use dmstr\modules\pages\Module;
 use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
+use dmstr\modules\pages\Module as PagesModule;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
-use yii\web\HttpException;
 
 /**
+ * Class Tree
+ *
  * This is the tree model class, extended from \kartik\tree\models\Tree.
  *
  * @property string $name
@@ -39,241 +38,12 @@ use yii\web\HttpException;
  * @property string $access_delete
  * @property string $created_at
  * @property string $updated_at
+ *
+ * @package dmstr\modules\pages\models
+ * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
-class Tree extends \kartik\tree\models\Tree
+class Tree extends BaseTree
 {
-    /**
-     * Constants useful for frontend actions.
-     */
-    const ICON_TYPE_CSS = 1;
-    const ICON_TYPE_RAW = 2;
-
-    const ACTIVE = 1;
-    const NOT_ACTIVE = 0;
-
-    const SELECTED = 1;
-    const NOT_SELECTED = 0;
-
-    const DISABLED = 1;
-    const NOT_DISABLED = 0;
-
-    const READ_ONLY = 1;
-    const NOT_READ_ONLY = 0;
-
-    const VISIBLE = 1;
-    const NOT_VISIBLE = 0;
-
-    const COLLAPSED = 1;
-    const NOT_COLLAPSED = 0;
-
-    /**
-     * The root node domain_id prefix and level identifier.
-     */
-    const ROOT_NODE_PREFIX = 'root';
-    const ROOT_NODE_LVL = 0;
-
-    /**
-     * The default page route
-     */
-    const DEFAULT_PAGE_ROUTE = '/pages/default/page';
-
-    /**
-     * Attribute names.
-     */
-    const ATTR_ID = 'id';
-    const ATTR_NAME = 'name';
-    const ATTR_DOMAIN_ID = 'domain_id';
-    const ATTR_ACCESS_DOMAIN = 'access_domain';
-    const ATTR_ROOT = 'root';
-    const ATTR_ROUTE = 'route';
-    const ATTR_VIEW = 'view';
-    const ATTR_REQUEST_PARAMS = 'request_params';
-    const ATTR_ICON = 'icon';
-    const ATTR_ICON_TYPE = 'icon_type';
-    const ATTR_ACTIVE = 'active';
-    const ATTR_SELECTED = 'selected';
-    const ATTR_DISABLED = 'disabled';
-    const ATTR_READ_ONLY = 'readonly';
-    const ATTR_VISIBLE = 'visible';
-    const ATTR_COLLAPSED = 'collapsed';
-
-    const GLOBAL_ACCESS_DOMAIN = '*';
-    const GLOBAL_ACCESS_PERMISSION = 'pages.globalAccess';
-
-    /**
-     * Virtual attribute generated from "domain_id"_"access_domain".
-     *
-     * @var string
-     */
-    public $name_id;
-
-    /**
-     * @var Module
-     */
-    public $module;
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'dmstr_page';
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * Use yii\behaviors\TimestampBehavior for created_at and updated_at attribute
-     *
-     * @return array
-     */
-    public function behaviors()
-    {
-        return ArrayHelper::merge(
-            parent::behaviors(),
-            [
-                [
-                    'class' => TimestampBehavior::className(),
-                    'createdAtAttribute' => 'created_at',
-                    'updatedAtAttribute' => 'updated_at',
-                    'value' => new Expression('NOW()'),
-                ],
-            ]
-        );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-
-        // set the pages module instance
-        if (null === $this->module = \Yii::$app->getModule(Module::NAME)) {
-            throw new HttpException(404, 'Module "' . Module::NAME . '" not found in ' . __METHOD__);
-        }
-
-        // add AuditTrailBehavior
-        if (!YII_ENV_TEST) {
-            $this->attachBehavior('audit', 'bedezign\yii2\audit\AuditTrailBehavior');
-        }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return ArrayHelper::merge(
-            parent::rules(),
-            [
-                [
-                    'domain_id',
-                    'default',
-                    'value' => function ($model) {
-                        return uniqid();
-                    }
-                ],
-                [
-                    ['domain_id', 'access_domain'],
-                    'unique',
-                    'targetAttribute' => ['domain_id', 'access_domain'],
-                    'message' => \Yii::t('pages', 'Combination domain_id and access_domain must be unique!'),
-                ],
-                [
-                    'domain_id',
-                    'match',
-                    'pattern' => '/^[a-z0-9_-]+$/',
-                    'message' => \Yii::t('pages', '{0} should not contain any uppercase and special chars!',
-                        ['{attribute}'])
-                ],
-                [
-                    [
-                        'domain_id',
-                        'page_title',
-                        'slug',
-                        'route',
-                        'view',
-                        'default_meta_keywords',
-                        'request_params',
-                        'access_read',
-                        'access_update',
-                        'access_delete',
-                    ],
-                    'string',
-                    'max' => 255,
-                ],
-                [
-                    'route',
-                    'match',
-                    'pattern' => '@^/[^/]@i',
-                    'message' => \Yii::t('pages', '{0} should begin with one slash!', ['{attribute}'])
-                ],
-                [
-                    'view',
-                    'required',
-                    'when' => function ($model) {
-                        return $model->route === self::DEFAULT_PAGE_ROUTE;
-                    },
-                    'whenClient' => 'function (attribute, value) {
-                        return $("#tree-route").find(":selected").val() == "' . self::DEFAULT_PAGE_ROUTE . '";
-                    }',
-                    'message' => 'Route ' . self::DEFAULT_PAGE_ROUTE . ' requires a view.'
-                ],
-                [
-                    [
-                        'default_meta_description',
-                    ],
-                    'string',
-                    'max' => 160,
-                ],
-                [
-                    [
-                        'access_domain',
-                    ],
-                    'string',
-                    'max' => 8,
-                ],
-                [
-                    [
-                        'access_domain',
-                    ],
-                    'default',
-                    'value' => mb_strtolower(\Yii::$app->language),
-                ],
-                [
-                    [
-                        'root',
-                        'access_owner',
-                    ],
-                    'integer',
-                    'integerOnly' => true,
-                ],
-                [
-                    [
-                        'domain_id',
-                        'page_title',
-                        'slug',
-                        'route',
-                        'view',
-                        'default_meta_keywords',
-                        'default_meta_description',
-                        'request_params',
-                        'access_domain',
-                        'access_owner',
-                        'access_read',
-                        'access_update',
-                        'access_delete',
-                        'created_at',
-                        'updated_at',
-                    ],
-                    'safe',
-                ],
-            ]
-        );
-    }
-
     /**
      * @inheritdoc
      */
@@ -300,10 +70,11 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function optsAccessDomain()
     {
-        $availableLanguages[mb_strtolower(Yii::$app->language)] = Yii::$app->language;
+        $currentLanguage = mb_strtolower(Yii::$app->language);
+        $availableLanguages[$currentLanguage] = $currentLanguage;
 
         if (Yii::$app->user->can(self::GLOBAL_ACCESS_PERMISSION)) {
-            $availableLanguages[self::GLOBAL_ACCESS_DOMAIN] = "GLOBAL";
+            $availableLanguages[self::GLOBAL_ACCESS_DOMAIN] = Yii::t('pages', 'GLOBAL');
         }
 
         return $availableLanguages;
@@ -316,7 +87,7 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function optsView()
     {
-        return \Yii::$app->getModule('pages')->availableViews;
+        return \Yii::$app->getModule(PagesModule::NAME)->availableViews;
     }
 
     /**
@@ -326,7 +97,7 @@ class Tree extends \kartik\tree\models\Tree
      */
     public static function optsRoute()
     {
-        return \Yii::$app->getModule('pages')->availableRoutes;
+        return \Yii::$app->getModule(PagesModule::NAME)->availableRoutes;
     }
 
     /**
@@ -435,6 +206,7 @@ class Tree extends \kartik\tree\models\Tree
 
         if (count($leaves) > 0) {
             foreach ($leaves as $page) {
+                /** @var Tree $page */
 
                 // prepare node identifiers
                 $pageOptions = [
@@ -442,13 +214,14 @@ class Tree extends \kartik\tree\models\Tree
                     'data-lvl' => $page->lvl,
                 ];
 
+                // prepare item template
                 $itemTemplate = [
                     'label' => $page->name,
                     'url' => $page->createRoute(),
                     'icon' => $page->icon,
                     'linkOptions' => $pageOptions,
                     // always show node, if it's a folder (TODO add check permissions)
-                    'visible' => ($checkUserPermissions && $page->route) ?
+                    'visible' => ($checkUserPermissions && !empty($page->route)) ?
                         Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]) :
                         true,
                 ];
@@ -516,6 +289,7 @@ class Tree extends \kartik\tree\models\Tree
         if (!$parent) {
             return null;
         }
+        /** @var Tree $parent */
 
         // return no path for first level nodes
         if ($activeNode && $parent->isRoot()) {
