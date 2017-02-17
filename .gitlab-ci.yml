@@ -5,8 +5,6 @@ before_script:
 
 stages:
   - test
-  - report
-  - cleanup
 
 test:
   stage: test
