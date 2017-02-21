@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\web\Application;
 
 /**
  * Class Tree
@@ -54,6 +55,14 @@ class Tree extends BaseTree
     }
 
     /**
+     * @throws NotSupportedException
+     */
+    public function beforeInsert()
+    {
+        return true;
+    }
+
+    /**
      * Override isDisabled method if you need as shown in the
      * example below. You can override similarly other methods
      * like isActive, isMovable etc.
@@ -78,6 +87,28 @@ class Tree extends BaseTree
         }
 
         return $availableLanguages;
+    }
+
+    /**
+     * Renders all available root nodes as mapped array, `id` => `name_id`
+     * @return array
+     */
+    public static function optsSourceRootId()
+    {
+        // disable access trait to find root nodes in all languages
+        self::$activeAccessTrait = false;
+
+        // find all root nodes but global access domain nodes
+        $rootNodes = self::find()
+            ->where([Tree::ATTR_LVL => Tree::ROOT_NODE_LVL])
+            ->andWhere(['NOT', [Tree::ATTR_ACCESS_DOMAIN => Tree::GLOBAL_ACCESS_DOMAIN]])
+            ->all();
+
+        if (empty($rootNodes)) {
+            return [];
+        }
+
+        return ArrayHelper::map($rootNodes, 'id', 'name_id');
     }
 
     /**

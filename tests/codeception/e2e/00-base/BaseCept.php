@@ -1,6 +1,6 @@
 <?php
 
-// @group optional
+// @group mandatory
 
 use dmstr\modules\pages\tests\codeception\_pages\LoginPage;
 
@@ -20,5 +20,8 @@ $I->makeScreenshot('pages-after-login');
 
 $I->amGoingTo('try to view pages');
 $I->amOnPage('/de/pages');
-$I->see('Pages settings', 'a');
+// Copy pages link
+$I->seeElement('.kv-icon-10.fa.fa-copy');
+// Settings link
+$I->seeElement('.kv-icon-10.fa.fa-cogs');
 $I->makeScreenshot('success-pages-index');

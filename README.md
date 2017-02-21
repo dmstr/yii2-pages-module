@@ -140,6 +140,32 @@ On a node you can attach an anchor by using *Advanced URL settings*, with `{'#':
 
 It is recommended to create a new entry in *Tree* mode.
 
+
+Copy pages
+---
+
+**Console config**
+
+```
+'controllerMap'       => [
+	'copy-pages' => '\dmstr\modules\pages\commands\CopyController',
+]
+```
+
+**CLI**
+
+Command: `yii copy-pages/root-node --rootId --destinationLanguage`
+
+**Web UI**
+
+Url: `/pages/copy`
+
+**RBAC permission**
+
+`pages_copy`
+
+
+
 Testing
 -------
 

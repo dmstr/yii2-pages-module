@@ -135,6 +135,11 @@ class BaseTree extends \kartik\tree\models\Tree
     const ATTR_ROOT = 'root';
 
     /**
+     * Column attribute 'lvl'
+     */
+    const ATTR_LVL = 'lvl';
+
+    /**
      * Column attribute 'route'
      */
     const ATTR_ROUTE = 'route';
@@ -200,6 +205,11 @@ class BaseTree extends \kartik\tree\models\Tree
     const GLOBAL_ACCESS_PERMISSION = 'pages.globalAccess';
 
     /**
+     * RBAC permission name to copy page root nodes
+     */
+    const COPY_ACCESS_PERMISSION = 'pages_copy';
+
+    /**
      * Virtual attribute generated from "domain_id"_"access_domain".
      *
      * @var string
@@ -223,11 +233,6 @@ class BaseTree extends \kartik\tree\models\Tree
         // set the pages module instance
         if (null === $this->module = \Yii::$app->getModule(PagesModule::NAME)) {
             throw new HttpException(404, 'Module "' . PagesModule::NAME . '" not found in ' . __METHOD__);
-        }
-
-        // add AuditTrailBehavior
-        if (!YII_ENV_TEST) {
-            $this->attachBehavior('audit', 'bedezign\yii2\audit\AuditTrailBehavior');
         }
     }
 
@@ -273,7 +278,10 @@ class BaseTree extends \kartik\tree\models\Tree
         return ArrayHelper::merge(
             parent::behaviors(),
             [
-                [
+                'audit' => [
+                    'class' => 'bedezign\yii2\audit\AuditTrailBehavior'
+                ],
+                'timestamp' =>[
                     'class'              => TimestampBehavior::className(),
                     'createdAtAttribute' => 'created_at',
                     'updatedAtAttribute' => 'updated_at',
@@ -294,7 +302,7 @@ class BaseTree extends \kartik\tree\models\Tree
                 [
                     'domain_id',
                     'default',
-                    'value' => function ($model) {
+                    'value' => function () {
                         return uniqid();
                     }
                 ],

@@ -24,19 +24,36 @@ $headerTemplate = <<< HTML
 </div>
 HTML;
 
-$settingsButton = \yii\helpers\Html::a(
-    'Pages Settings',
-    ['/settings', 'SettingSearch' => ['section' => 'pages']],
-    ['class' => 'btn btn-default']
-);
+/**
+ * Links to settings and copy area for toolbar
+ */
+$toolbar = [
+    TreeView::BTN_SEPARATOR,
+    TreeView::BTN_SEPARATOR,
+    TreeView::BTN_SEPARATOR,
+    'copy' => [
+        'icon' => 'copy',
+        'url' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION) ? ['/pages/copy'] : null),
+        'options' => [
+            'title' => Yii::t('pages', 'Copy root nodes'),
+            'disabled' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION) ? false : true),
+            'class' => 'btn btn-success'
+        ],
+    ],
+    TreeView::BTN_SEPARATOR,
+    'settings' => [
+        'icon' => 'cogs',
+        'url' => ['/settings', 'SettingSearch' => ['section' => 'pages']],
+        'options' => ['title' => Yii::t('pages', 'Settings'), 'disabled' => false, 'class' => 'btn btn-info'],
+    ]
+];
 
 $mainTemplate = <<< HTML
 <div class="row">
     <div class="col-md-4" id="pages-detail-wrapper">
-        <div class="box boy-body">
+        <div class="box">
         {wrapper}
         </div>
-        $settingsButton
     </div>
     <div class="col-md-8" id="pages-detail-panel">
         {detail}
@@ -71,5 +88,6 @@ echo TreeView::widget(
         'treeOptions' => ['style' => 'height:auto; min-height:400px'],
         'headerTemplate' => $headerTemplate,
         'mainTemplate' => $mainTemplate,
+        'toolbar' => $toolbar
     ]
 );

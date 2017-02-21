@@ -1,4 +1,5 @@
 <?php
+// @group mandatory
 
 namespace dmstr\modules\pages\tests\unit;
 

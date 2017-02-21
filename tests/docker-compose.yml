@@ -24,7 +24,7 @@ services:
         image: ${STACK_PHP_IMAGE}
         environment:
           - APP_NAME=pages
-          - YII_ENV=dev
+          - YII_ENV=test
           - YII_DEBUG=1
           - APP_CONFIG_FILE=/app/vendor/dmstr/yii2-pages-module/tests/config/local.php
         volumes:

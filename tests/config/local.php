@@ -44,12 +44,11 @@ $common = [
             'enablePrettyUrl'              => true,
             'showScriptName'               => getenv('YII_ENV_TEST') ? true : false,
             'scriptUrl'                    => (PHP_SAPI === 'cli') ? '/' : '',
-            'enableDefaultLanguageUrlCode' => false,
             'baseUrl'                      => '/',
             'rules'                        => [
                 'site/login' => 'user/security/login'
             ],
-            'languages'                    => ['de'],
+            'languages'                    => ['de', 'en', 'ru'],
         ],
         'user'        => [
             'class'         => '\dmstr\web\User',
@@ -58,6 +57,19 @@ $common = [
         ],
     ],
     'modules'     => [
+        'audit'            => [
+            'class'         => 'bedezign\yii2\audit\Audit',
+            'layout'        => '@app/views/layouts/main',
+            'panels'        => [
+                'audit/request',
+                'audit/mail',
+                'audit/trail',
+                'audit/javascript',
+                'audit/error',
+            ],
+            'ignoreActions' => ['*'],
+            'maxAge'        => 7,
+        ],
         'pages'       => [
             'class'  => 'dmstr\modules\pages\Module',
             'layout' => '@app/views/layouts/main',
@@ -91,11 +103,7 @@ $common = [
 
 $web = [
     'components' => [],
-    'modules'    => [
-        'audit'   => [
-            'class' => '\bedezign\yii2\audit\Audit'
-        ]
-    ]
+    'modules'    => []
 ];
 
 $console = [
@@ -106,7 +114,8 @@ $console = [
     ],
     'controllerMap' => [
         'db'      => '\dmstr\console\controllers\MysqlController',
-        'migrate' => '\dmstr\console\controllers\MigrateController'
+        'migrate' => '\dmstr\console\controllers\MigrateController',
+        'copy-pages' => '\dmstr\modules\pages\commands\CopyController'
     ],
 ];
 

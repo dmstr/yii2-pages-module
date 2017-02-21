@@ -1,6 +1,6 @@
 <?php
 
-// @group optional
+// @group mandatory
 
 use dmstr\modules\pages\tests\codeception\_pages\LoginPage;
 

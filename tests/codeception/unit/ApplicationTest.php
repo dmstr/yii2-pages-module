@@ -1,4 +1,5 @@
 <?php
+// @group mandatory
 
 class ApplicationTest extends \Codeception\Test\Unit
 {
