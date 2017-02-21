@@ -55,14 +55,6 @@ class Tree extends BaseTree
     }
 
     /**
-     * @throws NotSupportedException
-     */
-    public function beforeInsert()
-    {
-        return true;
-    }
-
-    /**
      * Override isDisabled method if you need as shown in the
      * example below. You can override similarly other methods
      * like isActive, isMovable etc.
