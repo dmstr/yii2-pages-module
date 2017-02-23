@@ -33,7 +33,7 @@ $toolbar = [
     TreeView::BTN_SEPARATOR,
     'copy' => [
         'icon' => 'copy',
-        'url' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION) ? ['/pages/copy'] : null),
+        'url' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION)) ? ['/pages/copy'] : null,
         'options' => [
             'title' => Yii::t('pages', 'Copy root nodes'),
             'disabled' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION) ? false : true),
@@ -43,8 +43,12 @@ $toolbar = [
     TreeView::BTN_SEPARATOR,
     'settings' => [
         'icon' => 'cogs',
-        'url' => ['/settings', 'SettingSearch' => ['section' => 'pages']],
-        'options' => ['title' => Yii::t('pages', 'Settings'), 'disabled' => false, 'class' => 'btn btn-info'],
+        'url' => (\Yii::$app->hasModule('settings')) ? ['/settings', 'SettingSearch' => ['section' => 'pages']] : null,
+        'options' => [
+            'title' => Yii::t('pages', 'Settings'),
+            'disabled' => !\Yii::$app->hasModule('settings'),
+            'class' => 'btn btn-info'
+        ]
     ]
 ];
 
