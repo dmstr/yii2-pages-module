@@ -43,7 +43,7 @@ $common = [
             'class'                        => 'codemix\localeurls\UrlManager',
             'enablePrettyUrl'              => true,
             'showScriptName'               => getenv('YII_ENV_TEST') ? true : false,
-            'scriptUrl'                    => (PHP_SAPI === 'cli') ? '/' : '',
+            'scriptUrl'                    => '',
             'baseUrl'                      => '/',
             'rules'                        => [
                 'site/login' => 'user/security/login'
