@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "27808b350e05033002b7213ed5d7f478",
-    "content-hash": "e24d430507ba0ff2e568dc2d176cda42",
+    "hash": "832244086e81b5c2f0258bb2b371c68f",
+    "content-hash": "8e166fba00f09f8db7f5200e5916fa96",
     "packages": [
         {
             "name": "2amigos/yii2-chartjs-widget",
@@ -908,16 +908,16 @@
         },
         {
             "name": "codemix/yii2-localeurls",
-            "version": "1.4.6",
+            "version": "1.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codemix/yii2-localeurls.git",
-                "reference": "f080c39eec2e989173f3c10f3fba36f3043bdd2f"
+                "reference": "eb6ca1b64612346feb257aa86f0d82e9b5ed1a4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codemix/yii2-localeurls/zipball/f080c39eec2e989173f3c10f3fba36f3043bdd2f",
-                "reference": "f080c39eec2e989173f3c10f3fba36f3043bdd2f",
+                "url": "https://api.github.com/repos/codemix/yii2-localeurls/zipball/eb6ca1b64612346feb257aa86f0d82e9b5ed1a4d",
+                "reference": "eb6ca1b64612346feb257aa86f0d82e9b5ed1a4d",
                 "shasum": ""
             },
             "require": {
@@ -945,7 +945,7 @@
                 "locale",
                 "yii2"
             ],
-            "time": "2017-01-09 12:26:05"
+            "time": "2017-02-22 15:51:39"
         },
         {
             "name": "codemix/yii2-streamlog",
@@ -1348,16 +1348,16 @@
         },
         {
             "name": "dmstr/yii2-db",
-            "version": "0.8.0-rc4",
+            "version": "0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmstr/yii2-db.git",
-                "reference": "1fc944f35fb99ae3f064fc818a7b1932895a21f4"
+                "reference": "ff2e171578c39e75096744977eea09dd2853bdbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmstr/yii2-db/zipball/1fc944f35fb99ae3f064fc818a7b1932895a21f4",
-                "reference": "1fc944f35fb99ae3f064fc818a7b1932895a21f4",
+                "url": "https://api.github.com/repos/dmstr/yii2-db/zipball/ff2e171578c39e75096744977eea09dd2853bdbc",
+                "reference": "ff2e171578c39e75096744977eea09dd2853bdbc",
                 "shasum": ""
             },
             "require": {
@@ -1390,7 +1390,7 @@
                 "extension",
                 "yii2"
             ],
-            "time": "2017-02-17 15:17:59"
+            "time": "2017-02-24 08:45:18"
         },
         {
             "name": "dmstr/yii2-helpers",
@@ -1478,22 +1478,21 @@
         },
         {
             "name": "dmstr/yii2-pages-module",
-            "version": "0.20.6",
+            "version": "0.20.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmstr/yii2-pages-module.git",
-                "reference": "6306b3edad72d9223d40c0a625ebfdfa11431457"
+                "reference": "a39a6f90a9a39a386e153e1c6804b28760cc1f43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmstr/yii2-pages-module/zipball/6306b3edad72d9223d40c0a625ebfdfa11431457",
-                "reference": "6306b3edad72d9223d40c0a625ebfdfa11431457",
+                "url": "https://api.github.com/repos/dmstr/yii2-pages-module/zipball/a39a6f90a9a39a386e153e1c6804b28760cc1f43",
+                "reference": "a39a6f90a9a39a386e153e1c6804b28760cc1f43",
                 "shasum": ""
             },
             "require": {
                 "bedezign/yii2-audit": "^1.0",
                 "devgroup/yii2-jsoneditor": "1.0.*",
-                "dmstr/yii2-db": "0.8.0-rc4 as 0.7.999",
                 "dmstr/yii2-web": "~0.1",
                 "insolita/yii2-adminlte-widgets": "^1.1.4",
                 "kartik-v/yii2-tree-manager": ">=1.0.3 <=1.0.5",
@@ -1531,7 +1530,7 @@
                 "navigation",
                 "yii2"
             ],
-            "time": "2017-02-17 15:25:06"
+            "time": "2017-02-01 09:00:46"
         },
         {
             "name": "dmstr/yii2-prototype-module",
@@ -1861,16 +1860,16 @@
         },
         {
             "name": "kartik-v/yii2-krajee-base",
-            "version": "v1.8.7",
+            "version": "v1.8.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-krajee-base.git",
-                "reference": "8f558809e6093c8f4f4599b7b9fd64b366b22a60"
+                "reference": "2479241c03c87995cfc528ae7b297f5ae9e733cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/8f558809e6093c8f4f4599b7b9fd64b366b22a60",
-                "reference": "8f558809e6093c8f4f4599b7b9fd64b366b22a60",
+                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/2479241c03c87995cfc528ae7b297f5ae9e733cb",
+                "reference": "2479241c03c87995cfc528ae7b297f5ae9e733cb",
                 "shasum": ""
             },
             "require": {
@@ -1908,7 +1907,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2016-09-04 09:25:29"
+            "time": "2017-02-22 05:58:53"
         },
         {
             "name": "kartik-v/yii2-tree-manager",
@@ -3718,17 +3717,9 @@
         }
     ],
     "packages-dev": [],
-    "aliases": [
-        {
-            "alias": "0.7.999",
-            "alias_normalized": "0.7.999.0",
-            "version": "0.8.0.0-RC4",
-            "package": "dmstr/yii2-db"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "dmstr/yii2-db": 5,
         "dmstr/yii2-prototype-module": 5
     },
     "prefer-stable": false,

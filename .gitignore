@@ -3,3 +3,4 @@ tests/codeception/_output
 migrations/workbench/dmstr_yii2-pages-module.mwb.bak
 tests/codeception/_support/_generated
 .php_cs.cache
+tests/vendor
