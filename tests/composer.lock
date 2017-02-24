@@ -1352,12 +1352,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmstr/yii2-db.git",
-                "reference": "ff2e171578c39e75096744977eea09dd2853bdbc"
+                "reference": "86ae417b7e2ae7bd9c3be9df7554b70942f69798"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmstr/yii2-db/zipball/ff2e171578c39e75096744977eea09dd2853bdbc",
-                "reference": "ff2e171578c39e75096744977eea09dd2853bdbc",
+                "url": "https://api.github.com/repos/dmstr/yii2-db/zipball/86ae417b7e2ae7bd9c3be9df7554b70942f69798",
+                "reference": "86ae417b7e2ae7bd9c3be9df7554b70942f69798",
                 "shasum": ""
             },
             "require": {
