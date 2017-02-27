@@ -85,7 +85,7 @@ echo TreeView::widget(
         'query' => $queryTree,
         'isAdmin' => true,
         'softDelete' => false,
-        'displayValue' => true,
+        'displayValue' => 1,
         'showTooltips' => false,
         'wrapperTemplate' => '{header}{footer}{tree}',
         'headingOptions' => ['label' => 'Nodes'],
