@@ -25,31 +25,47 @@ $headerTemplate = <<< HTML
 HTML;
 
 /**
- * Links to settings and copy area for toolbar
+ * Links to settings and copy pages area for toolbar
+ */
+$copyPages = [
+    'icon' => 'copy',
+    'url' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION)) ? ['/pages/copy'] : null,
+    'options' => [
+        'title' => Yii::t('pages', 'Copy root nodes'),
+        'disabled' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION) ? false : true),
+        'class' => 'btn btn-success'
+    ],
+];
+// check settings component and module existence
+if (\Yii::$app->has('settings') && \Yii::$app->hasModule('settings')) {
+
+    // check module permissions
+    $settingPermission = false;
+    foreach (\Yii::$app->getModule('settings')->accessRoles as $role) {
+        $settingPermission = \Yii::$app->user->can($role);
+    }
+
+    $settings = [
+        'icon' => 'cogs',
+        'url' => ['/settings', 'SettingSearch' => ['section' => 'pages']],
+        'options' => [
+            'title' => Yii::t('pages', 'Settings'),
+            'disabled' => ! $settingPermission,
+            'class' => 'btn btn-info'
+        ]
+    ];
+}
+
+/**
+ * Additional toolbar elements
  */
 $toolbar = [
     TreeView::BTN_SEPARATOR,
     TreeView::BTN_SEPARATOR,
     TreeView::BTN_SEPARATOR,
-    'copy' => [
-        'icon' => 'copy',
-        'url' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION)) ? ['/pages/copy'] : null,
-        'options' => [
-            'title' => Yii::t('pages', 'Copy root nodes'),
-            'disabled' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION) ? false : true),
-            'class' => 'btn btn-success'
-        ],
-    ],
+    'copy'     => $copyPages,
     TreeView::BTN_SEPARATOR,
-    'settings' => [
-        'icon' => 'cogs',
-        'url' => (\Yii::$app->hasModule('settings')) ? ['/settings', 'SettingSearch' => ['section' => 'pages']] : null,
-        'options' => [
-            'title' => Yii::t('pages', 'Settings'),
-            'disabled' => !\Yii::$app->hasModule('settings'),
-            'class' => 'btn btn-info'
-        ]
-    ]
+    'settings' => $settings,
 ];
 
 $mainTemplate = <<< HTML
