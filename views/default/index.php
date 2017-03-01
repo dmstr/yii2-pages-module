@@ -41,9 +41,14 @@ if (\Yii::$app->has('settings') && \Yii::$app->hasModule('settings')) {
 
     // check module permissions
     $settingPermission = false;
-    foreach (\Yii::$app->getModule('settings')->accessRoles as $role) {
-        $settingPermission = \Yii::$app->user->can($role);
+    if (\Yii::$app->getModule('settings')->accessRoles === null) {
+        $settingPermission = true;
+    } else {
+        foreach (\Yii::$app->getModule('settings')->accessRoles as $role) {
+            $settingPermission = \Yii::$app->user->can($role);
+        }
     }
+
 
     $settings = [
         'icon' => 'cogs',
