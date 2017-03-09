@@ -50,7 +50,7 @@ class CopyController extends Controller
         if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
 
             // RUN copy-pages cli command
-            $command = new Command('yii copy-pages/root-node');
+            $command = new Command('./yii copy-pages/root-node');
             $command->addArg('--rootId', $model->sourceRootId);
             $command->addArg('--destinationLanguage', $model->destinationLanguage);
             if ($command->execute() && empty($command->getError())) {
