@@ -50,7 +50,19 @@ class CopyController extends Controller
         if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
 
             // RUN copy-pages cli command
-            $command = new Command('./yii copy-pages/root-node');
+            $yiiCommandPath = \Yii::getAlias('@vendor') . '/../yii';
+            if ( ! file_exists($yiiCommandPath) || ! is_executable($yiiCommandPath)) {
+                \Yii::$app->session->setFlash(
+                    'danger',
+                    \Yii::t(
+                        'widgets',
+                        'yii binary not found or is not executable in path {PATH}',
+                        ['PATH' => $yiiCommandPath]
+                    )
+                );
+                return $this->refresh();
+            }
+            $command = new Command($yiiCommandPath . ' copy-pages/root-node');
             $command->addArg('--rootId', $model->sourceRootId);
             $command->addArg('--destinationLanguage', $model->destinationLanguage);
             if ($command->execute() && empty($command->getError())) {
