@@ -383,6 +383,7 @@ class BaseTree extends \kartik\tree\models\Tree
                         self::ATTR_SLUG,
                         self::ATTR_ROUTE,
                         self::ATTR_VIEW,
+                        self::ATTR_ICON,
                         self::ATTR_DEFAULT_META_KEYWORDS,
                         self::ATTR_REQUEST_PARAMS,
                         self::ATTR_ACCESS_READ,

@@ -67,7 +67,7 @@ $nodeUrl = $node->createUrl();
 
 // In case you are extending this form, it is mandatory to set
 // all these hidden inputs as defined below.
-echo Html::hiddenInput("Tree[{$keyAttribute}]", $node->id);
+echo Html::hiddenInput(Html::getInputName($node, $keyAttribute), $node->id);
 echo Html::hiddenInput('treeNodeModify', $node->isNewRecord);
 echo Html::hiddenInput('parentKey', $parentKey);
 echo Html::hiddenInput('currUrl', $currUrl);
@@ -80,9 +80,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <?= SmallBox::widget(
         [
             'head'        => $node->name,
-            'type' => SmallBox::TYPE_GRAY,
+            'type'        => SmallBox::TYPE_GRAY,
             'text'        => $nodeUrl,
-            'icon'        => $node->icon,
+            'icon'        => FA::$cssPrefix.' '.FA::$cssPrefix.'-'.$node->icon,
             'footer'      => 'Open',
             'footer_link' => $nodeUrl
         ]
@@ -112,15 +112,12 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     <?= $form->field($node, $iconAttribute)->widget(
                         \kartik\select2\Select2::classname(),
                         [
-                            'name' => 'Tree['.$iconAttribute.']',
                             'model' => $node,
                             'attribute' => $iconAttribute,
                             'addon' => [
-                                'prepend' => [
-                                    'content' => Inflector::titleize($iconAttribute),
-                                ],
+                                'prepend' => ['content' => Inflector::titleize($iconAttribute)],
                             ],
-                            'data' => FA::getConstants(true),
+                            'data' => $node::optsIcon(true),
                             'options' => [
                                 'id' => 'tree-'.$iconAttribute,
                                 'placeholder' => Yii::t('pages', 'Type to autocomplete'),
@@ -133,9 +130,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                         ]
                     )->label(false); ?>
                 <?php else: ?>
-                    <?= $form->field(
-                        $node,
-                        $iconAttribute,
+                    <?= $form->field($node, $iconAttribute,
                         [
                             'addon' => ['prepend' => ['content' => Inflector::titleize($iconAttribute)]],
                         ]
@@ -259,7 +254,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 <div class="col-xs-12">
                     <?= $form->field($node, $node::ATTR_PAGE_TITLE,
                         [
-                            'addon' => ['prepend' => ['content' => Inflector::titleize('page_title')]],
+                            'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_PAGE_TITLE)]],
                         ]
                     )->textInput($inputOpts)->label(false) ?>
                 </div>
@@ -355,13 +350,11 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     ?>
                 </div>
                 <div class="col-xs-12">
-                    <?= $form->field(
-                        $node,
-                        'request_params',
+                    <?= $form->field($node, $node::ATTR_REQUEST_PARAMS,
                         [
-                            'addon' => ['prepend' => ['content' => Inflector::titleize('request_params')]],
+                            'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_REQUEST_PARAMS)]],
                         ]
-                    )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => 'request_params'])->label(false) ?>
+                    )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS])->label(false) ?>
                 </div>
             </div>
             <?php Box::end() ?>

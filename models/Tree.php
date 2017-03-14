@@ -9,14 +9,13 @@ namespace dmstr\modules\pages\models;
  * file that was distributed with this source code.
  */
 
-use dmstr\db\traits\ActiveRecordAccessTrait;
+use rmrevin\yii\fontawesome\FA;
 use Yii;
 use dmstr\modules\pages\Module as PagesModule;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
-use yii\web\Application;
 
 /**
  * Class Tree
@@ -122,6 +121,24 @@ class Tree extends BaseTree
     public static function optsRoute()
     {
         return \Yii::$app->getModule(PagesModule::NAME)->availableRoutes;
+    }
+
+    /**
+     * Get all icon constants for dropdown list in example
+     * @param bool $html whether to render icon as array value prefix
+     * @return array
+     */
+    public static function optsIcon($html = false)
+    {
+        $result = [];
+        foreach ((new \ReflectionClass(FA::class))->getConstants() as $constant) {
+            $key = $constant;
+
+            $result[$key] = ($html)
+                ? FA::icon($constant) . '&nbsp;&nbsp;' . $constant
+                : $constant;
+        }
+        return $result;
     }
 
     /**
