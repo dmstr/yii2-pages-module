@@ -125,6 +125,11 @@ class BaseTree extends \kartik\tree\models\Tree
     const ATTR_DOMAIN_ID = 'domain_id';
 
     /**
+     * Column attribute 'slug'
+     */
+    const ATTR_SLUG = 'slug';
+
+    /**
      * Column attribute 'access_domain'
      */
     const ATTR_ACCESS_DOMAIN = 'access_domain';
@@ -150,6 +155,11 @@ class BaseTree extends \kartik\tree\models\Tree
     const ATTR_LVL = 'lvl';
 
     /**
+     * Column attribute 'page_title'
+     */
+    const ATTR_PAGE_TITLE = 'page_title';
+
+    /**
      * Column attribute 'route'
      */
     const ATTR_ROUTE = 'route';
@@ -158,6 +168,16 @@ class BaseTree extends \kartik\tree\models\Tree
      * Column attribute 'view'
      */
     const ATTR_VIEW = 'view';
+
+    /**
+     * Column attribute 'default_meta_keywords'
+     */
+    const ATTR_DEFAULT_META_KEYWORDS = 'default_meta_keywords';
+
+    /**
+     * Column attribute 'default_meta_description'
+     */
+    const ATTR_DEFAULT_META_DESCRIPTION = 'default_meta_description';
 
     /**
      * Column attribute 'request_params'

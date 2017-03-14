@@ -8,7 +8,6 @@ namespace dmstr\modules\pages\views\treeview;
  * @version 1.5.0
  */
 
-use dmstr\modules\pages\models\Tree;
 use insolita\wgadminlte\Box;
 use insolita\wgadminlte\SmallBox;
 use kartik\form\ActiveForm;
@@ -101,11 +100,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <div class="row">
             <div class="col-sm-6">
 
-                <?= $form->field(
-                    $node,
-                    $nameAttribute,
+                <?= $form->field($node, $nameAttribute,
                     [
-                        'addon' => ['prepend' => ['content' => Inflector::titleize('menu_name')]],
+                        'addon' => ['prepend' => ['content' => Inflector::titleize($nameAttribute)]],
                     ]
                 )->textInput($inputOpts)->label(false) ?>
             </div>
@@ -187,7 +184,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                             'attribute' => $node::ATTR_ACCESS_DOMAIN,
                             'addon' => [
                                 'prepend' => [
-                                    'content' => 'Access Domain',
+                                    'content' => Inflector::titleize($node::ATTR_ACCESS_DOMAIN),
                                 ],
                             ],
                             'data' => $node::optsAccessDomain(),
@@ -209,9 +206,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                             'model' => $node,
                             'attribute' => $node::ATTR_ROUTE,
                             'addon' => [
-                                'prepend' => [
-                                    'content' => 'Route',
-                                ],
+                                'prepend' => ['content' => Inflector::titleize($node::ATTR_ROUTE)],
                             ],
                             'data' => $node::optsRoute(),
                             'options' => [
@@ -234,9 +229,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                             'model' => $node,
                             'attribute' => $node::ATTR_VIEW,
                             'addon' => [
-                                'prepend' => [
-                                    'content' => 'Available Views',
-                                ],
+                                'prepend' => ['content' => Inflector::titleize($node::ATTR_VIEW)],
                             ],
                             'data' => $node::optsView(),
                             'options' => [
@@ -264,9 +257,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ) ?>
             <div class="row">
                 <div class="col-xs-12">
-                    <?= $form->field(
-                        $node,
-                        'page_title',
+                    <?= $form->field($node, $node::ATTR_PAGE_TITLE,
                         [
                             'addon' => ['prepend' => ['content' => Inflector::titleize('page_title')]],
                         ]
@@ -275,20 +266,16 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
             <div class="row">
                 <div class="col-xs-12 col-lg-12">
-                    <?= $form->field(
-                        $node,
-                        'default_meta_keywords',
+                    <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS,
                         [
-                            'addon' => ['prepend' => ['content' => 'Keywords']],
+                            'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Keywords')]],
                         ]
                     )->textInput()->label(false) ?>
                 </div>
                 <div class="col-xs-12 col-lg-12">
-                    <?= $form->field(
-                        $node,
-                        'default_meta_description',
+                    <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION,
                         [
-                            'addon' => ['prepend' => ['content' => 'Description']],
+                            'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Description')]],
                         ]
                     )->textarea(['rows' => 5])->label(false) ?>
                 </div>
@@ -296,15 +283,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
             <?php if ($node->route && $nodeUrl !== null) : ?>
                 <div class="row">
                     <div class="col-xs-12 col-lg-12">
-                        <?= $form->field(
-                            $node,
-                            'slug',
+                        <?= $form->field($node, $node::ATTR_SLUG,
                             [
-                                'addon' => [
-                                    'prepend' => [
-                                        'content' => \Yii::t('crud', 'Page URL'),
-                                    ],
-                                ],
+                                'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Page URL')]],
                             ]
                         )->textInput(
                             [
@@ -313,14 +294,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
                             ]
                         )->label(false)->hint(
                             FA::icon('info-circle').' '.
-                            \Yii::t(
-                                'crud',
-                                'Automatically generated from page title.'
-                            ).' '.
-                            \Yii::t(
-                                'crud',
-                                'To change URL change page title above.'
-                            ),
+                            \Yii::t('pages','Automatically generated from page title.')
+                            .' '.
+                            \Yii::t('pages','To change URL change page title above.'),
                             ['class' => 'hints']
                         ) ?>
                     </div>
@@ -338,18 +314,14 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ) ?>
             <div class="row">
                 <div class="col-xs-12 col-sm-6">
-                    <?= $form->field(
-                        $node,
-                        $node::ATTR_DOMAIN_ID,
+                    <?= $form->field($node, $node::ATTR_DOMAIN_ID,
                         [
-                            'addon' => ['prepend' => ['content' => 'Local Domain ID']],
+                            'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_DOMAIN_ID)]],
                         ]
                     )->textInput()->label(false) ?>
                 </div>
                 <div class="col-sm-6">
-                    <?= $form->field(
-                        $node,
-                        'name_id',
+                    <?= $form->field($node, 'name_id',
                         [
                             'addon' => ['prepend' => ['content' => 'Name ID']],
                         ]
@@ -408,14 +380,14 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <div class="col-xs-12 col-sm-6">
             <?=
             $form
-                ->field($node, 'access_read')->widget(
+                ->field($node, $node::ATTR_ACCESS_READ)->widget(
                     \kartik\select2\Select2::classname(),
                     [
                         'model' => $node,
-                        'attribute' => 'access_read',
+                        'attribute' => $node::ATTR_ACCESS_READ,
                         'addon' => [
                             'prepend' => [
-                                'content' => 'Access Read',
+                                'content' => Inflector::titleize($node::ATTR_ACCESS_READ),
                             ],
                         ],
                         'data' => $node::getUsersAuthItems(),
