@@ -130,6 +130,16 @@ class BaseTree extends \kartik\tree\models\Tree
     const ATTR_ACCESS_DOMAIN = 'access_domain';
 
     /**
+     * Column attribute 'access_owner'
+     */
+    const ATTR_ACCESS_OWNER = 'access_owner';
+
+    /**
+     * Column attribute 'access_read'
+     */
+    const ATTR_ACCESS_READ = 'access_read';
+
+    /**
      * Column attribute 'root'
      */
     const ATTR_ROOT = 'root';
@@ -248,8 +258,8 @@ class BaseTree extends \kartik\tree\models\Tree
      * Access checks of a page node
      *
      *  - 'access_domain'   enabled
-     *  - 'access_owner'    disabled, not implemented yet!
-     *  - 'access_read'     disabled, not implemented yet!
+     *  - 'access_owner'    enabled
+     *  - 'access_read'     enabled
      *  - 'access_update'   disabled, not implemented yet!
      *  - 'access_delete'   disabled, not implemented yet!
      *
@@ -258,9 +268,9 @@ class BaseTree extends \kartik\tree\models\Tree
     public static function accessColumnAttributes()
     {
         return [
-            'domain' => 'access_domain',
-            'owner'  => false,
-            'read'   => false,
+            'domain' => self::ATTR_ACCESS_DOMAIN,
+            'owner'  => self::ATTR_ACCESS_OWNER,
+            'read'   => self::ATTR_ACCESS_READ,
             'update' => false,
             'delete' => false,
         ];

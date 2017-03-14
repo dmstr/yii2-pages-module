@@ -46,22 +46,6 @@ use yii\web\Application;
  */
 class Tree extends BaseTree
 {
-    use ActiveRecordAccessTrait;
-
-    /**
-     * @return array with access field names
-     */
-    public static function accessColumnAttributes()
-    {
-        return [
-            'owner'  => 'access_owner',
-            'read'   => 'access_read',
-            'update' => false,
-            'delete' => false,
-            'domain' => 'access_domain',
-        ];
-    }
-
     /**
      * @inheritdoc
      */
