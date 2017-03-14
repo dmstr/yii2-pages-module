@@ -140,7 +140,7 @@ JS;
               return false;
         }
         $fallback = Tree::find()
-            ->where(['domain_id' => $original->domain_id, 'access_domain' => \Yii::$app->language])
+            ->andWhere(['domain_id' => $original->domain_id, 'access_domain' => \Yii::$app->language])
             ->one();
         return $fallback;
     }
