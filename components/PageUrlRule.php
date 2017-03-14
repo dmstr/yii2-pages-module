@@ -35,21 +35,21 @@ class PageUrlRule extends Object implements UrlRuleInterface
              * Build page url
              */
             $pageId = '';
-            if (isset($params['pageId'])) {
-                $pageId = '-' . $params['pageId'];
-                unset($params['pageId']);
+            if (isset($params[Tree::REQUEST_PARAM_ID])) {
+                $pageId = '-' . $params[Tree::REQUEST_PARAM_ID];
+                unset($params[Tree::REQUEST_PARAM_ID]);
             }
 
             $pageSlug = '';
-            if (isset($params['pageSlug'])) {
-                $pageSlug = $params['pageSlug'];
-                unset($params['pageSlug']);
+            if (isset($params[Tree::REQUEST_PARAM_SLUG])) {
+                $pageSlug = $params[Tree::REQUEST_PARAM_SLUG];
+                unset($params[Tree::REQUEST_PARAM_SLUG]);
             }
 
             $pagePath = '';
-            if (isset($params['pagePath'])) {
-                $pagePath = $params['pagePath'] . '/';
-                unset($params['pagePath']);
+            if (isset($params[Tree::REQUEST_PARAM_PATH])) {
+                $pagePath = $params[Tree::REQUEST_PARAM_PATH] . '/';
+                unset($params[Tree::REQUEST_PARAM_PATH]);
             }
 
             $pageUrl = $pagePath . $pageSlug . $pageId;

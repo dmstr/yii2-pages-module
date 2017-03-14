@@ -167,9 +167,9 @@ class Tree extends BaseTree
 
         $route = [
             $this->route,
-            'pageId' => $pageId,
-            'pageSlug' => $slug,
-            'pagePath' => $slugFolder
+            self::REQUEST_PARAM_ID => $pageId,
+            self::REQUEST_PARAM_SLUG => $slug,
+            self::REQUEST_PARAM_PATH => $slugFolder
         ];
 
         if (Json::decode($this->request_params)) {
@@ -204,8 +204,8 @@ class Tree extends BaseTree
     public static function getMenuItems($domainId, $checkUserPermissions = false)
     {
         // Get root node by domain id
-        $rootCondition['domain_id'] = $domainId;
-        $rootCondition['access_domain'] = [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)];
+        $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
+        $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)];
         if (!Yii::$app->user->can('pages')) {
             $rootCondition[self::ATTR_DISABLED] = self::NOT_DISABLED;
         }

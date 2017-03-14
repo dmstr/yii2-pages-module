@@ -5,6 +5,7 @@ namespace dmstr\modules\pages\tests\unit;
 
 use Codeception\Util\Debug;
 use dmstr\modules\pages\components\PageUrlRule;
+use dmstr\modules\pages\models\Tree;
 
 class UrlTestCase extends \Codeception\Test\Unit
 {
@@ -26,7 +27,7 @@ class UrlTestCase extends \Codeception\Test\Unit
          * Check url with params
          *  - pageId
          */
-        $params = ['pageId' => 1];
+        $params = [Tree::REQUEST_PARAM_ID => 1];
 
         $createdUrl = $rule->createUrl($urlManager, $route, $params);
         $expectedUrl = '-1';
@@ -38,7 +39,7 @@ class UrlTestCase extends \Codeception\Test\Unit
          *  - pageId
          *  - pageSlug
          */
-        $params = ['pageId' => 1, 'pageSlug' => 'slug'];
+        $params = [Tree::REQUEST_PARAM_ID => 1, Tree::REQUEST_PARAM_SLUG => 'slug'];
 
         $createdUrl = $rule->createUrl($urlManager, $route, $params);
         $expectedUrl = 'slug-1';
@@ -51,7 +52,7 @@ class UrlTestCase extends \Codeception\Test\Unit
          *  - pageSlug
          *  - pagePath
          */
-        $params = ['pageId' => 1, 'pageSlug' => 'slug', 'pagePath' => 'subpage/next-subpage/next-subpage'];
+        $params = [Tree::REQUEST_PARAM_ID => 1, Tree::REQUEST_PARAM_SLUG => 'slug', Tree::REQUEST_PARAM_PATH => 'subpage/next-subpage/next-subpage'];
 
         $createdUrl = $rule->createUrl($urlManager, $route, $params);
         $expectedUrl = 'subpage/next-subpage/next-subpage/slug-1';
@@ -95,7 +96,7 @@ class UrlTestCase extends \Codeception\Test\Unit
          *  - param1 => value1
          */
         $route = 'static-route';
-        $params = ['pageId' => 5, 'param1' => 'value1'];
+        $params = [Tree::REQUEST_PARAM_ID => 5, 'param1' => 'value1'];
         $createdUrl = $rule->createUrl($urlManager, $route, $params);
 
         /**
@@ -103,7 +104,7 @@ class UrlTestCase extends \Codeception\Test\Unit
          * and the application url manager will be used
          */
         if ($createdUrl === false) {
-            $params = [0 => '/static-route', 'pageId' => 5, 'param1' => 'value1'];
+            $params = [0 => '/static-route', Tree::REQUEST_PARAM_ID => 5, 'param1' => 'value1'];
 
             $createdUrl = $urlManager->createUrl($params);
         }

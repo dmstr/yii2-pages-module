@@ -10,6 +10,7 @@
 namespace dmstr\modules\pages;
 
 use dmstr\modules\pages\components\PageUrlRule;
+use dmstr\modules\pages\models\Tree;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
 
@@ -51,14 +52,14 @@ class Bootstrap implements BootstrapInterface
             [
                 // pages default page route
                 ['class' => PageUrlRule::className()],
-                'p/<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
-                'p/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
+                'p/<'.Tree::REQUEST_PARAM_PATH.':[a-zA-Z0-9_\-\./\+]*>/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
+                'p/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
 
                 // Backward compatibility
-                'page/<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
-                'page/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
-                '<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>' => 'pages/default/page',
-                '<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>' => 'pages/default/page',
+                'page/<'.Tree::REQUEST_PARAM_PATH.':[a-zA-Z0-9_\-\./\+]*>/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
+                'page/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
+                '<'.Tree::REQUEST_PARAM_PATH.':[a-zA-Z0-9_\-\./\+]*>/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>' => 'pages/default/page',
+                '<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>' => 'pages/default/page',
             ],
             true
         );
