@@ -82,7 +82,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
             'head'        => $node->name,
             'type' => SmallBox::TYPE_GRAY,
             'text'        => $nodeUrl,
-            'icon'        => 'fa fa-' . $node->icon,
+            'icon'        => $node->icon,
             'footer'      => 'Open',
             'footer_link' => $nodeUrl
         ]
