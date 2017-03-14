@@ -94,7 +94,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
         <?php Box::begin(
             [
-                'title'    => Yii::t('kvtree', 'General'),
+                'title'    => Yii::t('pages', 'General'),
                 'collapse' => true
             ]
         ) ?>
@@ -151,7 +151,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
         <?php Box::begin(
             [
-                'title'           => Yii::t('kvtree', 'Options'),
+                'title'           => Yii::t('pages', 'Options'),
                 'collapse'          => true,
                 'collapse_remember' => false,
                 'collapseDefault'   => true
@@ -172,7 +172,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <?php if (true) : ?>
             <?php Box::begin(
                 [
-                    'title'    => Yii::t('kvtree', Yii::t('kvtree', 'Route')),
+                    'title'    => Yii::t('pages', Yii::t('pages', 'Route')),
                     'collapse'          => true,
                     'collapse_remember' => false,
                     'collapseDefault'   => !$node->isPage()
@@ -180,27 +180,40 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ) ?>
             <div class="row">
                 <div class="col-xs-12 col-sm-6">
-                    <?= $form->field(
-                        $node,
-                        Tree::ATTR_ACCESS_DOMAIN,
-                        [
-                            'addon' => ['prepend' => ['content' => 'Access Domain']],
-                        ]
-                    )->dropDownList(Tree::optsAccessDomain())->label(false) ?>
-                </div>
-                <div class="col-xs-12 col-sm-6">
-                    <?= $form->field($node, Tree::ATTR_ROUTE)->widget(
+                    <?= $form->field($node, $node::ATTR_ACCESS_DOMAIN)->widget(
                         \kartik\select2\Select2::classname(),
                         [
-                            'name' => Html::getInputName($node, Tree::ATTR_ROUTE),
                             'model' => $node,
-                            'attribute' => Tree::ATTR_ROUTE,
+                            'attribute' => $node::ATTR_ACCESS_DOMAIN,
+                            'addon' => [
+                                'prepend' => [
+                                    'content' => 'Access Domain',
+                                ],
+                            ],
+                            'data' => $node::optsAccessDomain(),
+                            'options' => [
+                                'id' => 'tree-access-domain',
+                                'placeholder' => Yii::t('pages', 'Type to autocomplete'),
+                                'multiple' => false,
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => false,
+                            ],
+                        ]
+                    )->label(false) ?>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <?= $form->field($node, $node::ATTR_ROUTE)->widget(
+                        \kartik\select2\Select2::classname(),
+                        [
+                            'model' => $node,
+                            'attribute' => $node::ATTR_ROUTE,
                             'addon' => [
                                 'prepend' => [
                                     'content' => 'Route',
                                 ],
                             ],
-                            'data' => Tree::optsRoute(),
+                            'data' => $node::optsRoute(),
                             'options' => [
                                 'placeholder' => Yii::t('pages', 'Select route'),
                                 'multiple' => false,
@@ -215,18 +228,17 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12">
-                    <?= $form->field($node, Tree::ATTR_VIEW)->widget(
+                    <?= $form->field($node, $node::ATTR_VIEW)->widget(
                         \kartik\select2\Select2::classname(),
                         [
-                            'name' => Html::getInputName($node, Tree::ATTR_VIEW),
                             'model' => $node,
-                            'attribute' => Tree::ATTR_VIEW,
+                            'attribute' => $node::ATTR_VIEW,
                             'addon' => [
                                 'prepend' => [
                                     'content' => 'Available Views',
                                 ],
                             ],
-                            'data' => Tree::optsView(),
+                            'data' => $node::optsView(),
                             'options' => [
                                 'id' => 'tree-views',
                                 'placeholder' => Yii::t('pages', 'Type to autocomplete'),
@@ -244,7 +256,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
             <?php Box::begin(
                 [
-                    'title'           => Yii::t('kvtree', Yii::t('kvtree', 'SEO')),
+                    'title'           => Yii::t('pages', Yii::t('pages', 'SEO')),
                     'collapse'          => true,
                     'collapse_remember' => false,
                     'collapseDefault'   => !$node->isPage()
@@ -318,7 +330,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
             <?php Box::begin(
                 [
-                    'title'             => Yii::t('kvtree', Yii::t('kvtree', 'Advanced')),
+                    'title'             => Yii::t('pages', Yii::t('pages', 'Advanced')),
                     'collapse'          => true,
                     'collapse_remember' => false,
                     'collapseDefault'   => true
@@ -328,7 +340,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 <div class="col-xs-12 col-sm-6">
                     <?= $form->field(
                         $node,
-                        Tree::ATTR_DOMAIN_ID,
+                        $node::ATTR_DOMAIN_ID,
                         [
                             'addon' => ['prepend' => ['content' => 'Local Domain ID']],
                         ]
@@ -347,7 +359,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     <?= $form->field($node, $iconTypeAttribute)->widget(
                         \kartik\select2\Select2::classname(),
                         [
-                            'name' => 'Tree['.$iconTypeAttribute.']',
                             'model' => $node,
                             'attribute' => $iconTypeAttribute,
                             'addon' => [
@@ -387,7 +398,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
     <?php Box::begin(
         [
-            'title' => Yii::t('kvtree', Yii::t('kvtree', 'Access')),
+            'title' => Yii::t('pages', Yii::t('pages', 'Access')),
             'collapse' => true,
             'collapse_remember' => false,
             'collapseDefault' => true,
@@ -397,13 +408,26 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <div class="col-xs-12 col-sm-6">
             <?=
             $form
-                ->field($node,
-                    'access_read',
+                ->field($node, 'access_read')->widget(
+                    \kartik\select2\Select2::classname(),
                     [
-                        'addon' => ['prepend' => ['content' => 'Access Read']],
+                        'model' => $node,
+                        'attribute' => 'access_read',
+                        'addon' => [
+                            'prepend' => [
+                                'content' => 'Access Read',
+                            ],
+                        ],
+                        'data' => $node::getUsersAuthItems(),
+                        'options' => [
+                            'placeholder' => Yii::t('pages', 'Select ...'),
+                            'multiple' => false,
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                        ],
                     ]
                 )
-                ->dropDownList($node->getUsersAuthItems())
                 ->label(false)
             ?>
         </div>
@@ -460,11 +484,11 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <div class="row">
         <div class="col-xs-12">
             <?= Html::submitButton(
-                '<i class="glyphicon glyphicon-floppy-disk"></i> '.Yii::t('kvtree', 'Save'),
+                '<i class="glyphicon glyphicon-floppy-disk"></i> '.Yii::t('pages', 'Save'),
                 ['class' => 'btn btn-lg btn-primary']
             ) ?>
             <?= Html::resetButton(
-                '<i class="glyphicon glyphicon-repeat"></i> '.Yii::t('kvtree', 'Reset'),
+                '<i class="glyphicon glyphicon-repeat"></i> '.Yii::t('pages', 'Reset'),
                 ['class' => 'btn btn-lg btn-default']
             ) ?>
         </div>
