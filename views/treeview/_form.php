@@ -9,6 +9,7 @@ namespace dmstr\modules\pages\views\treeview;
  */
 
 use insolita\wgadminlte\Box;
+use insolita\wgadminlte\InfoBox;
 use insolita\wgadminlte\SmallBox;
 use kartik\form\ActiveForm;
 use kartik\tree\TreeView;
@@ -77,16 +78,20 @@ echo Html::hiddenInput('softDelete', $softDelete);
 <div class="vertical-spacer"></div>
 
 <?php if ($nodeUrl !== null) : ?>
-    <?= SmallBox::widget(
+    <?php $infoBoxHtml = InfoBox::widget(
         [
-            'head'        => $node->name,
-            'type'        => SmallBox::TYPE_GRAY,
-            'text'        => $nodeUrl,
-            'icon'        => FA::$cssPrefix.' '.FA::$cssPrefix.'-'.$node->icon,
-            'footer'      => 'Open',
-            'footer_link' => $nodeUrl
+            'text' => '<div class="text-center">
+                            <h3 style="white-space: normal;">'.$node->name.'</h3>
+                            <div style="text-transform: lowercase">' . $nodeUrl . '</div>
+                        </div>',
+            'boxBg' => InfoBox::TYPE_AQUA,
+            'icon' => (empty($node->icon)
+                ? FA::$cssPrefix.' '.FA::$cssPrefix.'-file'
+                : FA::$cssPrefix.' '.FA::$cssPrefix.'-'.$node->icon),
         ]
-    ) ?>
+    );
+    echo Html::a($infoBoxHtml, $nodeUrl);
+    ?>
 <?php endif; ?>
 <div class="clearfix"></div>
 
@@ -275,28 +280,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     )->textarea(['rows' => 5])->label(false) ?>
                 </div>
             </div>
-            <?php if ($node->route && $nodeUrl !== null) : ?>
-                <div class="row">
-                    <div class="col-xs-12 col-lg-12">
-                        <?= $form->field($node, $node::ATTR_SLUG,
-                            [
-                                'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Page URL')]],
-                            ]
-                        )->textInput(
-                            [
-                                'value' => $nodeUrl,
-                                'disabled' => true,
-                            ]
-                        )->label(false)->hint(
-                            FA::icon('info-circle').' '.
-                            \Yii::t('pages','Automatically generated from page title.')
-                            .' '.
-                            \Yii::t('pages','To change URL change page title above.'),
-                            ['class' => 'hints']
-                        ) ?>
-                    </div>
-                </div>
-            <?php endif; ?>
             <?php Box::end() ?>
 
             <?php Box::begin(
