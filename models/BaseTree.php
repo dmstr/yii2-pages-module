@@ -130,21 +130,6 @@ class BaseTree extends \kartik\tree\models\Tree
     const ATTR_SLUG = 'slug';
 
     /**
-     * Column attribute 'access_domain'
-     */
-    const ATTR_ACCESS_DOMAIN = 'access_domain';
-
-    /**
-     * Column attribute 'access_owner'
-     */
-    const ATTR_ACCESS_OWNER = 'access_owner';
-
-    /**
-     * Column attribute 'access_read'
-     */
-    const ATTR_ACCESS_READ = 'access_read';
-
-    /**
      * Column attribute 'root'
      */
     const ATTR_ROOT = 'root';
@@ -185,6 +170,31 @@ class BaseTree extends \kartik\tree\models\Tree
     const ATTR_REQUEST_PARAMS = 'request_params';
 
     /**
+     * Column attribute 'access_domain'
+     */
+    const ATTR_ACCESS_DOMAIN = 'access_domain';
+
+    /**
+     * Column attribute 'access_owner'
+     */
+    const ATTR_ACCESS_OWNER = 'access_owner';
+
+    /**
+     * Column attribute 'access_read'
+     */
+    const ATTR_ACCESS_READ = 'access_read';
+
+    /**
+     * Column attribute 'access_update'
+     */
+    const ATTR_ACCESS_UPDATE = 'access_update';
+
+    /**
+     * Column attribute 'access_delete'
+     */
+    const ATTR_ACCESS_DELETE = 'access_delete';
+
+    /**
      * Column attribute 'icon'
      */
     const ATTR_ICON = 'icon';
@@ -223,6 +233,16 @@ class BaseTree extends \kartik\tree\models\Tree
      * Column attribute 'collapsed'
      */
     const ATTR_COLLAPSED = 'collapsed';
+
+    /**
+     * Column attribute 'created_at'
+     */
+    const ATTR_CREATED_AT = 'created_at';
+
+    /**
+     * Column attribute 'updated_at'
+     */
+    const ATTR_UPDATED_AT = 'updated_at';
 
     /**
      * Global identifier for a access_domain
@@ -313,8 +333,8 @@ class BaseTree extends \kartik\tree\models\Tree
                 ],
                 'timestamp' =>[
                     'class'              => TimestampBehavior::className(),
-                    'createdAtAttribute' => 'created_at',
-                    'updatedAtAttribute' => 'updated_at',
+                    'createdAtAttribute' => self::ATTR_CREATED_AT,
+                    'updatedAtAttribute' => self::ATTR_UPDATED_AT,
                     'value'              => new Expression('NOW()'),
                 ],
             ]
@@ -330,43 +350,50 @@ class BaseTree extends \kartik\tree\models\Tree
             parent::rules(),
             [
                 [
-                    'domain_id',
+                    self::ATTR_DOMAIN_ID,
                     'default',
                     'value' => function () {
                         return uniqid();
                     }
                 ],
                 [
-                    ['domain_id', 'access_domain'],
-                    'unique',
-                    'targetAttribute' => ['domain_id', 'access_domain'],
-                    'message' => \Yii::t('pages', 'Combination domain_id and access_domain must be unique!'),
+                    self::ATTR_ACCESS_READ,
+                    'default',
+                    'value' => self::$_all
                 ],
                 [
-                    'domain_id',
+                    [self::ATTR_DOMAIN_ID, self::ATTR_ACCESS_DOMAIN],
+                    'unique',
+                    'targetAttribute' => [self::ATTR_DOMAIN_ID, self::ATTR_ACCESS_DOMAIN],
+                    'message' => \Yii::t('pages', 'Combination ' . self::ATTR_DOMAIN_ID . ' and ' . self::ATTR_ACCESS_DOMAIN . ' must be unique!'),
+                ],
+                [
+                    self::ATTR_DOMAIN_ID,
                     'match',
                     'pattern' => '/^[a-z0-9_-]+$/',
-                    'message' => \Yii::t('pages', '{0} should not contain any uppercase and special chars!',
-                                         ['{attribute}'])
+                    'message' => \Yii::t(
+                        'pages',
+                        '{0} should not contain any uppercase and special chars!', ['{attribute}']
+                    )
                 ],
                 [
                     [
-                        'domain_id',
-                        'page_title',
-                        'slug',
-                        'route',
-                        'view',
-                        'default_meta_keywords',
-                        'request_params',
-                        'access_read',
-                        'access_update',
-                        'access_delete',
+                        self::ATTR_DOMAIN_ID,
+                        self::ATTR_PAGE_TITLE,
+                        self::ATTR_SLUG,
+                        self::ATTR_ROUTE,
+                        self::ATTR_VIEW,
+                        self::ATTR_DEFAULT_META_KEYWORDS,
+                        self::ATTR_REQUEST_PARAMS,
+                        self::ATTR_ACCESS_READ,
+                        self::ATTR_ACCESS_UPDATE,
+                        self::ATTR_ACCESS_DELETE,
                     ],
                     'string',
                     'max' => 255,
                 ],
                 [
-                    'route',
+                    self::ATTR_ROUTE,
                     'match',
                     'pattern' => '@^/[^/]@i',
                     'message' => \Yii::t('pages', '{0} should begin with one slash!', ['{attribute}'])
@@ -384,50 +411,49 @@ class BaseTree extends \kartik\tree\models\Tree
                 ],
                 [
                     [
-                        'default_meta_description',
+                        self::ATTR_DEFAULT_META_DESCRIPTION,
                     ],
                     'string',
                     'max' => 160,
                 ],
                 [
                     [
-                        'access_domain',
+                        self::ATTR_ACCESS_DOMAIN,
                     ],
                     'string',
                     'max' => 8,
                 ],
                 [
                     [
-                        'access_domain',
+                        self::ATTR_ACCESS_DOMAIN,
                     ],
                     'default',
                     'value' => mb_strtolower(\Yii::$app->language),
                 ],
                 [
                     [
-                        'root',
-                        'access_owner',
+                        self::ATTR_ROOT,
+                        self::ATTR_ACCESS_OWNER,
                     ],
                     'integer',
                     'integerOnly' => true,
                 ],
                 [
                     [
-                        'domain_id',
-                        'page_title',
-                        'slug',
-                        'route',
-                        'view',
-                        'default_meta_keywords',
-                        'default_meta_description',
-                        'request_params',
-                        'access_domain',
-                        'access_owner',
-                        'access_read',
-                        'access_update',
-                        'access_delete',
-                        'created_at',
-                        'updated_at',
+                        self::ATTR_DOMAIN_ID,
+                        self::ATTR_PAGE_TITLE,
+                        self::ATTR_SLUG,
+                        self::ATTR_ROUTE,
+                        self::ATTR_VIEW,
+                        self::ATTR_DEFAULT_META_KEYWORDS,
+                        self::ATTR_DEFAULT_META_DESCRIPTION,
+                        self::ATTR_REQUEST_PARAMS,
+                        self::ATTR_ACCESS_DOMAIN,
+                        self::ATTR_ACCESS_OWNER,
+                        self::ATTR_ACCESS_UPDATE,
+                        self::ATTR_ACCESS_DELETE,
+                        self::ATTR_CREATED_AT,
+                        self::ATTR_UPDATED_AT,
                     ],
                     'safe',
                 ],
