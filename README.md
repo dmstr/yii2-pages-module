@@ -164,6 +164,12 @@ Url: `/pages/copy`
 
 `pages_copy`
 
+**Usage**
+
+* Switch to the application language you want to copy page root nodes to -> `/pages/copy`
+* Select the root node you whant to copy
+* Select the target language or you can select the global domain if you have permissions to
+* Start Copy
 
 
 Testing
