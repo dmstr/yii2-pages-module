@@ -38,7 +38,8 @@ class DefaultController extends Controller
 Please create a new root-node for the current language.
 </p>
 <p>
-<a onclick="$('#tree-domain_id').val('{$rootNodePrefix}');$('#tree-name').val('{$rootNodePrefix}_{$language}');$('.kv-detail-container button[type=submit]').click()" class="btn btn-warning btn-lg">Create root-node for <b>{$language}</b></a>
+<a onclick="$('#tree-domain_id').val('{$rootNodePrefix}');$('#tree-name').val('{$rootNodePrefix}_{$language}');$('.kv-detail-container button[type=submit]').click()" 
+   class="btn btn-warning">Create root-node for <b>{$language}</b></a>
 </p>
 HTML;
 
@@ -55,7 +56,19 @@ JS;
          */
         PagesAsset::register($this->view);
 
-        return $this->render('index');
+        /** @var Tree $queryTree */
+        $queryTree = Tree::find()
+            ->andWhere(
+                [
+                    Tree::ATTR_ACCESS_DOMAIN => [
+                        \Yii::$app->language,
+                        (\Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION) ? Tree::GLOBAL_ACCESS_DOMAIN : '')
+                    ]
+                ]
+            )
+            ->orderBy('root, lft');
+
+        return $this->render('index', ['queryTree'=>$queryTree]);
     }
 
     /**
@@ -77,11 +90,10 @@ JS;
 
         // Get active Tree object, allow access to invisible pages
         // @todo: improve handling, using also roles
-        $pageQuery = Tree::find()->where(
+        $pageQuery = Tree::find()->andWhere(
             [
                 Tree::ATTR_ID => $pageId,
                 Tree::ATTR_ACTIVE => Tree::ACTIVE,
-                Tree::ATTR_ACCESS_DOMAIN => \Yii::$app->language,
             ]
         );
 

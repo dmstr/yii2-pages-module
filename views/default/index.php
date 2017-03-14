@@ -86,17 +86,7 @@ $mainTemplate = <<< HTML
 </div>
 HTML;
 
-/** @var Tree $queryTree */
-$queryTree = Tree::find()
-    ->where(
-        [
-            Tree::ATTR_ACCESS_DOMAIN => [
-                \Yii::$app->language,
-                (Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION) ? Tree::GLOBAL_ACCESS_DOMAIN : '')
-            ]
-        ]
-    )
-    ->orderBy('root, lft');
+
 
 /**
  * Render tree view

@@ -383,6 +383,34 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
             <?php Box::end() ?>
         <?php endif; ?>
+
+
+    <?php Box::begin(
+        [
+            'title' => Yii::t('kvtree', Yii::t('kvtree', 'Access')),
+            'collapse' => true,
+            'collapse_remember' => false,
+            'collapseDefault' => true,
+        ]
+    ) ?>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <?=
+            $form
+                ->field($node,
+                    'access_read',
+                    [
+                        'addon' => ['prepend' => ['content' => 'Access Read']],
+                    ]
+                )
+                ->dropDownList($node->getUsersAuthItems())
+                ->label(false)
+            ?>
+        </div>
+    </div>
+    <?php Box::end() ?>
+
+
 <?php else : ?>
     <div class="row">
         <div class="col-sm-6">
