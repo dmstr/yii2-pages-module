@@ -139,9 +139,6 @@ JS;
         if (empty($original)){
               return false;
         }
-        $fallback = Tree::find()
-            ->andWhere(['domain_id' => $original->domain_id, 'access_domain' => \Yii::$app->language])
-            ->one();
-        return $fallback;
+        return Tree::find()->andWhere(['domain_id' => $original->domain_id])->one();
     }
 }
