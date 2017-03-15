@@ -128,7 +128,12 @@ Now you should be able to see the page in your `Nav` widget in the frontend of y
 
 #### Traits
 
-- we use `\dmstr\db\traits\ActiveRecordAccessTrait` to have a check access behavior on active record level
+We use the `\dmstr\db\traits\ActiveRecordAccessTrait` to have a check access behavior on active record level
+
+- Owner Access
+- Read Access
+- Update Access
+- Delete Access
 
 
 #### Anchors
