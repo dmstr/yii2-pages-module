@@ -2,16 +2,10 @@
 
 namespace dmstr\modules\pages\views\treeview;
 
-/*
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
- * @package yii2-tree-manager
- * @version 1.5.0
- */
-
 use insolita\wgadminlte\Box;
 use insolita\wgadminlte\InfoBox;
-use insolita\wgadminlte\SmallBox;
 use kartik\form\ActiveForm;
+use kartik\select2\Select2;
 use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
@@ -19,9 +13,25 @@ use yii\helpers\Html;
 use yii\helpers\Inflector;
 
 /**
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
+ * @package yii2-tree-manager
+ * @version 1.5.0
+ *
  * @var $this  \yii\web\View
  * @var $form \kartik\form\ActiveForm
  * @var $node \dmstr\modules\pages\models\Tree
+ * @var $params array
+ * @var $isAdmin boolean
+ * @var $keyAttribute string
+ * @var $action string
+ * @var $currUrl string
+ * @var $modelClass string
+ * @var $softDelete boolean
+ * @var $iconsList string
+ * @var $nameAttribute string
+ * @var $iconAttribute string
+ * @var $iconTypeAttribute string
+ * @var $showFormButtons boolean
  */
 
 $this->registerJs(
@@ -65,6 +75,9 @@ $treeViewModule = TreeView::module();
 
 // create node Url
 $nodeUrl = $node->createUrl();
+
+/** @var array $userAuthItems */
+$userAuthItems = $node::getUsersAuthItems();
 
 // In case you are extending this form, it is mandatory to set
 // all these hidden inputs as defined below.
@@ -115,19 +128,13 @@ echo Html::hiddenInput('softDelete', $softDelete);
             <div class="col-sm-6">
                 <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] == true): ?>
                     <?= $form->field($node, $iconAttribute)->widget(
-                        \kartik\select2\Select2::classname(),
+                        Select2::classname(),
                         [
-                            'model' => $node,
-                            'attribute' => $iconAttribute,
                             'addon' => [
                                 'prepend' => ['content' => Inflector::titleize($iconAttribute)],
                             ],
                             'data' => $node::optsIcon(true),
-                            'options' => [
-                                'id' => 'tree-'.$iconAttribute,
-                                'placeholder' => Yii::t('pages', 'Type to autocomplete'),
-                                'multiple' => false,
-                            ],
+                            'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
                             'pluginOptions' => [
                                 'escapeMarkup' => new \yii\web\JsExpression('function(m) { return m; }'),
                                 'allowClear' => true,
@@ -145,7 +152,160 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
         </div>
         <?php Box::end() ?>
+        <?php Box::begin(
+            [
+                'title'    => Yii::t('pages', 'Route'),
+                'collapse'          => true,
+                'collapse_remember' => false,
+                'collapseDefault'   => !$node->isPage()
+            ]
+        ) ?>
+        <div class="row">
+            <div class="col-xs-12 col-sm-5">
+                <?= $form->field($node, $node::ATTR_ROUTE)->widget(
+                    Select2::classname(),
+                    [
+                        'addon' => [
+                            'prepend' => ['content' => Inflector::titleize($node::ATTR_ROUTE)],
+                        ],
+                        'data' => $node::optsRoute(),
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => ['allowClear' => true],
+                    ]
+                )->label(false);
+                ?>
+            </div>
+            <div class="col-xs-12 col-sm-7">
+                <?= $form->field($node, $node::ATTR_VIEW)->widget(
+                    Select2::classname(),
+                    [
+                        'addon' => [
+                            'prepend' => ['content' => Inflector::titleize($node::ATTR_VIEW)],
+                        ],
+                        'data' => $node::optsView(),
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => ['allowClear' => true],
+                    ]
+                )->label(false); ?>
+            </div>
 
+        </div>
+        <?php Box::end() ?>
+        <?php Box::begin(
+            [
+                'title'           => Yii::t('pages', Yii::t('pages', 'SEO')),
+                'collapse'          => true,
+                'collapse_remember' => false,
+                'collapseDefault'   => !$node->isPage()
+            ]
+        ) ?>
+        <div class="row">
+            <div class="col-xs-12">
+                <?= $form->field($node, $node::ATTR_PAGE_TITLE,
+                    [
+                        'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_PAGE_TITLE)]],
+                    ]
+                )->textInput($inputOpts)->label(false) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS,
+                    [
+                        'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Keywords')]],
+                    ]
+                )->textInput()->label(false) ?>
+            </div>
+            <div class="col-xs-12 col-lg-12">
+                <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION,
+                    [
+                        'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Description')]],
+                    ]
+                )->textarea(['rows' => 5])->label(false) ?>
+            </div>
+        </div>
+        <?php Box::end() ?>
+        <?php Box::begin(
+            [
+                'title' => Yii::t('pages', Yii::t('pages', 'Access')),
+                'collapse' => true,
+                'collapse_remember' => false,
+                'collapseDefault' => true,
+            ]
+        ) ?>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <?= $form->field($node, $node::ATTR_ACCESS_DOMAIN)->widget(
+                    Select2::classname(),
+                    [
+                        'addon' => [
+                            'prepend' => [
+                                'content' => Inflector::titleize($node::ATTR_ACCESS_DOMAIN),
+                            ],
+                        ],
+                        'data' => $node::optsAccessDomain(),
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => ['allowClear' => true],
+                    ]
+                )->label(false) ?>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <?= $form->field($node, $node::ATTR_ACCESS_READ)->widget(
+                    Select2::classname(),
+                    [
+                        'addon' => [
+                            'prepend' => [
+                                'content' => Inflector::titleize($node::ATTR_ACCESS_READ),
+                            ],
+                        ],
+                        'data' => $userAuthItems,
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => ['allowClear' => true],
+                    ]
+                )
+                    ->label(false)
+                ?>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <?php if ($node->hasPermission($node::ATTR_ACCESS_UPDATE)) : ?>
+                    <?= $form->field($node, $node::ATTR_ACCESS_UPDATE)->widget(
+                        Select2::classname(),
+                        [
+                            'addon' => [
+                                'prepend' => [
+                                    'content' => Inflector::titleize($node::ATTR_ACCESS_UPDATE),
+                                ],
+                            ],
+                            'data' => $userAuthItems,
+                            'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                            'pluginOptions' => ['allowClear' => true],
+                        ]
+                    )
+                        ->label(false)
+                    ?>
+                <?php endif; ?>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <?php if ($node->hasPermission($node::ATTR_ACCESS_DELETE)) : ?>
+                    <?= $form->field($node, $node::ATTR_ACCESS_DELETE)->widget(
+                        Select2::classname(),
+                        [
+                            'addon' => [
+                                'prepend' => [
+                                    'content' => Inflector::titleize($node::ATTR_ACCESS_DELETE),
+                                ],
+                            ],
+                            'data' => $userAuthItems,
+                            'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                            'pluginOptions' => ['allowClear' => true],
+                        ]
+                    )
+                        ->label(false)
+                    ?>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php Box::end() ?>
         <?php Box::begin(
             [
                 'title'           => Yii::t('pages', 'Options'),
@@ -166,222 +326,63 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
         </div>
         <?php Box::end() ?>
-        <?php if (true) : ?>
-            <?php Box::begin(
-                [
-                    'title'    => Yii::t('pages', Yii::t('pages', 'Route')),
-                    'collapse'          => true,
-                    'collapse_remember' => false,
-                    'collapseDefault'   => !$node->isPage()
-                ]
-            ) ?>
-            <div class="row">
-                <div class="col-xs-12 col-sm-6">
-                    <?= $form->field($node, $node::ATTR_ACCESS_DOMAIN)->widget(
-                        \kartik\select2\Select2::classname(),
-                        [
-                            'model' => $node,
-                            'attribute' => $node::ATTR_ACCESS_DOMAIN,
-                            'addon' => [
-                                'prepend' => [
-                                    'content' => Inflector::titleize($node::ATTR_ACCESS_DOMAIN),
-                                ],
-                            ],
-                            'data' => $node::optsAccessDomain(),
-                            'options' => [
-                                'id' => 'tree-access-domain',
-                                'placeholder' => Yii::t('pages', 'Type to autocomplete'),
-                                'multiple' => false,
-                            ],
-                            'pluginOptions' => [
-                                'allowClear' => false,
-                            ],
-                        ]
-                    )->label(false) ?>
-                </div>
-                <div class="col-xs-12 col-sm-6">
-                    <?= $form->field($node, $node::ATTR_ROUTE)->widget(
-                        \kartik\select2\Select2::classname(),
-                        [
-                            'model' => $node,
-                            'attribute' => $node::ATTR_ROUTE,
-                            'addon' => [
-                                'prepend' => ['content' => Inflector::titleize($node::ATTR_ROUTE)],
-                            ],
-                            'data' => $node::optsRoute(),
-                            'options' => [
-                                'placeholder' => Yii::t('pages', 'Select route'),
-                                'multiple' => false,
-                            ],
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                            ],
-                        ]
-                    )->label(false);
-                    ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12">
-                    <?= $form->field($node, $node::ATTR_VIEW)->widget(
-                        \kartik\select2\Select2::classname(),
-                        [
-                            'model' => $node,
-                            'attribute' => $node::ATTR_VIEW,
-                            'addon' => [
-                                'prepend' => ['content' => Inflector::titleize($node::ATTR_VIEW)],
-                            ],
-                            'data' => $node::optsView(),
-                            'options' => [
-                                'id' => 'tree-views',
-                                'placeholder' => Yii::t('pages', 'Type to autocomplete'),
-                                'multiple' => false,
-                            ],
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                            ],
-                        ]
-                    )->label(false); ?>
-                </div>
-
-            </div>
-            <?php Box::end() ?>
-
-            <?php Box::begin(
-                [
-                    'title'           => Yii::t('pages', Yii::t('pages', 'SEO')),
-                    'collapse'          => true,
-                    'collapse_remember' => false,
-                    'collapseDefault'   => !$node->isPage()
-                ]
-            ) ?>
-            <div class="row">
-                <div class="col-xs-12">
-                    <?= $form->field($node, $node::ATTR_PAGE_TITLE,
-                        [
-                            'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_PAGE_TITLE)]],
-                        ]
-                    )->textInput($inputOpts)->label(false) ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-lg-12">
-                    <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS,
-                        [
-                            'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Keywords')]],
-                        ]
-                    )->textInput()->label(false) ?>
-                </div>
-                <div class="col-xs-12 col-lg-12">
-                    <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION,
-                        [
-                            'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Description')]],
-                        ]
-                    )->textarea(['rows' => 5])->label(false) ?>
-                </div>
-            </div>
-            <?php Box::end() ?>
-
-            <?php Box::begin(
-                [
-                    'title'             => Yii::t('pages', Yii::t('pages', 'Advanced')),
-                    'collapse'          => true,
-                    'collapse_remember' => false,
-                    'collapseDefault'   => true
-                ]
-            ) ?>
-            <div class="row">
-                <div class="col-xs-12 col-sm-6">
-                    <?= $form->field($node, $node::ATTR_DOMAIN_ID,
-                        [
-                            'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_DOMAIN_ID)]],
-                        ]
-                    )->textInput()->label(false) ?>
-                </div>
-                <div class="col-sm-6">
-                    <?= $form->field($node, 'name_id',
-                        [
-                            'addon' => ['prepend' => ['content' => 'Name ID']],
-                        ]
-                    )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
-                </div>
-                <div class="col-sm-6">
-                    <?= $form->field($node, $iconTypeAttribute)->widget(
-                        \kartik\select2\Select2::classname(),
-                        [
-                            'model' => $node,
-                            'attribute' => $iconTypeAttribute,
-                            'addon' => [
-                                'prepend' => [
-                                    'content' => Inflector::titleize($iconTypeAttribute),
-                                ],
-                            ],
-                            'data' => [
-                                TreeView::ICON_CSS => 'CSS Suffix',
-                                TreeView::ICON_RAW => 'Raw Markup',
-                            ],
-                            'options' => [
-                                    'id' => 'tree-'.$iconTypeAttribute,
-                                    'placeholder' => Yii::t('pages', 'Select'),
-                                    'multiple' => false,
-                                ] + $inputOpts,
-                            'pluginOptions' => [
-                                'allowClear' => false,
-                            ],
-                        ]
-                    )->label(false);
-                    ?>
-                </div>
-                <div class="col-xs-12">
-                    <?= $form->field($node, $node::ATTR_REQUEST_PARAMS,
-                        [
-                            'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_REQUEST_PARAMS)]],
-                        ]
-                    )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS])->label(false) ?>
-                </div>
-            </div>
-            <?php Box::end() ?>
-        <?php endif; ?>
-
-
-    <?php Box::begin(
-        [
-            'title' => Yii::t('pages', Yii::t('pages', 'Access')),
-            'collapse' => true,
-            'collapse_remember' => false,
-            'collapseDefault' => true,
-        ]
-    ) ?>
-    <div class="row">
-        <div class="col-xs-12 col-sm-6">
-            <?=
-            $form
-                ->field($node, $node::ATTR_ACCESS_READ)->widget(
-                    \kartik\select2\Select2::classname(),
+        <?php Box::begin(
+            [
+                'title'             => Yii::t('pages', Yii::t('pages', 'Advanced')),
+                'collapse'          => true,
+                'collapse_remember' => false,
+                'collapseDefault'   => true
+            ]
+        ) ?>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <?= $form->field($node, $node::ATTR_DOMAIN_ID,
                     [
-                        'model' => $node,
-                        'attribute' => $node::ATTR_ACCESS_READ,
+                        'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_DOMAIN_ID)]],
+                    ]
+                )->textInput()->label(false) ?>
+            </div>
+            <div class="col-sm-6">
+                <?= $form->field($node, 'name_id',
+                    [
+                        'addon' => ['prepend' => ['content' => 'Name ID']],
+                    ]
+                )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
+            </div>
+            <div class="col-sm-6">
+                <?= $form->field($node, $iconTypeAttribute)->widget(
+                    Select2::classname(),
+                    [
                         'addon' => [
                             'prepend' => [
-                                'content' => Inflector::titleize($node::ATTR_ACCESS_READ),
+                                'content' => Inflector::titleize($iconTypeAttribute),
                             ],
                         ],
-                        'data' => $node::getUsersAuthItems(),
-                        'options' => [
-                            'placeholder' => Yii::t('pages', 'Select ...'),
-                            'multiple' => false,
+                        'data' => [
+                            TreeView::ICON_CSS => 'CSS Suffix',
+                            TreeView::ICON_RAW => 'Raw Markup',
                         ],
+                        'options' => [
+                                'id' => 'tree-'.$iconTypeAttribute,
+                                'placeholder' => Yii::t('pages', 'Select'),
+                                'multiple' => false,
+                            ] + $inputOpts,
                         'pluginOptions' => [
-                            'allowClear' => true,
+                            'allowClear' => false,
                         ],
                     ]
-                )
-                ->label(false)
-            ?>
+                )->label(false);
+                ?>
+            </div>
+            <div class="col-xs-12">
+                <?= $form->field($node, $node::ATTR_REQUEST_PARAMS,
+                    [
+                        'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_REQUEST_PARAMS)]],
+                    ]
+                )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS])->label(false) ?>
+            </div>
         </div>
-    </div>
-    <?php Box::end() ?>
-
+        <?php Box::end() ?>
 
 <?php else : ?>
     <div class="row">

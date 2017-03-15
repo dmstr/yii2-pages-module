@@ -326,8 +326,8 @@ class BaseTree extends \kartik\tree\models\Tree
             'domain' => self::ATTR_ACCESS_DOMAIN,
             'owner'  => self::ATTR_ACCESS_OWNER,
             'read'   => self::ATTR_ACCESS_READ,
-            'update' => false,
-            'delete' => false,
+            'update' => self::ATTR_ACCESS_UPDATE,
+            'delete' => self::ATTR_ACCESS_DELETE,
         ];
     }
 
@@ -372,7 +372,11 @@ class BaseTree extends \kartik\tree\models\Tree
                     }
                 ],
                 [
-                    self::ATTR_ACCESS_READ,
+                    [
+                        self::ATTR_ACCESS_READ,
+                        self::ATTR_ACCESS_UPDATE,
+                        self::ATTR_ACCESS_DELETE
+                    ],
                     'default',
                     'value' => self::$_all
                 ],
