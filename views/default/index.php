@@ -24,18 +24,31 @@ $headerTemplate = <<< HTML
 </div>
 HTML;
 
+
+/**
+ * Additional toolbar elements
+ */
+$toolbar = [];
+
 /**
  * Links to settings and copy pages area for toolbar
  */
-$copyPages = [
-    'icon' => 'copy',
-    'url' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION)) ? ['/pages/copy'] : null,
-    'options' => [
-        'title' => Yii::t('pages', 'Copy root nodes'),
-        'disabled' => (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION) ? false : true),
-        'class' => 'btn btn-success'
-    ],
-];
+if (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION)) {
+    $copyPages = [
+        'icon'    => 'copy',
+        'url'     => ['/pages/copy'],
+        'options' => [
+            'title'    => Yii::t('pages', 'Copy root nodes'),
+            'class'    => 'btn btn-success'
+        ],
+    ];
+    $toolbar[] = TreeView::BTN_SEPARATOR;
+    $toolbar[] = TreeView::BTN_SEPARATOR;
+    $toolbar[] = TreeView::BTN_SEPARATOR;
+    $toolbar['copy'] = $copyPages;
+}
+
+
 // check settings component and module existence
 if (\Yii::$app->has('settings') && \Yii::$app->hasModule('settings')) {
 
@@ -49,29 +62,19 @@ if (\Yii::$app->has('settings') && \Yii::$app->hasModule('settings')) {
         }
     }
 
-
-    $settings = [
-        'icon' => 'cogs',
-        'url' => ['/settings', 'SettingSearch' => ['section' => 'pages']],
-        'options' => [
-            'title' => Yii::t('pages', 'Settings'),
-            'disabled' => ! $settingPermission,
-            'class' => 'btn btn-info'
-        ]
-    ];
+    if ($settingPermission) {
+        $settings = [
+            'icon' => 'cogs',
+            'url' => ['/settings', 'SettingSearch' => ['section' => 'pages']],
+            'options' => [
+                'title' => Yii::t('pages', 'Settings'),
+                'class' => 'btn btn-info'
+            ]
+        ];
+        $toolbar[] = TreeView::BTN_SEPARATOR;
+        $toolbar['settings'] = $settings;
+    }
 }
-
-/**
- * Additional toolbar elements
- */
-$toolbar = [
-    TreeView::BTN_SEPARATOR,
-    TreeView::BTN_SEPARATOR,
-    TreeView::BTN_SEPARATOR,
-    'copy'     => $copyPages,
-    TreeView::BTN_SEPARATOR,
-    'settings' => $settings,
-];
 
 $mainTemplate = <<< HTML
 <div class="row">
