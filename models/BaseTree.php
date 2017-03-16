@@ -315,8 +315,8 @@ class BaseTree extends \kartik\tree\models\Tree
      *  - 'access_domain'   enabled
      *  - 'access_owner'    enabled
      *  - 'access_read'     enabled
-     *  - 'access_update'   disabled, not implemented yet!
-     *  - 'access_delete'   disabled, not implemented yet!
+     *  - 'access_update'   enabled
+     *  - 'access_delete'   enabled
      *
      * @return array
      */

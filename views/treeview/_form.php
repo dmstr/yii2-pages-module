@@ -267,7 +267,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 ?>
             </div>
             <div class="col-xs-12 col-sm-6">
-                <?php if ($node->hasPermission($node::ATTR_ACCESS_UPDATE)) : ?>
+                <?php if ($node->hasPermission($node::ATTR_ACCESS_UPDATE) || $node->isNewRecord) : ?>
                     <?= $form->field($node, $node::ATTR_ACCESS_UPDATE)->widget(
                         Select2::classname(),
                         [
@@ -286,7 +286,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 <?php endif; ?>
             </div>
             <div class="col-xs-12 col-sm-6">
-                <?php if ($node->hasPermission($node::ATTR_ACCESS_DELETE)) : ?>
+                <?php if ($node->hasPermission($node::ATTR_ACCESS_DELETE) || $node->isNewRecord) : ?>
                     <?= $form->field($node, $node::ATTR_ACCESS_DELETE)->widget(
                         Select2::classname(),
                         [
