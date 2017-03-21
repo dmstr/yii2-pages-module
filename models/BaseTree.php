@@ -275,6 +275,11 @@ class BaseTree extends \kartik\tree\models\Tree
     const COPY_ACCESS_PERMISSION = 'pages_copy';
 
     /**
+    /**
+     * @var bool whether to HTML encode the tree node names. Defaults to `false`.
+     */
+    public $encodeNodeNames = false;
+
      * Virtual attribute generated from "domain_id"_"access_domain".
      *
      * @var string
