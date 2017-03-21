@@ -433,11 +433,11 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <div class="row">
         <div class="col-xs-12">
             <?= Html::submitButton(
-                '<i class="glyphicon glyphicon-floppy-disk"></i> '.Yii::t('pages', 'Save'),
+                FA::i(FA::_FLOPPY_O).' '.Yii::t('pages', 'Save'),
                 ['class' => 'btn btn-lg btn-primary']
             ) ?>
             <?= Html::resetButton(
-                '<i class="glyphicon glyphicon-repeat"></i> '.Yii::t('pages', 'Reset'),
+                FA::i(FA::_REFRESH).' '.Yii::t('pages', 'Reset'),
                 ['class' => 'btn btn-lg btn-default']
             ) ?>
         </div>
