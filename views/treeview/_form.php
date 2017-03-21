@@ -117,12 +117,11 @@ echo Html::hiddenInput('softDelete', $softDelete);
         ) ?>
         <div class="row">
             <div class="col-sm-6">
-
-                <?= $form->field($node, $nameAttribute,
+                <?= $form->field($node, $node::ATTR_NAME,
                     [
-                        'addon' => ['prepend' => ['content' => Inflector::titleize($nameAttribute)]],
+                        'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_NAME)]],
                     ]
-                )->textInput($inputOpts)->label(false) ?>
+                )->label(false) ?>
             </div>
 
             <div class="col-sm-6">
