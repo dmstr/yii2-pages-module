@@ -443,6 +443,13 @@ class BaseTree extends \kartik\tree\models\Tree
                 ],
                 [
                     [
+                        self::ATTR_NAME,
+                    ],
+                    'string',
+                    'max' => 60,
+                ],
+                [
+                    [
                         self::ATTR_ACCESS_DOMAIN,
                     ],
                     'string',
@@ -467,6 +474,7 @@ class BaseTree extends \kartik\tree\models\Tree
                     [
                         self::ATTR_DOMAIN_ID,
                         self::ATTR_PAGE_TITLE,
+                        self::ATTR_NAME,
                         self::ATTR_SLUG,
                         self::ATTR_ROUTE,
                         self::ATTR_VIEW,
