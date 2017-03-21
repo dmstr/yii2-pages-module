@@ -371,4 +371,86 @@ class Tree extends BaseTree
                 return false;
         }
     }
+
+    /**
+     * Find the sibling page in target language if exists
+     *
+     * @param string $targetLanguage
+     * @param integer $sourceId
+     * @param string $route
+     *
+     * @return Tree|null
+     * @throws \yii\console\Exception
+     */
+    public function sibling($targetLanguage, $sourceId = null, $route = self::DEFAULT_PAGE_ROUTE)
+    {
+        if (strpos(Tree::DEFAULT_PAGE_ROUTE, $route) === false) {
+            return null;
+        }
+
+        // Disable access trait access_domain checks in find
+        self::$activeAccessTrait = false;
+
+        if ($sourceId === null && ! $this->isNewRecord) {
+            $sourcePage = $this;
+        } else {
+            /**
+             * find page with page id and source language
+             *
+             * @var Tree $sourcePage
+             */
+            $sourcePage = self::findOne($sourceId);
+            if ($sourcePage === null) {
+                $message   = \Yii::t(
+                    'pages',
+                    'Page with id {PAGE_ID} not found!"',
+                    ['PAGE_ID' => $sourceId]
+                );
+                $errorCode = 404;
+                $this->outputError($message, $errorCode);
+            }
+        }
+
+        /**
+         * find page with domain_id and destination language
+         *
+         * @var Tree $destinationPage
+         */
+        $destinationPage = self::findOne(
+            [
+                self::ATTR_DOMAIN_ID     => $sourcePage->domain_id,
+                self::ATTR_ACCESS_DOMAIN => mb_strtolower($targetLanguage)
+            ]
+        );
+        if ($destinationPage === null) {
+            $message   = \Yii::t(
+                'pages',
+                'Page with domain_id {DOMAIN_ID} in language "{LANGUAGE}" does not exists!',
+                [
+                    'DOMAIN_ID' => $sourcePage->domain_id,
+                    'LANGUAGE'  => mb_strtolower($targetLanguage)
+                ]
+            );
+            $errorCode = 404;
+            $this->outputError($message, $errorCode);
+        }
+        return $destinationPage;
+    }
+
+    /**
+     * @param $message
+     * @param $code
+     *
+     * @return bool
+     * @throws \yii\console\Exception
+     */
+    protected function outputError($message, $code)
+    {
+        if (php_sapi_name() === 'cli') {
+            throw new \yii\console\Exception($message, $code);
+        } else {
+            \Yii::$app->session->set('error', $code . ': ' . $message);
+        }
+        return false;
+    }
 }

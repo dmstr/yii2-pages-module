@@ -146,6 +146,43 @@ On a node you can attach an anchor by using *Advanced URL settings*, with `{'#':
 It is recommended to create a new entry in *Tree* mode.
 
 
+#### i18n - sibling pages
+
+Find sibling page in target language
+
+```
+/**
+ * Find the sibling page in target language if exists
+ *
+ * @param string $targetLanguage
+ * @param integer $sourceId
+ * @param string $route
+ *
+ * @return Tree|null
+ * @throws \yii\console\Exception
+ */
+public function sibling($targetLanguage, $sourceId = null, $route = self::DEFAULT_PAGE_ROUTE);
+
+
+Example 1:
+---
+
+// page id 12 is a node in language 'en'
+$sourcePage = Tree::findOne(12);
+
+// returns corresponding page object in language 'de' or null if not exists
+$targetPage = $sourcePage->sibling('de');
+
+
+Example 2:
+---
+
+// find by params
+$targetPage = (new Tree())->sibling('de', 12, '/pages/default/page')
+
+```
+
+
 Copy pages
 ---
 
