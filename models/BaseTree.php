@@ -1,5 +1,4 @@
 <?php
-namespace dmstr\modules\pages\models;
 /**
  * @link http://www.diemeisterei.de/
  * @copyright Copyright (c) 2017 diemeisterei GmbH, Stuttgart
@@ -7,6 +6,8 @@ namespace dmstr\modules\pages\models;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace dmstr\modules\pages\models;
 
 use dmstr\db\traits\ActiveRecordAccessTrait;
 use dmstr\modules\pages\Module as PagesModule;
