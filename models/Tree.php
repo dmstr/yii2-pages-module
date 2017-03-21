@@ -75,7 +75,7 @@ class Tree extends BaseTree
         $availableLanguages[$currentLanguage] = $currentLanguage;
 
         if (Yii::$app->user->can(self::GLOBAL_ACCESS_PERMISSION)) {
-            $availableLanguages[self::GLOBAL_ACCESS_DOMAIN] = Yii::t('pages', 'GLOBAL');
+            $availableLanguages[self::GLOBAL_ACCESS_DOMAIN] = Yii::t(self::PAGES_ACCESS_PERMISSION, 'GLOBAL');
         }
 
         return $availableLanguages;
@@ -206,7 +206,7 @@ class Tree extends BaseTree
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
         $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)];
-        if (!Yii::$app->user->can('pages')) {
+        if (!Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
             $rootCondition[self::ATTR_DISABLED] = self::NOT_DISABLED;
         }
         $rootNode = self::findOne($rootCondition);
@@ -227,7 +227,7 @@ class Tree extends BaseTree
                 self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)],
             ]
         );
-        if (!Yii::$app->user->can('pages')) {
+        if (!Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
             $leavesQuery->andWhere(
                 [
                     self::ATTR_DISABLED => self::NOT_DISABLED,
