@@ -91,10 +91,9 @@ class Module extends \yii\base\Module
     {
         $localizedRoot = Tree::ROOT_NODE_PREFIX.'_'.\Yii::$app->language;
         \Yii::trace('localizedRoot: '.$localizedRoot, __METHOD__);
-        $page = Tree::findOne(
+        return Tree::findOne(
             [
                 Tree::ATTR_DOMAIN_ID => Tree::ROOT_NODE_PREFIX,
-                Tree::ATTR_ACCESS_DOMAIN => mb_strtolower(\Yii::$app->language),
                 Tree::ATTR_ACTIVE => Tree::ACTIVE,
                 Tree::ATTR_VISIBLE => Tree::VISIBLE,
             ]
