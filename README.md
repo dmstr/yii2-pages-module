@@ -1,6 +1,10 @@
 Yii2 Page Manager
 =================
 
+[![Latest Stable Version](https://poser.pugx.org/dmstr/yii2-pages-module/v/stable.svg)](https://packagist.org/packages/dmstr/yii2-pages-module) 
+[![Total Downloads](https://poser.pugx.org/dmstr/yii2-pages-module/downloads.svg)](https://packagist.org/packages/dmstr/yii2-pages-module)
+[![License](https://poser.pugx.org/dmstr/yii2-pages-module/license.svg)](https://packagist.org/packages/dmstr/yii2-pages-module)
+
 Application sitemap and navigation manager module for Yii 2.0 Framework
 
 **:warning: Breaking changes in 0.14.0 and 0.18.0**
