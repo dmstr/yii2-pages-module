@@ -68,7 +68,8 @@ class CopyController extends Controller
             if ($command->execute() && empty($command->getError())) {
                 \Yii::$app->session->setFlash('success', $command->getOutput());
             } else {
-                \Yii::$app->session->setFlash('danger', $command->getError());
+                \Yii::$app->session->setFlash('error', $command->getError());
+                \Yii::error($command->getError(), __METHOD__);
             }
 
             return $this->refresh();
