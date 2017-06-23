@@ -23,4 +23,4 @@ before_script:
   - make clean
 
 script:
-  - docker-compose run --rm php codecept run cli,unit,functional,e2e -g $CODECEPTION_SUITE
+  - docker-compose run --rm php codecept run cli,unit,functional,e2e
