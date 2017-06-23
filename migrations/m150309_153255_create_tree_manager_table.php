@@ -50,8 +50,8 @@ class m150309_153255_create_tree_manager_table extends Migration
                 'movable_r' => $this->smallInteger()->defaultValue(1),
                 'removable' => $this->smallInteger()->defaultValue(1),
                 'removable_all' => $this->smallInteger()->defaultValue(0),
-                'created_at' => $this->timestamp()->defaultExpression('NOW()'),
-                'updated_at' => $this->timestamp()->defaultExpression('NOW()'),
+                'created_at' => $this->integer(),
+                'updated_at' => $this->integer(),
             ]
         );
 
