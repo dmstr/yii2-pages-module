@@ -19,8 +19,9 @@ before_install:
 before_script:
   - cd tests
   - make build up setup
-  - make run-tests
-  - make clean
 
 script:
-  - docker-compose run --rm php codecept run cli,unit,functional,e2e
+  - make run-tests
+
+after_script:
+  - make clean
