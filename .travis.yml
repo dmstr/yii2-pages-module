@@ -1,0 +1,26 @@
+dist: trusty
+sudo: required
+
+language: generic
+
+services:
+  - docker
+
+env:
+  global:
+    - DOCKER_COMPOSE_VERSION=1.13.0
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose || true
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
+before_script:
+  - cd tests
+  - make build up setup
+  - make run-tests
+  - make clean
+
+script:
+  - docker-compose run --rm php codecept run cli,unit,functional,e2e -g $CODECEPTION_SUITE
