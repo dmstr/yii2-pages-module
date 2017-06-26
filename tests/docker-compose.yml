@@ -33,7 +33,7 @@ services:
           #- ~/.composer/cache:/root/.composer/cache
             
     db:
-        image: 'percona:5.7'
+        image: ${STACK_DB_IMAGE}
         env_file:
           - db.env
         ports:

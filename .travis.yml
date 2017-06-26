@@ -7,6 +7,8 @@ services:
   - docker
 
 env:
+  - DB_SERVICE_IMAGE=percona:5.7
+  - DB_SERVICE_IMAGE=mariadb:10.1.22
   global:
     - DOCKER_COMPOSE_VERSION=1.13.0
 
