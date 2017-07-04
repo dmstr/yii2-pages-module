@@ -19,6 +19,6 @@ class PagesAsset extends AssetBundle
         'module.less',
     ];
     public $depends = [
-        'rmrevin\yii\fontawesome\AssetBundle',
+        '\dmstr\web\AdminLteAsset'
     ];
 }
