@@ -109,6 +109,13 @@ JS;
         // get page
         $page = $pageQuery->one();
 
+        // check if page has access_read permissions set, if yes check if user is allowed
+        if ((!empty($page->access_read) && ($page->access_read != '*'))) {
+            if (!\Yii::$app->user->can($page->access_read)) {
+                throw new HttpException(403, \Yii::t('pages', 'Forbidden'));
+            }
+        }
+
         if ($page !== null) {
             // Set page title, use name as fallback
             $this->view->title = $page->page_title ?: $page->name;
