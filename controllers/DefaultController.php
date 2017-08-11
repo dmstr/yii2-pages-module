@@ -12,6 +12,7 @@ namespace dmstr\modules\pages\controllers;
 use dmstr\modules\pages\assets\PagesAsset;
 use dmstr\modules\pages\models\Tree;
 use yii\helpers\Url;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\View;
@@ -88,6 +89,9 @@ JS;
         // Set layout
         $this->layout = $this->module->defaultPageLayout;
 
+        // deactivate access_* check in ActiveRecordAccessTrait::find to be able to handle 'forbidden pages' here.
+        Tree::$activeAccessTrait = false;
+
         // Get active Tree object, allow access to invisible pages
         // @todo: improve handling, using also roles
         $pageQuery = Tree::find()->andWhere(
@@ -112,7 +116,14 @@ JS;
         // check if page has access_read permissions set, if yes check if user is allowed
         if ((!empty($page->access_read) && ($page->access_read != '*'))) {
             if (!\Yii::$app->user->can($page->access_read)) {
-                throw new HttpException(403, \Yii::t('pages', 'Forbidden'));
+                # if userIsGuest, redirect to login page
+                if (!\Yii::$app->user->isGuest) {
+                    throw new HttpException(403, \Yii::t('pages', 'Forbidden'));
+                } else {
+                    #echo "forbidden -> login" ; exit;
+                    #VarDumper::dump(\Yii::$app->user, 10, 1);
+                    return $this->redirect(\Yii::$app->user->loginUrl,302);
+                }
             }
         }
 
