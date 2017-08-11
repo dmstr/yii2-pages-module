@@ -12,7 +12,6 @@ namespace dmstr\modules\pages\controllers;
 use dmstr\modules\pages\assets\PagesAsset;
 use dmstr\modules\pages\models\Tree;
 use yii\helpers\Url;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\View;
