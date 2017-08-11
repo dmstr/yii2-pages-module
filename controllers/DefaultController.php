@@ -119,8 +119,6 @@ JS;
                 if (!\Yii::$app->user->isGuest) {
                     throw new HttpException(403, \Yii::t('pages', 'Forbidden'));
                 } else {
-                    #echo "forbidden -> login" ; exit;
-                    #VarDumper::dump(\Yii::$app->user, 10, 1);
                     return $this->redirect(\Yii::$app->user->loginUrl,302);
                 }
             }
