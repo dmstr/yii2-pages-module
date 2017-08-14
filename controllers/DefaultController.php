@@ -88,6 +88,9 @@ JS;
         // Set layout
         $this->layout = $this->module->defaultPageLayout;
 
+        // deactivate access_* check in ActiveRecordAccessTrait::find to be able to handle 'forbidden pages' here.
+        Tree::$activeAccessTrait = false;
+
         // Get active Tree object, allow access to invisible pages
         // @todo: improve handling, using also roles
         $pageQuery = Tree::find()->andWhere(
@@ -108,6 +111,18 @@ JS;
 
         // get page
         $page = $pageQuery->one();
+
+        // check if page has access_read permissions set, if yes check if user is allowed
+        if ((!empty($page->access_read) && ($page->access_read != '*'))) {
+            if (!\Yii::$app->user->can($page->access_read)) {
+                # if userIsGuest, redirect to login page
+                if (!\Yii::$app->user->isGuest) {
+                    throw new HttpException(403, \Yii::t('pages', 'Forbidden'));
+                } else {
+                    return $this->redirect(\Yii::$app->user->loginUrl,302);
+                }
+            }
+        }
 
         if ($page !== null) {
             // Set page title, use name as fallback
