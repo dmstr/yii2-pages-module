@@ -10,9 +10,9 @@
 
 namespace dmstr\modules\pages\models;
 
+use dmstr\modules\pages\Module as PagesModule;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
-use dmstr\modules\pages\Module as PagesModule;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
@@ -202,7 +202,7 @@ class Tree extends BaseTree
      *
      * @return array
      */
-    public static function getMenuItems($domainId, $checkUserPermissions = false)
+    public static function getMenuItems($domainId, $checkUserPermissions = false, $linkOptions = [])
     {
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
@@ -251,17 +251,20 @@ class Tree extends BaseTree
                 /** @var Tree $page */
 
                 // prepare node identifiers
-                $pageOptions = [
-                    'data-page-id' => $page->id,
-                    'data-lvl' => $page->lvl,
-                ];
+                $linkOptions = ArrayHelper::merge(
+                    $linkOptions,
+                    [
+                        'data-page-id' => $page->id,
+                        'data-lvl' => $page->lvl,
+                    ]
+                );
 
                 // prepare item template
                 $itemTemplate = [
                     'label' => $page->name,
                     'url' => $page->createRoute(),
                     'icon' => $page->icon,
-                    'linkOptions' => $pageOptions,
+                    'linkOptions' => $linkOptions,
                     // always show node, if it's a folder (TODO add check permissions)
                     'visible' => ($checkUserPermissions && !empty($page->route)) ?
                         Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]) :
