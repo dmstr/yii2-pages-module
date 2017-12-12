@@ -85,7 +85,7 @@ class CopyForm extends Model
     public function validateDestinationLanguage($attribute)
     {
         // build available languages
-        $availableLanguages = ArrayHelper::merge([Tree::GLOBAL_ACCESS_DOMAIN], \Yii::$app->urlManager->languages);
+         $availableLanguages = ArrayHelper::merge([Tree::GLOBAL_ACCESS_DOMAIN], array_map('strtolower', \Yii::$app->urlManager->languages));
 
         if (!in_array($this->$attribute, $availableLanguages, true)) {
             $this->addError($attribute, \Yii::t('pages', 'Target Language "{language}" node does not exist', ['language' => $this->$attribute]));
