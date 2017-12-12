@@ -199,10 +199,11 @@ class Tree extends BaseTree
      *
      * @param string $domainId the domain id of the root node
      * @param bool|false $checkUserPermissions weather to check permissions for the node leave routes
+     * @param array $linkOptions
      *
      * @return array
      */
-    public static function getMenuItems($domainId, $checkUserPermissions = false, $linkOptions = [])
+    public static function getMenuItems($domainId, $checkUserPermissions = false, array $linkOptions = [])
     {
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
