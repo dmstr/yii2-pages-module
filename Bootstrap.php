@@ -52,7 +52,11 @@ class Bootstrap implements BootstrapInterface
             [
                 // pages default page route
                 ['class' => PageUrlRule::className()],
-                'p/<'.Tree::REQUEST_PARAM_PATH.':[a-zA-Z0-9_\-\./\+]*>/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
+                [
+                    'pattern' => 'p/<'.Tree::REQUEST_PARAM_PATH.':[a-zA-Z0-9_\-\./\+]*>/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html',
+                    'route' => 'pages/default/page',
+                    'encodeParams' => false,
+                ],
                 'p/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
 
                 // Backward compatibility
