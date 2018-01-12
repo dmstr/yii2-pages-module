@@ -112,7 +112,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <?php Box::begin(
             [
                 'title'    => Yii::t('pages', 'General'),
-                'collapse' => true
             ]
         ) ?>
         <div class="row">
@@ -154,9 +153,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <?php Box::begin(
             [
                 'title'    => Yii::t('pages', 'Route'),
-                'collapse'          => true,
-                'collapse_remember' => false,
-                'collapseDefault'   => !$node->isPage()
             ]
         ) ?>
         <div class="row">
@@ -193,9 +189,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <?php Box::begin(
             [
                 'title'           => Yii::t('pages', Yii::t('pages', 'SEO')),
-                'collapse'          => true,
-                'collapse_remember' => false,
-                'collapseDefault'   => !$node->isPage()
             ]
         ) ?>
         <div class="row">
@@ -227,9 +220,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <?php Box::begin(
             [
                 'title' => Yii::t('pages', Yii::t('pages', 'Access')),
-                'collapse' => true,
-                'collapse_remember' => false,
-                'collapseDefault' => true,
             ]
         ) ?>
         <div class="row">
@@ -308,9 +298,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <?php Box::begin(
             [
                 'title'           => Yii::t('pages', 'Options'),
-                'collapse'          => true,
-                'collapse_remember' => false,
-                'collapseDefault'   => true
             ]
         ) ?>
         <div class="row">
@@ -328,9 +315,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         <?php Box::begin(
             [
                 'title'             => Yii::t('pages', Yii::t('pages', 'Advanced')),
-                'collapse'          => true,
-                'collapse_remember' => false,
-                'collapseDefault'   => true
             ]
         ) ?>
         <div class="row">
