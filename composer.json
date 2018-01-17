@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "^2.0.6",
+        "yiisoft/yii2": "^2.0.13",
         "kartik-v/yii2-tree-manager": ">=1.0.3 <=1.0.5",
         "kartik-v/yii2-widget-select2": "^2.0.1",
         "insolita/yii2-adminlte-widgets": "^1.1.4",
