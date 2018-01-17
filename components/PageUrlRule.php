@@ -11,14 +11,14 @@ namespace dmstr\modules\pages\components;
 
 use \dmstr\modules\pages\models\Tree;
 use yii\web\UrlRuleInterface;
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Class PageUrlRule
  * @package dmstr\modules\pages\components
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
-class PageUrlRule extends Object implements UrlRuleInterface
+class PageUrlRule extends BaseObject implements UrlRuleInterface
 {
     /**
      * @param \yii\web\UrlManager $manager
