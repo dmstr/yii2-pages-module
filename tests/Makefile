@@ -2,7 +2,7 @@
 
 DOCKER_COMPOSE  ?= docker-compose
 PHP_SERVICE ?= php
-WEB_SERVICE ?= web
+WEB_SERVICE ?= php
 CODECEPT_SERVICE ?= forrest
 
 UNAME_S := $(shell uname -s)
