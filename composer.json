@@ -28,7 +28,7 @@
         "devgroup/yii2-jsoneditor": "1.0.*",
         "dmstr/yii2-web": "^0.4.0",
         "dmstr/yii2-db": "^0.8.0 || ^0.9.0",
-        "bedezign/yii2-audit": "^1.0",
+        "bedezign/yii2-audit": "^1.1",
         "mikehaertl/php-shellcommand": "^1.2.4"
     },
     "autoload": {
