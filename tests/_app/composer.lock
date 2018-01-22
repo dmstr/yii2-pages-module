@@ -630,16 +630,16 @@
         },
         {
             "name": "dmstr/yii2-db",
-            "version": "0.8.11",
+            "version": "0.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmstr/yii2-db.git",
-                "reference": "5eed0fbb0c713ed651fedc0b827b40fb7414134c"
+                "reference": "b368a85dc70c2feff9cf7ab0670d01d097706ee7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmstr/yii2-db/zipball/5eed0fbb0c713ed651fedc0b827b40fb7414134c",
-                "reference": "5eed0fbb0c713ed651fedc0b827b40fb7414134c",
+                "url": "https://api.github.com/repos/dmstr/yii2-db/zipball/b368a85dc70c2feff9cf7ab0670d01d097706ee7",
+                "reference": "b368a85dc70c2feff9cf7ab0670d01d097706ee7",
                 "shasum": ""
             },
             "require": {
@@ -672,7 +672,7 @@
                 "extension",
                 "yii2"
             ],
-            "time": "2017-04-17T22:33:01+00:00"
+            "time": "2017-10-16T08:11:34+00:00"
         },
         {
             "name": "dmstr/yii2-pages-module",
@@ -680,19 +680,20 @@
             "source": {
                 "type": "git",
                 "url": "/repo",
-                "reference": "87b651bf3ff571220fcac44c4c603a68a5b08ec6"
+                "reference": "27637a1d2acff077e37650ae3c0fb3ba11541c4e"
             },
             "require": {
-                "bedezign/yii2-audit": "^1.0",
+                "bedezign/yii2-audit": "^1.1",
                 "devgroup/yii2-jsoneditor": "1.0.*",
-                "dmstr/yii2-db": "^0.8.0",
+                "dmstr/yii2-db": "^0.8.0 || ^0.9.0",
                 "dmstr/yii2-web": "^0.4.0",
                 "insolita/yii2-adminlte-widgets": "^1.1.4",
                 "kartik-v/yii2-tree-manager": ">=1.0.3 <=1.0.5",
                 "kartik-v/yii2-widget-select2": "^2.0.1",
                 "mikehaertl/php-shellcommand": "^1.2.4",
+                "pheme/yii2-settings": "^0.5.0",
                 "rmrevin/yii2-fontawesome": "~2.9",
-                "yiisoft/yii2": "^2.0.6"
+                "yiisoft/yii2": "^2.0.13"
             },
             "type": "yii2-extension",
             "extra": {
@@ -723,7 +724,7 @@
                 "sitemap",
                 "yii2"
             ],
-            "time": "2017-06-26T08:39:58+00:00"
+            "time": "2018-01-22T14:51:04+00:00"
         },
         {
             "name": "dmstr/yii2-web",

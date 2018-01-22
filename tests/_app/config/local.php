@@ -12,12 +12,16 @@ use yii\console\controllers\MigrateController;
 use yii\rbac\PhpManager;
 use yii\web\Application;
 
+// prefer autoloaded classes from tests/_app
+$testVendorPath = '/repo/tests/_app/vendor';
+require($testVendorPath.'/autoload.php');
+
 Yii::$classMap['dmstr\modules\pages\Module'] = '/repo/Module.php';
 Yii::$classMap['app\components\EditorIdentity'] = '/repo/tests/_app/src/components/EditorIdentity.php';
 
 $common = [
     'id' => 'test',
-    'vendorPath' => '/repo/tests/vendor',
+    'vendorPath' => '/repo/tests/_app/vendor',
     'runtimePath' => '@app/../runtime',
     'aliases' => [
         'repo' => '/repo',

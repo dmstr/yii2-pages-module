@@ -5,7 +5,7 @@ services:
         build:
             dockerfile: Dockerfile
             context: .
-        working_dir: /repo/tests
+        working_dir: /repo/tests/_app
         ports:
           - 80
         env_file:

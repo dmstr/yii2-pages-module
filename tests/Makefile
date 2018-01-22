@@ -45,9 +45,7 @@ bash:	 ##@docker open application development bash
 	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) bash
 
 setup:	 ##@docker setup application stack
-	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii db/create
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii migrate --interactive=0
-	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii user/create testpages@example.com admin admin1
 
 clean-tests: ##@test clean codeception output
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) codecept clean

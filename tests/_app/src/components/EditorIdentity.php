@@ -15,6 +15,7 @@ use yii\web\IdentityInterface;
 class EditorIdentity implements IdentityInterface
 {
     public $username = 'editor';
+    public $isAdmin = false;
 
     /**
      * @inheritdoc
