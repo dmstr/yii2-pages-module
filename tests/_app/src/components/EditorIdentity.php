@@ -15,6 +15,10 @@ use yii\web\IdentityInterface;
 class EditorIdentity implements IdentityInterface
 {
     public $username = 'editor';
+
+    /**
+     * @todo required for ActiveRecordAccessTrait
+     */
     public $isAdmin = false;
 
     /**
