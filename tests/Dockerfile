@@ -1,4 +1,4 @@
-FROM dmstr/yii2-app:0.4.0
+FROM dmstr/yii2-app:0.5.0
 
 # Missing directories
 RUN mkdir -p /app/src/migrations

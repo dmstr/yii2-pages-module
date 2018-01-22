@@ -15,7 +15,7 @@ services:
         build:
             dockerfile: Dockerfile
             context: .
-        working_dir: /app/vendor/dmstr/yii2-pages-module
+        working_dir: /repo/tests
         env_file:
           - db.env
         depends_on:
@@ -26,10 +26,10 @@ services:
           - APP_NAME=pages
           - YII_ENV=test
           - YII_DEBUG=1
-          - APP_CONFIG_FILE=/app/vendor/dmstr/yii2-pages-module/tests/config/local.php
+          - APP_CONFIG_FILE=/repo/tests/config/local.php
         volumes:
           - /app
-          - ./..:/app/vendor/dmstr/yii2-pages-module
+          - ./..:/repo
           #- ~/.composer/cache:/root/.composer/cache
             
     db:

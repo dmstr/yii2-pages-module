@@ -1,28 +1,34 @@
 {
-    "name": "dmstr/yii2-app",
-    "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "file:///repo"
+        }
+    ],
     "require": {
-        "vlucas/phpdotenv": "2.*",
-        "yiisoft/yii2": "^2.0.8",
-        "yiisoft/yii2-bootstrap": "2.*",
-        "yiisoft/yii2-debug": "2.*",
-        "codemix/yii2-streamlog": "^1.0.0",
-        "codemix/yii2-localeurls": "1.4.*",
-        "dmstr/yii2-db": "^0.8.0",
-        "dmstr/yii2-web": "^0.4.0",
-        "dmstr/yii2-migrate-command": "0.3.*",
-        "dmstr/yii2-prototype-module": " 0.4.3-rc1",
-        "dmstr/yii2-cms-metapackage": "6.1.0",
-        "friendsofphp/php-cs-fixer": "^2.0.0"
+        "wikimedia/composer-merge-plugin": "~1.4",
+        "dmstr/yii2-pages-module": "dev-develop"
     },
     "extra": {
-        "asset-installer-paths": {
-            "npm-asset-library": "vendor/npm",
-            "bower-asset-library": "vendor/bower"
-        },
-        "asset-vcs-driver-options": {
-            "github-no-api": true
-        },
-        "asset-pattern-skip-version": "(-build|-patch)"
+        "merge-plugin": {
+            "require": [
+                "/app/composer.json",
+                "/repo/composer.json"
+            ]
+        }
+    },
+    "config": {
+        "fxp-asset": {
+            "installer-paths": {
+                "npm-asset-library": "vendor/npm",
+                "bower-asset-library": "vendor/bower"
+            },
+            "vcs-driver-options": {
+                "github-no-api": true
+            },
+            "git-skip-update": "2 days",
+            "pattern-skip-version": "(-build|-patch)",
+            "optimize-with-installed-packages": false
+        }
     }
 }
