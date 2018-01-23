@@ -19,7 +19,7 @@ endif
 
 default: help
 
-all: build dev up setup open
+all: build dev up setup
 
 dev:    ##@development install composer package (enable host-volume in docker-compose config)
 dev:
