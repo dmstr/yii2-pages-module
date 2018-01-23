@@ -52,7 +52,8 @@ open-vnc:	 ##@test open application database service in browser
 bash:	 ##@docker open application development bash
 	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) bash
 
-setup:	 ##@docker setup application stack
+setup:	 ##@docker wait for database and setup application stack
+	$(DOCKER_COMPOSE) run --rm php bash -c "while ! curl db:3306; do ((c++)) && ((c==30)) && break; sleep 2; done"
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii migrate --interactive=0
 
 clean-tests: ##@test clean codeception output
