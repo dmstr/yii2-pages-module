@@ -21,7 +21,7 @@ before_install:
 
 before_script:
   - cd tests
-  - make build up setup
+  - make all
 
 script:
   - make run-tests
