@@ -19,7 +19,15 @@ endif
 
 default: help
 
-all: clean build up setup open
+all: build dev up setup open
+
+dev:    ##@development install composer package (enable host-volume in docker-compose config)
+dev:
+	#
+	# Running composer installation in development environment
+	# This may take a while on your first install...
+	#
+	$(DOCKER_COMPOSE) run --rm php composer install
 
 up: ##@docker start application stack
 	$(DOCKER_COMPOSE) up -d
