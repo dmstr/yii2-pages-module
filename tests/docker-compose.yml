@@ -18,7 +18,7 @@ services:
           - APP_NAME=pages
           - YII_ENV=test
           - YII_DEBUG=1
-          - APP_CONFIG_FILE=/repo/tests/_app/config/test.php
+          - APP_CONFIG_FILE=/repo/tests/project/config/test.php
         volumes:
           - ./..:/repo
           - ~/.composer-docker/cache:/root/.composer/cache:delegated

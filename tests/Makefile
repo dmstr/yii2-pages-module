@@ -27,7 +27,7 @@ dev:
 	# Running composer installation in development environment
 	# This may take a while on your first install...
 	#
-	$(DOCKER_COMPOSE) run -w /repo/tests/_app --rm php composer install
+	$(DOCKER_COMPOSE) run -w /repo/tests/project --rm php composer install
 
 up: ##@docker start application stack
 	$(DOCKER_COMPOSE) up -d
@@ -53,14 +53,14 @@ bash:	 ##@docker open application development bash
 	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) bash
 
 setup:	 ##@docker wait for database and setup application stack
-	$(DOCKER_COMPOSE) run --rm php bash -c "while ! curl db:3306; do ((c++)) && ((c==30)) && break; sleep 2; done"
+	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii db/wait-for-connection
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii migrate --interactive=0
 
 clean-tests: ##@test clean codeception output
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) codecept clean
 
 run-tests: ##@test run codeception tests
-	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) /repo/tests/_app/vendor/bin/codecept run e2e,cli,unit -x optional
+	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) /repo/tests/project/vendor/bin/codecept run e2e,cli,unit -x optional
 
 lint: ##@test run php cs-fixer
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) /app/vendor/bin/php-cs-fixer fix --format=txt -v --dry-run .

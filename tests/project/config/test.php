@@ -12,16 +12,16 @@ use yii\console\controllers\MigrateController;
 use yii\rbac\PhpManager;
 use yii\web\Application;
 
-// prefer autoloaded classes from tests/_app
-$testVendorPath = '/repo/tests/_app/vendor';
+// prefer autoloaded classes from tests/project
+$testVendorPath = '/repo/tests/project/vendor';
 require($testVendorPath.'/autoload.php');
 
 Yii::$classMap['dmstr\modules\pages\Module'] = '/repo/Module.php';
-Yii::$classMap['app\components\EditorIdentity'] = '/repo/tests/_app/src/components/EditorIdentity.php';
+Yii::$classMap['app\components\EditorIdentity'] = '/repo/tests/project/src/components/EditorIdentity.php';
 
 $common = [
     'id' => 'test',
-    'vendorPath' => '/repo/tests/_app/vendor',
+    'vendorPath' => '/repo/tests/project/vendor',
     'runtimePath' => '@app/../runtime',
     'language' => 'de',
     'aliases' => [
@@ -33,9 +33,9 @@ $common = [
     'components' => [
         'authManager' => [
             'class' => PhpManager::class,
-            'itemFile' => '@repo/tests/_app/config/rbac/items.php',
-            'assignmentFile' => '@repo/tests/_app/config/rbac/assignments.php',
-            'ruleFile' => '@repo/tests/_app/config/rbac/rules.php',
+            'itemFile' => '@repo/tests/project/config/rbac/items.php',
+            'assignmentFile' => '@repo/tests/project/config/rbac/assignments.php',
+            'ruleFile' => '@repo/tests/project/config/rbac/rules.php',
         ],
         'db' => [
             'class' => 'yii\db\Connection',

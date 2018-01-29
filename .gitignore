@@ -6,5 +6,5 @@ tests/codeception/_support/_generated
 
 migrations/workbench/dmstr_yii2-pages-module.mwb.bak
 
-tests/_app/vendor
+tests/project/vendor
 tests/_output

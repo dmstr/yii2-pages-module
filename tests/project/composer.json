@@ -3,6 +3,10 @@
         {
             "type": "vcs",
             "url": "file:///repo"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
         }
     ],
     "require": {
