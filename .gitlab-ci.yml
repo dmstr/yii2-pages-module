@@ -9,7 +9,7 @@ stages:
 test:
   stage: test
   script:
-    - make build up setup
+    - make all
     - make run-tests
     - make clean
   artifacts:
