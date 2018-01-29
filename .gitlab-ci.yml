@@ -3,6 +3,12 @@ before_script:
   - export COMPOSE_PROJECT_NAME=${BUILD_PREFIX}yii2pages
   - cd tests
 
+after_script:
+  - export BUILD_PREFIX=buildpipeline${CI_PIPELINE_ID}
+  - export COMPOSE_PROJECT_NAME=${BUILD_PREFIX}yii2pages
+  - cd tests
+  - make clean
+
 stages:
   - test
 
@@ -11,7 +17,6 @@ test:
   script:
     - make all
     - make run-tests
-    - make clean
   artifacts:
     name: ${CI_PROJECT_PATH}-p${CI_PIPELINE_ID}-codeception
     when: always
