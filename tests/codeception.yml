@@ -1,10 +1,10 @@
 actor: Tester
 paths:
-    tests: tests/codeception
-    log: tests/codeception/_output
-    data: tests/codeception/_data
-    support: tests/codeception/_support
-    envs: tests/codeception/_envs
+    tests: codeception
+    log: codeception/_output
+    data: codeception/_data
+    support: codeception/_support
+    envs: codeception/_envs
 settings:
     #shuffle: true
     bootstrap: _bootstrap.php
@@ -16,7 +16,7 @@ extensions:
 modules:
     config:
         Yii2:
-            configFile: 'tests/codeception/_config/codeception-module.php'
+            configFile: 'codeception/_config/codeception-module.php'
 cleanup: false
 config:
     test_entry_url: http://web:80/index.php

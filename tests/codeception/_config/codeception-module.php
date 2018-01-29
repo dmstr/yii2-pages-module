@@ -10,11 +10,13 @@
 $_SERVER['HOST_NAME'] = 'web';
 $_SERVER['REQUEST_TIME'] = time();
 
+$rootDir = '/app';
+
 // For functional and unit tests
 defined('APP_TYPE') or define('APP_TYPE', 'web');
 
 return yii\helpers\ArrayHelper::merge(
-    require(__DIR__ . '/../../../../../../src/config/main.php'),
+    require($rootDir.'/config/main.php'),
     [
         'language' => 'en',
         'components' => [
@@ -23,7 +25,7 @@ return yii\helpers\ArrayHelper::merge(
             ],
             'urlManager' => [
                 'scriptUrl' => '',
-                'enableDefaultLanguageUrlCode' => false,
+                #'enableDefaultLanguageUrlCode' => false,
             ]
         ]
     ]

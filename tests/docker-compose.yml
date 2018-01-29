@@ -5,7 +5,7 @@ services:
         build:
             dockerfile: Dockerfile
             context: .
-        working_dir: /repo/tests/_app
+        working_dir: /repo/tests
         ports:
           - 80
         env_file:
@@ -18,10 +18,14 @@ services:
           - APP_NAME=pages
           - YII_ENV=test
           - YII_DEBUG=1
-          - APP_CONFIG_FILE=/repo/tests/_app/config/local.php
+          - APP_CONFIG_FILE=/repo/tests/_app/config/test.php
         volumes:
           - ./..:/repo
           - ~/.composer-docker/cache:/root/.composer/cache:delegated
+        networks:
+          default:
+            aliases:
+              - web
             
     db:
         image: ${STACK_DB_IMAGE}

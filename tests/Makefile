@@ -60,7 +60,7 @@ clean-tests: ##@test clean codeception output
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) codecept clean
 
 run-tests: ##@test run codeception tests
-	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) codecept run e2e,cli,unit -x optional
+	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) /repo/tests/_app/vendor/bin/codecept run e2e,cli,unit -x optional
 
 lint: ##@test run php cs-fixer
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) /app/vendor/bin/php-cs-fixer fix --format=txt -v --dry-run .

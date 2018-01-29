@@ -15,7 +15,7 @@ class m161029_011345_settings extends Migration
             }
             if (!Yii::$app->settings->get('availableViews', 'pages', false)) {
                 Yii::$app->settings->set('availableViews',
-                    '@vendor/dmstr/yii2-prototype-module/src/views/render/twig.php',
+                    '@vendor/dmstr/yii2-pages-module/example-views/column1.php',
                     'pages', 'string');
             }
         }

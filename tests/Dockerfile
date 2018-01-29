@@ -1,1 +1,9 @@
-FROM dmstr/yii2-app:0.6.0
+FROM dmstr/yii2-app:0.6.2
+
+# Install npm and lessc
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+ && apt-get install -y npm \
+ && npm install -g less
+ENV PATH /app:/repo/tests/_app/vendor/bin:/usr/lib/node_modules/less/bin:$PATH
+
+ENV COMPOSER=/repo/tests/_app/composer.json

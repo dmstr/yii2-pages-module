@@ -143,9 +143,6 @@ class ModelTestCase extends \Codeception\Test\Unit
                 Tree::ATTR_ACCESS_DOMAIN => 'de',
             ]
         );
-        if ($root === null) {
-            $this->createRootNode('de');
-        }
 
         // switch to app language 'en'
         \Yii::$app->language = 'en';

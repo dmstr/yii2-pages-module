@@ -23,6 +23,7 @@ $common = [
     'id' => 'test',
     'vendorPath' => '/repo/tests/_app/vendor',
     'runtimePath' => '@app/../runtime',
+    'language' => 'de',
     'aliases' => [
         'repo' => '/repo',
         'dmstr/modules/pages' => '/repo',
@@ -175,6 +176,7 @@ $console = [
                 '@dmstr/modules/pages/migrations',
                 '@pheme/settings/migrations',
                 '@bedezign/yii2/audit/migrations',
+                '@tests/migrations',
             ],
         ],
         'copy-pages' => '\dmstr\modules\pages\commands\CopyController',
