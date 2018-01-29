@@ -53,7 +53,7 @@ bash:	 ##@docker open application development bash
 	$(DOCKER_COMPOSE) run --rm -e YII_ENV=test $(PHP_SERVICE) bash
 
 setup:	 ##@docker wait for database and setup application stack
-	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii db/wait-for-connection
+	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii db/wait-for-connection mysql:host=db pages pages
 	$(DOCKER_COMPOSE) run --rm $(PHP_SERVICE) yii migrate --interactive=0
 
 clean-tests: ##@test clean codeception output

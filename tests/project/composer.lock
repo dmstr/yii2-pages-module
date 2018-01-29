@@ -528,7 +528,7 @@
             "source": {
                 "type": "git",
                 "url": "/repo",
-                "reference": "ff11f5bb1eb0ec5fc551d8057cb644844d4e3884"
+                "reference": "6c24a11ab2e506a07d0d67e2200b108e897b9733"
             },
             "require": {
                 "bedezign/yii2-audit": "^1.1",
@@ -544,7 +544,8 @@
                 "yiisoft/yii2": "^2.0.13"
             },
             "require-dev": {
-                "codeception/codeception": "^2.2"
+                "codeception/codeception": "^2.2",
+                "dmstr/yii2-db": "^0.9.4"
             },
             "type": "yii2-extension",
             "extra": {
@@ -575,7 +576,7 @@
                 "sitemap",
                 "yii2"
             ],
-            "time": "2018-01-29T11:06:21+00:00"
+            "time": "2018-01-29T12:03:11+00:00"
         },
         {
             "name": "dmstr/yii2-web",

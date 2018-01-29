@@ -169,7 +169,7 @@ $console = [
         ],
     ],
     'controllerMap' => [
-        #'db'      => '\dmstr\console\controllers\MysqlController',
+        'db'      => '\dmstr\console\controllers\MysqlController',
         'migrate' => [
             'class' => MigrateController::class,
             'migrationPath' => [
