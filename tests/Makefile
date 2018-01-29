@@ -27,7 +27,7 @@ dev:
 	# Running composer installation in development environment
 	# This may take a while on your first install...
 	#
-	$(DOCKER_COMPOSE) run --rm php composer install
+	$(DOCKER_COMPOSE) run -w /repo/tests/_app --rm php composer install
 
 up: ##@docker start application stack
 	$(DOCKER_COMPOSE) up -d
