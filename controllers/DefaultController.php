@@ -112,6 +112,8 @@ JS;
         // get page
         $page = $pageQuery->one();
 
+        # reactivate access_* check in ActiveRecordAccessTrait::find for further queries
+        Tree::$activeAccessTrait = true;
         // check if page has access_read permissions set, if yes check if user is allowed
         if ((!empty($page->access_read) && ($page->access_read != '*'))) {
             if (!\Yii::$app->user->can($page->access_read)) {
