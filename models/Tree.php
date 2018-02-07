@@ -260,16 +260,25 @@ class Tree extends BaseTree
                     ]
                 );
 
+                $visible = true;
+                if ($checkUserPermissions) {
+                    if ($page->access_read !== '*') {
+                        \Yii::trace("Checking Access_read permissions for page " . $page->id, __METHOD__);
+                        $visible = Yii::$app->user->can($page->access_read);
+                    } else if (!empty($page->route)) {
+                        $visible = Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]);
+                    }
+                }
+
+
+
                 // prepare item template
                 $itemTemplate = [
                     'label' => $page->name,
                     'url' => $page->createRoute(),
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
-                    // always show node, if it's a folder (TODO add check permissions)
-                    'visible' => ($checkUserPermissions && !empty($page->route)) ?
-                        Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]) :
-                        true,
+                    'visible' => $visible,
                 ];
                 $item = $itemTemplate;
 
