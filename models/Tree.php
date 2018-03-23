@@ -274,7 +274,7 @@ class Tree extends BaseTree
 
                 // prepare item template
                 $itemTemplate = [
-                    'label' => $page->name,
+                    'label' => $page->getMenuLabel(),
                     'url' => $page->createRoute(),
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
@@ -310,6 +310,11 @@ class Tree extends BaseTree
         }
 
         return array_filter($treeMap);
+    }
+
+    public function getMenuLabel()
+    {
+        return !empty($this->name) ? $this->name : "({$this->domain_id})";
     }
 
     /**

@@ -15,6 +15,9 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\web\HttpException;
+use bedezign\yii2\audit\AuditTrailBehavior;
+use dosamigos\translateable\TranslateableBehavior;
+use dmstr\modules\pages\models\TreeTranslation;
 
 /**
  * Class BaseTree
@@ -351,21 +354,41 @@ class BaseTree extends \kartik\tree\models\Tree
      */
     public function behaviors()
     {
-        return ArrayHelper::merge(
-            parent::behaviors(),
-            [
-                'audit' => [
-                    'class' => 'bedezign\yii2\audit\AuditTrailBehavior'
-                ],
-                'timestamp' =>[
-                    'class'              => TimestampBehavior::className(),
-                    'createdAtAttribute' => self::ATTR_CREATED_AT,
-                    'updatedAtAttribute' => self::ATTR_UPDATED_AT,
-                    'value'              => new Expression('NOW()'),
-                ],
+
+        $behaviors = parent::behaviors();
+
+        $behaviors['audit'] = [
+            'class' => AuditTrailBehavior::class
+        ];
+
+        $behaviors['timestamp'] = [
+            'class'              => TimestampBehavior::class,
+            'createdAtAttribute' => self::ATTR_CREATED_AT,
+            'updatedAtAttribute' => self::ATTR_UPDATED_AT,
+            'value'              => new Expression('NOW()'),
+        ];
+
+        $behaviors['translatable'] = [
+            'class' => TranslateableBehavior::class,
+            'translationAttributes' => [
+                'name',
+                'page_title',
+                'default_meta_keywords',
+                'default_meta_description',
             ]
-        );
+        ];
+
+        return $behaviors;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTranslations()
+    {
+        return $this->hasMany(TreeTranslation::class, ['page_id' => 'id']);
+    }
+
 
     /**
      * @inheritdoc
