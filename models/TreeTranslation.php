@@ -51,7 +51,7 @@ class TreeTranslation extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'dmstr_page_translation';
+        return '{{%dmstr_page_translation}}';
     }
 
     /**

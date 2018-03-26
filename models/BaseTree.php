@@ -320,7 +320,7 @@ class BaseTree extends \kartik\tree\models\Tree
      */
     public static function tableName()
     {
-        return 'dmstr_page';
+        return '{{%dmstr_page}}';
     }
 
     /**
