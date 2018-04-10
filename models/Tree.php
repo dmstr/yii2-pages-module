@@ -275,7 +275,7 @@ class Tree extends BaseTree
                 // prepare item template
                 $itemTemplate = [
                     'label' => $page->getMenuLabel(),
-                    'url' => $page->createRoute(),
+                    'url' => $page->createRoute() ? $page->createRoute() : '#',
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
                     'visible' => $visible,
