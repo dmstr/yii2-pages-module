@@ -62,7 +62,7 @@ JS;
                 [
                     Tree::ATTR_ACCESS_DOMAIN => [
                         \Yii::$app->language,
-                        (\Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION) ? Tree::GLOBAL_ACCESS_DOMAIN : '')
+                        Tree::GLOBAL_ACCESS_DOMAIN
                     ]
                 ]
             )
