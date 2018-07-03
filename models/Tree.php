@@ -208,12 +208,13 @@ class Tree extends BaseTree
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
         $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)];
-        if (!Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
-            $rootCondition[self::ATTR_DISABLED] = self::NOT_DISABLED;
-        }
         $rootNode = self::findOne($rootCondition);
 
         if ($rootNode === null) {
+            return [];
+        }
+
+        if ($rootNode->isDisabled() && !Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
             return [];
         }
 
@@ -225,23 +226,29 @@ class Tree extends BaseTree
         $leavesQuery = $rootNode->children()->andWhere(
             [
                 self::ATTR_ACTIVE => self::ACTIVE,
-                self::ATTR_VISIBLE => self::VISIBLE,
                 self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)],
             ]
         );
-        if (!Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
-            $leavesQuery->andWhere(
-                [
-                    self::ATTR_DISABLED => self::NOT_DISABLED,
-                ]
-            );
-        }
-
+        $leavesQuery->with('translationsMeta');
         $leaves = $leavesQuery->all();
 
         if ($leaves === null) {
             return [];
         }
+
+        // filter out invisible models and disabled models (if needed)
+        // this is not done in the SQL query to reflect translation_meta values for "visible" and "disabled" attributes.
+        $canAccessPages = Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION);
+        $leaves = array_filter($leaves, function(Tree $leave) use ($canAccessPages) {
+            if (!$leave->isVisible()) {
+                return false;
+            }
+            if (!$canAccessPages && $leave->isDisabled()) {
+                return false;
+            }
+            return true;
+        });
+
 
         // tree mapping and leave stack
         $treeMap = [];

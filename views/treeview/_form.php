@@ -191,6 +191,15 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 'title'           => Yii::t('pages', Yii::t('pages', 'SEO')),
             ]
         ) ?>
+        <?php if ($node->getBehavior('translatable')->isFallbackTranslation): ?>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="well well-sm alert-info"><!-- using well instead of alert to not conflict with kv treeview JS -->
+                    <?= \Yii::t('pages', 'The currently displayed values are taken from the fallback language. If you change translated values a new translation will be stored for this page.') ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
         <div class="row">
             <div class="col-xs-12">
                 <?= $form->field($node, $node::ATTR_PAGE_TITLE,
@@ -302,10 +311,18 @@ echo Html::hiddenInput('softDelete', $softDelete);
         ) ?>
         <div class="row">
             <div class="col-xs-12 col-sm-2">
-                <?= $form->field($node, 'visible')->checkbox() ?>
+                <?php
+                // set default value if value is null (translation_meta entry missing)
+                $node->visible = $node->isVisible() ? 1 : 0;
+                echo $form->field($node, 'visible')->checkbox()
+                ?>
             </div>
             <div class="col-xs-12 col-sm-2">
-                <?= $form->field($node, 'disabled')->checkbox() ?>
+                <?php
+                    // set default value if value is null (translation_meta entry missing)
+                    $node->disabled = $node->isDisabled() ? 1 : 0;
+                    echo $form->field($node, 'disabled')->checkbox()
+                ?>
             </div>
             <div class="col-xs-12 col-sm-2">
                 <?= $form->field($node, 'collapsed')->checkbox($flagOptions) ?>

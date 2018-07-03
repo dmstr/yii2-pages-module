@@ -370,11 +370,25 @@ class BaseTree extends \kartik\tree\models\Tree
 
         $behaviors['translatable'] = [
             'class' => TranslateableBehavior::class,
+            'languageField' => 'language',
+            'skipSavingDuplicateTranslation' => true,
             'translationAttributes' => [
-                'name',
-                'page_title',
-                'default_meta_keywords',
-                'default_meta_description',
+                self::ATTR_NAME,
+                self::ATTR_PAGE_TITLE,
+                self::ATTR_DEFAULT_META_KEYWORDS,
+                self::ATTR_DEFAULT_META_DESCRIPTION,
+            ]
+        ];
+
+        $behaviors['translation_meta'] = [
+            'class' => TranslateableBehavior::class,
+            'relation' => 'translationsMeta',
+            'languageField' => 'language',
+            'fallbackLanguage' => false,
+            'skipSavingDuplicateTranslation' => false,
+            'translationAttributes' => [
+                self::ATTR_DISABLED,
+                self::ATTR_VISIBLE,
             ]
         ];
 
@@ -387,6 +401,14 @@ class BaseTree extends \kartik\tree\models\Tree
     public function getTranslations()
     {
         return $this->hasMany(TreeTranslation::class, ['page_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTranslationsMeta()
+    {
+        return $this->hasMany(TreeTranslationMeta::class, ['page_id' => 'id']);
     }
 
 
@@ -498,6 +520,14 @@ class BaseTree extends \kartik\tree\models\Tree
                     ],
                     'integer',
                     'integerOnly' => true,
+                ],
+                [
+                    [
+                        self::ATTR_PAGE_TITLE,
+                        self::ATTR_DEFAULT_META_KEYWORDS,
+                        self::ATTR_DEFAULT_META_DESCRIPTION,
+                    ],
+                    'default',
                 ],
                 [
                     [
