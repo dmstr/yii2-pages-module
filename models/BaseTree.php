@@ -523,6 +523,14 @@ class BaseTree extends \kartik\tree\models\Tree
                 ],
                 [
                     [
+                        self::ATTR_PAGE_TITLE,
+                        self::ATTR_DEFAULT_META_KEYWORDS,
+                        self::ATTR_DEFAULT_META_DESCRIPTION,
+                    ],
+                    'default',
+                ],
+                [
+                    [
                         self::ATTR_DOMAIN_ID,
                         self::ATTR_PAGE_TITLE,
                         self::ATTR_NAME,

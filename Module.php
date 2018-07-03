@@ -97,7 +97,7 @@ class Module extends \yii\base\Module
                 Tree::ATTR_ACTIVE => Tree::ACTIVE,
             ]
         );
-        if ($rootNode->getAttribute(Tree::ATTR_VISIBLE) != Tree::VISIBLE) {
+        if ($rootNode !== null && !$rootNode->isVisible()) {
             return null;
         }
         return $rootNode;

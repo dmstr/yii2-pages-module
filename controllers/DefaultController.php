@@ -105,7 +105,7 @@ JS;
         $page = $pageQuery->one();
 
         // Show disabled pages for admins
-        if ($page !== null && $page->disabled == Tree::DISABLED && !\Yii::$app->user->can('pages')) {
+        if ($page !== null && $page->isDisabled() && !\Yii::$app->user->can('pages')) {
             $page = null;
         }
 

@@ -214,7 +214,7 @@ class Tree extends BaseTree
             return [];
         }
 
-        if ($rootNode->disabled == Tree::DISABLED && !Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
+        if ($rootNode->isDisabled() && !Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
             return [];
         }
 
@@ -240,10 +240,10 @@ class Tree extends BaseTree
         // this is not done in the SQL query to reflect translation_meta values for "visible" and "disabled" attributes.
         $canAccessPages = Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION);
         $leaves = array_filter($leaves, function(Tree $leave) use ($canAccessPages) {
-            if ($leave->getAttribute(self::ATTR_VISIBLE) != self::VISIBLE) {
+            if (!$leave->isVisible()) {
                 return false;
             }
-            if (!$canAccessPages && $leave->getAttribute(self::ATTR_DISABLED) == self::DISABLED) {
+            if (!$canAccessPages && $leave->isDisabled()) {
                 return false;
             }
             return true;
