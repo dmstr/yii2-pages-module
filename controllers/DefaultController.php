@@ -100,17 +100,14 @@ JS;
             ]
         );
 
-        // Show disabled pages for admins
-        if (!\Yii::$app->user->can('pages')) {
-            $pageQuery->andWhere(
-                [
-                    Tree::ATTR_DISABLED => Tree::NOT_DISABLED,
-                ]
-            );
-        }
-
         // get page
+        /** @var $page Tree */
         $page = $pageQuery->one();
+
+        // Show disabled pages for admins
+        if ($page !== null && $page->disabled == Tree::DISABLED && !\Yii::$app->user->can('pages')) {
+            $page = null;
+        }
 
         # reactivate access_* check in ActiveRecordAccessTrait::find for further queries
         Tree::$activeAccessTrait = true;

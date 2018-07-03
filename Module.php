@@ -91,13 +91,16 @@ class Module extends \yii\base\Module
     {
         $localizedRoot = Tree::ROOT_NODE_PREFIX.'_'.\Yii::$app->language;
         \Yii::trace('localizedRoot: '.$localizedRoot, __METHOD__);
-        return Tree::findOne(
+        $rootNode = Tree::findOne(
             [
                 Tree::ATTR_DOMAIN_ID => Tree::ROOT_NODE_PREFIX,
                 Tree::ATTR_ACTIVE => Tree::ACTIVE,
-                Tree::ATTR_VISIBLE => Tree::VISIBLE,
             ]
         );
+        if ($rootNode->getAttribute(Tree::ATTR_VISIBLE) != Tree::VISIBLE) {
+            return null;
+        }
+        return $rootNode;
     }
 
     /**
