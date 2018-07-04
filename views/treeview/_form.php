@@ -88,39 +88,78 @@ echo Html::hiddenInput('currUrl', $currUrl);
 echo Html::hiddenInput('modelClass', $modelClass);
 echo Html::hiddenInput('softDelete', $softDelete);
 ?>
+
+
+<?php $this->beginBlock('buttons') ?>
+<?php if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
+    <div class="row">
+        <div class="col-xs-12">
+            <?= Html::submitButton(
+                FA::i(FA::_FLOPPY_O).' '.Yii::t('pages', 'Save'),
+                ['class' => 'btn btn-success']
+            ) ?>
+            <?= Html::resetButton(
+                FA::i(FA::_REFRESH).' '.Yii::t('pages', 'Reset'),
+                ['class' => 'btn btn-default pull-right']
+            ) ?>
+        </div>
+    </div>
+<?php endif; ?>
+<?php $this->endBlock() ?>
+
+
+
+<?php Box::begin(
+    [
+        #'title'    => Yii::t('pages', 'General'),
+        'type'=> 'solid'
+    ]
+) ?>
+
+<?= $this->blocks['buttons'] ?>
+
 <div class="vertical-spacer"></div>
 
-<?php if ($nodeUrl !== null) : ?>
-    <?php $infoBoxHtml = InfoBox::widget(
-        [
-            'text' => '<div class="text-center">
-                            <h3 style="white-space: normal;">'.$node->name.'</h3>
-                            <div style="text-transform: lowercase">' . $nodeUrl . '</div>
-                        </div>',
-            'boxBg' => InfoBox::TYPE_AQUA,
-            'icon' => (empty($node->icon)
-                ? FA::$cssPrefix.' '.FA::$cssPrefix.'-file'
-                : FA::$cssPrefix.' '.FA::$cssPrefix.'-'.$node->icon),
-        ]
-    );
-    echo Html::a($infoBoxHtml, $nodeUrl);
-    ?>
-<?php endif; ?>
+<h2>
+    <?= FA::icon($node->icon?:'file') ?>
+    <?= $node->name ?>
+</h2>
+
+<p><?= Html::a($nodeUrl, $nodeUrl) ?></p>
+
 <div class="clearfix"></div>
 
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
+
         <?php Box::begin(
             [
                 'title'    => Yii::t('pages', 'General'),
+                'type'=> Box::TYPE_PRIMARY
             ]
         ) ?>
         <div class="row">
-            <div class="col-sm-6">
-                <?= $form->field($node, $node::ATTR_NAME,
+            <div class="col-xs-12 col-lg-5">
+                <?= $form->field($node, $node::ATTR_ROUTE)->widget(
+                    Select2::classname(),
                     [
-                        'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_NAME)]],
+
+                        'data' => $node::optsRoute(),
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => ['allowClear' => true],
                     ]
-                )->label(false) ?>
+                );
+                ?>
+            </div>
+            <div class="col-xs-12 col-lg-7">
+                <?= $form->field($node, $node::ATTR_VIEW)->widget(
+                    Select2::classname(),
+                    [
+
+                        'data' => $node::optsView(),
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => ['allowClear' => true],
+                    ]
+                ); ?>
             </div>
 
             <div class="col-sm-6">
@@ -128,9 +167,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     <?= $form->field($node, $iconAttribute)->widget(
                         Select2::classname(),
                         [
-                            'addon' => [
-                                'prepend' => ['content' => Inflector::titleize($iconAttribute)],
-                            ],
+
                             'data' => $node::optsIcon(true),
                             'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
                             'pluginOptions' => [
@@ -138,57 +175,30 @@ echo Html::hiddenInput('softDelete', $softDelete);
                                 'allowClear' => true,
                             ],
                         ]
-                    )->label(false); ?>
+                    ) ?>
                 <?php else: ?>
-                    <?= $form->field($node, $iconAttribute,
-                        [
-                            'addon' => ['prepend' => ['content' => Inflector::titleize($iconAttribute)]],
-                        ]
-                    )->textInput($inputOpts)->label(false) ?>
+                    <?= $form->field($node, $iconAttribute
+                    )->textInput($inputOpts) ?>
                 <?php endif; ?>
             </div>
 
         </div>
-        <?php Box::end() ?>
-        <?php Box::begin(
-            [
-                'title'    => Yii::t('pages', 'Route'),
-            ]
-        ) ?>
-        <div class="row">
-            <div class="col-xs-12 col-sm-5">
-                <?= $form->field($node, $node::ATTR_ROUTE)->widget(
-                    Select2::classname(),
-                    [
-                        'addon' => [
-                            'prepend' => ['content' => Inflector::titleize($node::ATTR_ROUTE)],
-                        ],
-                        'data' => $node::optsRoute(),
-                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                        'pluginOptions' => ['allowClear' => true],
-                    ]
-                )->label(false);
-                ?>
+<div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <?= $form->field($node, $node::ATTR_DOMAIN_ID
+                )->textInput() ?>
             </div>
-            <div class="col-xs-12 col-sm-7">
-                <?= $form->field($node, $node::ATTR_VIEW)->widget(
-                    Select2::classname(),
-                    [
-                        'addon' => [
-                            'prepend' => ['content' => Inflector::titleize($node::ATTR_VIEW)],
-                        ],
-                        'data' => $node::optsView(),
-                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                        'pluginOptions' => ['allowClear' => true],
-                    ]
-                )->label(false); ?>
+            <div class="col-sm-6">
+                <?= $form->field($node, 'name_id'
+                )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled']) ?>
             </div>
-
         </div>
         <?php Box::end() ?>
+
+
         <?php Box::begin(
             [
-                'title'           => Yii::t('pages', Yii::t('pages', 'SEO')),
+                'title'           => Yii::t('pages', Yii::t('pages', 'Localization')),
             ]
         ) ?>
         <?php if ($node->getBehavior('translatable')->isFallbackTranslation): ?>
@@ -200,68 +210,74 @@ echo Html::hiddenInput('softDelete', $softDelete);
             </div>
         </div>
         <?php endif; ?>
+
         <div class="row">
+            <div class="col-sm-6">
+                <?= $form->field($node, $node::ATTR_NAME) ?>
+            </div>
+
             <div class="col-xs-12">
-                <?= $form->field($node, $node::ATTR_PAGE_TITLE,
-                    [
-                        'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_PAGE_TITLE)]],
-                    ]
-                )->textInput($inputOpts)->label(false) ?>
+                <?= $form->field($node, $node::ATTR_PAGE_TITLE)->textInput($inputOpts) ?>
             </div>
         </div>
-        <div class="row">
+
+    <div class="row">
             <div class="col-xs-12 col-lg-12">
-                <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS,
-                    [
-                        'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Keywords')]],
-                    ]
-                )->textInput()->label(false) ?>
+                <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS)->textInput() ?>
             </div>
             <div class="col-xs-12 col-lg-12">
-                <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION,
-                    [
-                        'addon' => ['prepend' => ['content' => \Yii::t('pages', 'Description')]],
-                    ]
-                )->textarea(['rows' => 5])->label(false) ?>
+                <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION)->textarea(['rows' => 5]) ?>
             </div>
         </div>
-        <?php Box::end() ?>
-        <?php Box::begin(
-            [
-                'title' => Yii::t('pages', Yii::t('pages', 'Access')),
-            ]
-        ) ?>
+
+
+    <hr>
+<h4><?= Yii::t('pages', 'Access') ?></h4>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-2">
+            <?php
+            // set default value if value is null (translation_meta entry missing)
+            $node->visible = $node->isVisible() ? 1 : 0;
+            echo $form->field($node, 'visible')->checkbox()
+            ?>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+            <?php
+            // set default value if value is null (translation_meta entry missing)
+            $node->disabled = $node->isDisabled() ? 1 : 0;
+            echo $form->field($node, 'disabled')->checkbox()
+            ?>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+            <?= $form->field($node, 'collapsed')->checkbox($flagOptions) ?>
+        </div>
+    </div>
+
+
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 <?= $form->field($node, $node::ATTR_ACCESS_DOMAIN)->widget(
                     Select2::classname(),
                     [
-                        'addon' => [
-                            'prepend' => [
-                                'content' => Inflector::titleize($node::ATTR_ACCESS_DOMAIN),
-                            ],
-                        ],
+
                         'data' => $node::optsAccessDomain(),
                         'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
                         'pluginOptions' => ['allowClear' => true],
                     ]
-                )->label(false) ?>
+                ) ?>
             </div>
             <div class="col-xs-12 col-sm-6">
                 <?= $form->field($node, $node::ATTR_ACCESS_READ)->widget(
                     Select2::classname(),
                     [
-                        'addon' => [
-                            'prepend' => [
-                                'content' => Inflector::titleize($node::ATTR_ACCESS_READ),
-                            ],
-                        ],
+
                         'data' => $userAuthItems,
                         'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
                         'pluginOptions' => ['allowClear' => true],
                     ]
                 )
-                    ->label(false)
+
                 ?>
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -269,17 +285,13 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     <?= $form->field($node, $node::ATTR_ACCESS_UPDATE)->widget(
                         Select2::classname(),
                         [
-                            'addon' => [
-                                'prepend' => [
-                                    'content' => Inflector::titleize($node::ATTR_ACCESS_UPDATE),
-                                ],
-                            ],
+
                             'data' => $userAuthItems,
                             'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
                             'pluginOptions' => ['allowClear' => true],
                         ]
                     )
-                        ->label(false)
+
                     ?>
                 <?php endif; ?>
             </div>
@@ -288,76 +300,33 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     <?= $form->field($node, $node::ATTR_ACCESS_DELETE)->widget(
                         Select2::classname(),
                         [
-                            'addon' => [
-                                'prepend' => [
-                                    'content' => Inflector::titleize($node::ATTR_ACCESS_DELETE),
-                                ],
-                            ],
+
                             'data' => $userAuthItems,
                             'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
                             'pluginOptions' => ['allowClear' => true],
                         ]
                     )
-                        ->label(false)
+
                     ?>
                 <?php endif; ?>
             </div>
         </div>
+
         <?php Box::end() ?>
-        <?php Box::begin(
-            [
-                'title'           => Yii::t('pages', 'Options'),
-            ]
-        ) ?>
-        <div class="row">
-            <div class="col-xs-12 col-sm-2">
-                <?php
-                // set default value if value is null (translation_meta entry missing)
-                $node->visible = $node->isVisible() ? 1 : 0;
-                echo $form->field($node, 'visible')->checkbox()
-                ?>
-            </div>
-            <div class="col-xs-12 col-sm-2">
-                <?php
-                    // set default value if value is null (translation_meta entry missing)
-                    $node->disabled = $node->isDisabled() ? 1 : 0;
-                    echo $form->field($node, 'disabled')->checkbox()
-                ?>
-            </div>
-            <div class="col-xs-12 col-sm-2">
-                <?= $form->field($node, 'collapsed')->checkbox($flagOptions) ?>
-            </div>
-        </div>
-        <?php Box::end() ?>
+
         <?php Box::begin(
             [
                 'title'             => Yii::t('pages', Yii::t('pages', 'Advanced')),
+                'type' => Box::TYPE_PRIMARY
             ]
         ) ?>
         <div class="row">
-            <div class="col-xs-12 col-sm-6">
-                <?= $form->field($node, $node::ATTR_DOMAIN_ID,
-                    [
-                        'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_DOMAIN_ID)]],
-                    ]
-                )->textInput()->label(false) ?>
-            </div>
-            <div class="col-sm-6">
-                <?= $form->field($node, 'name_id',
-                    [
-                        'addon' => ['prepend' => ['content' => 'Name ID']],
-                    ]
-                )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled'])->label(false) ?>
-            </div>
+
             <div class="col-sm-6">
                 <?= $form->field($node, $iconTypeAttribute)->widget(
                     Select2::classname(),
                     [
-                        'addon' => [
-                            'prepend' => [
-                                'content' => Inflector::titleize($iconTypeAttribute),
-                            ],
-                        ],
+
                         'data' => [
                             TreeView::ICON_CSS => 'CSS Suffix',
                             TreeView::ICON_RAW => 'Raw Markup',
@@ -371,15 +340,12 @@ echo Html::hiddenInput('softDelete', $softDelete);
                             'allowClear' => false,
                         ],
                     ]
-                )->label(false);
+                );
                 ?>
             </div>
             <div class="col-xs-12">
-                <?= $form->field($node, $node::ATTR_REQUEST_PARAMS,
-                    [
-                        'addon' => ['prepend' => ['content' => Inflector::titleize($node::ATTR_REQUEST_PARAMS)]],
-                    ]
-                )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS])->label(false) ?>
+                <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
+                )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
             </div>
         </div>
         <?php Box::end() ?>
@@ -390,19 +356,13 @@ echo Html::hiddenInput('softDelete', $softDelete);
             <?= Html::activeHiddenInput($node, $iconTypeAttribute) ?>
             <?= $form->field(
                 $node,
-                $nameAttribute,
-                [
-                    'addon' => ['prepend' => ['content' => Inflector::titleize($iconTypeAttribute)]],
-                ]
-            )->textArea(['rows' => 2] + $inputOpts)->label(false) ?>
+                $nameAttribute
+            )->textArea(['rows' => 2] + $inputOpts) ?>
         </div>
         <div class="col-sm-6">
             <?= $form->field(
                 $node,
-                $iconAttribute,
-                [
-                    'addon' => ['prepend' => ['content' => Inflector::titleize($iconTypeAttribute)]],
-                ]
+                $iconAttribute
             )->multiselect(
                 $iconsList,
                 [
@@ -424,24 +384,13 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     },
                     'selector' => 'radio',
                 ]
-            )->label(false) ?>
-        </div>
-    </div>
-<?php endif; ?>
-
-<?php if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
-    <div class="row">
-        <div class="col-xs-12">
-            <?= Html::submitButton(
-                FA::i(FA::_FLOPPY_O).' '.Yii::t('pages', 'Save'),
-                ['class' => 'btn btn-lg btn-primary']
-            ) ?>
-            <?= Html::resetButton(
-                FA::i(FA::_REFRESH).' '.Yii::t('pages', 'Reset'),
-                ['class' => 'btn btn-lg btn-default']
             ) ?>
         </div>
     </div>
 <?php endif; ?>
 
+<?= $this->blocks['buttons'] ?>
+
+
+    <?php Box::end() ?>
 <?php ActiveForm::end() ?>

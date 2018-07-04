@@ -39,7 +39,7 @@ if (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION, ['route' => true])) {
         'url'     => ['/pages/copy'],
         'options' => [
             'title'    => Yii::t('pages', 'Copy root nodes'),
-            'class'    => 'btn btn-success'
+            'class'    => 'btn btn-default'
         ],
     ];
     $toolbar[] = TreeView::BTN_SEPARATOR;
@@ -78,12 +78,12 @@ if (\Yii::$app->has('settings') && \Yii::$app->hasModule('settings')) {
 
 $mainTemplate = <<< HTML
 <div class="row">
-    <div class="col-md-4" id="pages-detail-wrapper">
-        <div class="box">
+    <div class="col-md-5" id="pages-detail-wrapper">
+        <div class="box box-solid">
         {wrapper}
         </div>
     </div>
-    <div class="col-md-8" id="pages-detail-panel">
+    <div class="col-md-7" id="pages-detail-panel">
         {detail}
     </div>
 </div>
