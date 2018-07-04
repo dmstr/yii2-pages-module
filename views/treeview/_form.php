@@ -95,11 +95,11 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <div class="row">
         <div class="col-xs-12">
             <?= Html::submitButton(
-                FA::i(FA::_FLOPPY_O).' '.Yii::t('pages', 'Apply'),
+                FA::i(FA::_FLOPPY_O) . ' ' . Yii::t('pages', 'Apply'),
                 ['class' => 'btn btn-success']
             ) ?>
             <?= Html::resetButton(
-                FA::i(FA::_REFRESH).' '.Yii::t('pages', 'Reset'),
+                FA::i(FA::_REFRESH) . ' ' . Yii::t('pages', 'Reset'),
                 ['class' => 'btn btn-default pull-right']
             ) ?>
         </div>
@@ -111,8 +111,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 <?php Box::begin(
     [
-        #'title'    => Yii::t('pages', 'General'),
-        'type'=> 'solid'
+        'type' => 'solid'
     ]
 ) ?>
 
@@ -121,7 +120,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 <div class="vertical-spacer"></div>
 
 <h2>
-    <?= FA::icon($node->icon?:'file') ?>
+    <?= FA::icon($node->icon ?: 'file') ?>
     <?= $node->name ?>
     <small>
         <span class="label label-default"><?= $node->getNameId() ?></span>
@@ -130,108 +129,106 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 <p><?= Html::a($nodeUrl, $nodeUrl) ?></p>
 
+
 <div class="clearfix"></div>
+
 
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
 
-        <?php Box::begin(
-            [
-                #'title'    => Yii::t('pages', 'General'),
-                'type'=> Box::TYPE_PRIMARY
-            ]
-        ) ?>
-        <div class="row">
-            <div class="col-xs-12 col-lg-5">
-                <?= $form->field($node, $node::ATTR_ROUTE)->widget(
-                    Select2::classname(),
-                    [
+    <?php Box::begin(
+        [
+            'type' => Box::TYPE_PRIMARY
+        ]
+    ) ?>
 
-                        'data' => $node::optsRoute(),
-                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                        'pluginOptions' => ['allowClear' => true],
-                    ]
-                );
-                ?>
-            </div>
-            <div class="col-xs-12 col-lg-7">
-                <?= $form->field($node, $node::ATTR_VIEW)->widget(
-                    Select2::classname(),
-                    [
+    <div class="row">
+        <div class="col-xs-12 col-lg-5">
+            <?= $form->field($node, $node::ATTR_ROUTE)->widget(
+                Select2::classname(),
+                [
 
-                        'data' => $node::optsView(),
-                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                        'pluginOptions' => ['allowClear' => true],
-                    ]
-                ); ?>
-            </div>
-
-            <div class="col-sm-5">
-                <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] == true): ?>
-                    <?= $form->field($node, $iconAttribute)->widget(
-                        Select2::classname(),
-                        [
-
-                            'data' => $node::optsIcon(true),
-                            'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                            'pluginOptions' => [
-                                'escapeMarkup' => new \yii\web\JsExpression('function(m) { return m; }'),
-                                'allowClear' => true,
-                            ],
-                        ]
-                    ) ?>
-                <?php else: ?>
-                    <?= $form->field($node, $iconAttribute
-                    )->textInput($inputOpts) ?>
-                <?php endif; ?>
-            </div>
-
-
-            <div class="col-xs-12 col-sm-7">
-                <?= $form->field($node, $node::ATTR_DOMAIN_ID
-                )->textInput() ?>
-            </div>
-
+                    'data' => $node::optsRoute(),
+                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
+            );
+            ?>
         </div>
-        <?php Box::end() ?>
+        <div class="col-xs-12 col-lg-7">
+            <?= $form->field($node, $node::ATTR_VIEW)->widget(
+                Select2::classname(),
+                [
+
+                    'data' => $node::optsView(),
+                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
+            ); ?>
+        </div>
+
+        <div class="col-sm-5">
+            <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] == true): ?>
+                <?= $form->field($node, $iconAttribute)->widget(
+                    Select2::classname(),
+                    [
+
+                        'data' => $node::optsIcon(true),
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => [
+                            'escapeMarkup' => new \yii\web\JsExpression('function(m) { return m; }'),
+                            'allowClear' => true,
+                        ],
+                    ]
+                ) ?>
+            <?php else: ?>
+                <?= $form->field($node, $iconAttribute)->textInput($inputOpts) ?>
+            <?php endif; ?>
+        </div>
 
 
-        <?php Box::begin(
-            [
-                #'title'           => Yii::t('pages', Yii::t('pages', 'Localization')),
-            ]
-        ) ?>
-        <?php if ($node->getBehavior('translatable')->isFallbackTranslation): ?>
+        <div class="col-xs-12 col-sm-7">
+            <?= $form->field($node, $node::ATTR_DOMAIN_ID)->textInput() ?>
+        </div>
+
+    </div>
+    <?php Box::end() ?>
+
+
+    <?php Box::begin() ?>
+    <?php if ($node->getBehavior('translatable')->isFallbackTranslation): ?>
         <div class="row">
             <div class="col-xs-12">
-                <div class="well well-sm alert-info"><!-- using well instead of alert to not conflict with kv treeview JS -->
-                    <?= \Yii::t('pages', 'The currently displayed values are taken from the fallback language. If you change translated values a new translation will be stored for this page.') ?>
+                <div class="well well-sm alert-info">
+                    <!-- using well instead of alert to not conflict with kv treeview JS -->
+                    <?= \Yii::t('pages',
+                                'The currently displayed values are taken from the fallback language. If you change translated values a new translation will be stored for this page.') ?>
                 </div>
             </div>
         </div>
-        <?php endif; ?>
-
-        <div class="row">
-            <div class="col-sm-6">
-                <?= $form->field($node, $node::ATTR_NAME) ?>
-            </div>
-
-            <div class="col-xs-12">
-                <?= $form->field($node, $node::ATTR_PAGE_TITLE)->textInput($inputOpts) ?>
-            </div>
-        </div>
+    <?php endif; ?>
 
     <div class="row">
-            <div class="col-xs-12 col-lg-12">
-                <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS)->textInput() ?>
-            </div>
-            <div class="col-xs-12 col-lg-12">
-                <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION)->textarea(['rows' => 5]) ?>
-            </div>
+        <div class="col-sm-6">
+            <?= $form->field($node, $node::ATTR_NAME) ?>
         </div>
+
+        <div class="col-xs-12">
+            <?= $form->field($node, $node::ATTR_PAGE_TITLE)->textInput($inputOpts) ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS)->textInput() ?>
+        </div>
+        <div class="col-xs-12 col-lg-12">
+            <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION)->textarea(['rows' => 5]) ?>
+        </div>
+    </div>
 
 
     <hr>
-<h4><?= Yii::t('pages', 'Access') ?></h4>
+    <h4><?= Yii::t('pages', 'Access') ?></h4>
 
     <div class="row">
         <div class="col-xs-12 col-sm-2">
@@ -254,22 +251,36 @@ echo Html::hiddenInput('softDelete', $softDelete);
     </div>
 
 
-        <div class="row">
-            <div class="col-xs-12 col-sm-4">
-                <?= $form->field($node, $node::ATTR_ACCESS_DOMAIN)->widget(
-                    Select2::classname(),
-                    [
+    <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            <?= $form->field($node, $node::ATTR_ACCESS_DOMAIN)->widget(
+                Select2::classname(),
+                [
 
-                        'data' => $node::optsAccessDomain(),
-                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                        'pluginOptions' => ['allowClear' => true],
-                    ]
-                ) ?>
-            </div>
+                    'data' => $node::optsAccessDomain(),
+                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
+            ) ?>
         </div>
-            <div class="row">
-            <div class="col-xs-12 col-sm-4">
-                <?= $form->field($node, $node::ATTR_ACCESS_READ)->widget(
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            <?= $form->field($node, $node::ATTR_ACCESS_READ)->widget(
+                Select2::classname(),
+                [
+
+                    'data' => $userAuthItems,
+                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
+            )
+
+            ?>
+        </div>
+        <div class="col-xs-12 col-sm-4">
+            <?php if ($node->hasPermission($node::ATTR_ACCESS_UPDATE) || $node->isNewRecord) : ?>
+                <?= $form->field($node, $node::ATTR_ACCESS_UPDATE)->widget(
                     Select2::classname(),
                     [
 
@@ -280,93 +291,73 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 )
 
                 ?>
-            </div>
-            <div class="col-xs-12 col-sm-4">
-                <?php if ($node->hasPermission($node::ATTR_ACCESS_UPDATE) || $node->isNewRecord) : ?>
-                    <?= $form->field($node, $node::ATTR_ACCESS_UPDATE)->widget(
-                        Select2::classname(),
-                        [
-
-                            'data' => $userAuthItems,
-                            'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                            'pluginOptions' => ['allowClear' => true],
-                        ]
-                    )
-
-                    ?>
-                <?php endif; ?>
-            </div>
-            <div class="col-xs-12 col-sm-4">
-                <?php if ($node->hasPermission($node::ATTR_ACCESS_DELETE) || $node->isNewRecord) : ?>
-                    <?= $form->field($node, $node::ATTR_ACCESS_DELETE)->widget(
-                        Select2::classname(),
-                        [
-
-                            'data' => $userAuthItems,
-                            'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                            'pluginOptions' => ['allowClear' => true],
-                        ]
-                    )
-
-                    ?>
-                <?php endif; ?>
-            </div>
+            <?php endif; ?>
         </div>
-
-        <?php Box::end() ?>
-
-        <?php Box::begin(
-            [
-                #'title'             => Yii::t('pages', Yii::t('pages', 'Advanced')),
-                'type' => Box::TYPE_PRIMARY
-            ]
-        ) ?>
-        <div class="row">
-
-
-            <div class="col-xs-12">
-                <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
-                )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
-            </div>
-
-            <div class="col-sm-6">
-                <?= $form->field($node, $iconTypeAttribute)->widget(
+        <div class="col-xs-12 col-sm-4">
+            <?php if ($node->hasPermission($node::ATTR_ACCESS_DELETE) || $node->isNewRecord) : ?>
+                <?= $form->field($node, $node::ATTR_ACCESS_DELETE)->widget(
                     Select2::classname(),
                     [
 
-                        'data' => [
-                            TreeView::ICON_CSS => 'CSS Suffix',
-                            TreeView::ICON_RAW => 'Raw Markup',
-                        ],
-                        'options' => [
-                                'id' => 'tree-'.$iconTypeAttribute,
-                                'placeholder' => Yii::t('pages', 'Select'),
-                                'multiple' => false,
-                            ] + $inputOpts,
-                        'pluginOptions' => [
-                            'allowClear' => false,
-                        ],
+                        'data' => $userAuthItems,
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => ['allowClear' => true],
                     ]
-                );
+                )
+
                 ?>
-            </div>
+            <?php endif; ?>
         </div>
-        <?php Box::end() ?>
+    </div>
+
+    <?php Box::end() ?>
+
+    <?php Box::begin(
+        [
+            'type' => Box::TYPE_PRIMARY
+        ]
+    ) ?>
+    <div class="row">
+
+
+        <div class="col-xs-12">
+            <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
+            )->widget(\devgroup\jsoneditor\Jsoneditor::className(),
+                      ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
+        </div>
+
+        <div class="col-sm-6">
+            <?= $form->field($node, $iconTypeAttribute)->widget(
+                Select2::classname(),
+                [
+
+                    'data' => [
+                        TreeView::ICON_CSS => 'CSS Suffix',
+                        TreeView::ICON_RAW => 'Raw Markup',
+                    ],
+                    'options' => [
+                            'id' => 'tree-' . $iconTypeAttribute,
+                            'placeholder' => Yii::t('pages', 'Select'),
+                            'multiple' => false,
+                        ] + $inputOpts,
+                    'pluginOptions' => [
+                        'allowClear' => false,
+                    ],
+                ]
+            );
+            ?>
+        </div>
+    </div>
+    <?php Box::end() ?>
 
 <?php else : ?>
     <div class="row">
         <div class="col-sm-6">
             <?= Html::activeHiddenInput($node, $iconTypeAttribute) ?>
-            <?= $form->field(
-                $node,
-                $nameAttribute
-            )->textArea(['rows' => 2] + $inputOpts) ?>
+            <?= $form->field($node, $nameAttribute)->textArea(['rows' => 2] + $inputOpts) ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field(
-                $node,
-                $iconAttribute
-            )->multiselect(
+            <?= $form->field($node, $iconAttribute)->multiselect(
                 $iconsList,
                 [
                     'item' => function ($index, $label, $name, $checked, $value) use ($inputOpts) {
@@ -375,15 +366,15 @@ echo Html::hiddenInput('softDelete', $softDelete);
                             $value = '';
                         }
 
-                        return '<div class="radio">'.Html::radio(
-                            $name,
-                            $checked,
-                            [
-                                'value' => $value,
-                                'label' => $label,
-                                'disabled' => !empty($inputOpts['readonly']) || !empty($inputOpts['disabled']),
-                            ]
-                        ).'</div>';
+                        return '<div class="radio">' . Html::radio(
+                                $name,
+                                $checked,
+                                [
+                                    'value' => $value,
+                                    'label' => $label,
+                                    'disabled' => !empty($inputOpts['readonly']) || !empty($inputOpts['disabled']),
+                                ]
+                            ) . '</div>';
                     },
                     'selector' => 'radio',
                 ]
@@ -394,6 +385,5 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 <?= $this->blocks['buttons'] ?>
 
-
-    <?php Box::end() ?>
+<?php Box::end() ?>
 <?php ActiveForm::end() ?>
