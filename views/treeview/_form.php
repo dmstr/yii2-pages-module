@@ -95,7 +95,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <div class="row">
         <div class="col-xs-12">
             <?= Html::submitButton(
-                FA::i(FA::_FLOPPY_O).' '.Yii::t('pages', 'Save'),
+                FA::i(FA::_FLOPPY_O).' '.Yii::t('pages', 'Apply'),
                 ['class' => 'btn btn-success']
             ) ?>
             <?= Html::resetButton(
@@ -123,6 +123,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
 <h2>
     <?= FA::icon($node->icon?:'file') ?>
     <?= $node->name ?>
+    <small>
+        <span class="label label-default"><?= $node->getNameId() ?></span>
+    </small>
 </h2>
 
 <p><?= Html::a($nodeUrl, $nodeUrl) ?></p>
@@ -133,7 +136,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
         <?php Box::begin(
             [
-                'title'    => Yii::t('pages', 'General'),
+                #'title'    => Yii::t('pages', 'General'),
                 'type'=> Box::TYPE_PRIMARY
             ]
         ) ?>
@@ -162,7 +165,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 ); ?>
             </div>
 
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] == true): ?>
                     <?= $form->field($node, $iconAttribute)->widget(
                         Select2::classname(),
@@ -182,23 +185,19 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 <?php endif; ?>
             </div>
 
-        </div>
-<div class="row">
-            <div class="col-xs-12 col-sm-6">
+
+            <div class="col-xs-12 col-sm-7">
                 <?= $form->field($node, $node::ATTR_DOMAIN_ID
                 )->textInput() ?>
             </div>
-            <div class="col-sm-6">
-                <?= $form->field($node, 'name_id'
-                )->textInput(['value' => $node->getNameId(), 'disabled' => 'disabled']) ?>
-            </div>
+
         </div>
         <?php Box::end() ?>
 
 
         <?php Box::begin(
             [
-                'title'           => Yii::t('pages', Yii::t('pages', 'Localization')),
+                #'title'           => Yii::t('pages', Yii::t('pages', 'Localization')),
             ]
         ) ?>
         <?php if ($node->getBehavior('translatable')->isFallbackTranslation): ?>
@@ -256,7 +255,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 
         <div class="row">
-            <div class="col-xs-12 col-sm-6">
+            <div class="col-xs-12 col-sm-4">
                 <?= $form->field($node, $node::ATTR_ACCESS_DOMAIN)->widget(
                     Select2::classname(),
                     [
@@ -267,7 +266,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     ]
                 ) ?>
             </div>
-            <div class="col-xs-12 col-sm-6">
+        </div>
+            <div class="row">
+            <div class="col-xs-12 col-sm-4">
                 <?= $form->field($node, $node::ATTR_ACCESS_READ)->widget(
                     Select2::classname(),
                     [
@@ -280,7 +281,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
                 ?>
             </div>
-            <div class="col-xs-12 col-sm-6">
+            <div class="col-xs-12 col-sm-4">
                 <?php if ($node->hasPermission($node::ATTR_ACCESS_UPDATE) || $node->isNewRecord) : ?>
                     <?= $form->field($node, $node::ATTR_ACCESS_UPDATE)->widget(
                         Select2::classname(),
@@ -295,7 +296,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     ?>
                 <?php endif; ?>
             </div>
-            <div class="col-xs-12 col-sm-6">
+            <div class="col-xs-12 col-sm-4">
                 <?php if ($node->hasPermission($node::ATTR_ACCESS_DELETE) || $node->isNewRecord) : ?>
                     <?= $form->field($node, $node::ATTR_ACCESS_DELETE)->widget(
                         Select2::classname(),
@@ -316,11 +317,17 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
         <?php Box::begin(
             [
-                'title'             => Yii::t('pages', Yii::t('pages', 'Advanced')),
+                #'title'             => Yii::t('pages', Yii::t('pages', 'Advanced')),
                 'type' => Box::TYPE_PRIMARY
             ]
         ) ?>
         <div class="row">
+
+
+            <div class="col-xs-12">
+                <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
+                )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
+            </div>
 
             <div class="col-sm-6">
                 <?= $form->field($node, $iconTypeAttribute)->widget(
@@ -342,10 +349,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     ]
                 );
                 ?>
-            </div>
-            <div class="col-xs-12">
-                <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
-                )->widget(\devgroup\jsoneditor\Jsoneditor::className(), ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
             </div>
         </div>
         <?php Box::end() ?>
