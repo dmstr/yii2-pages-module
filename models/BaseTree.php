@@ -430,11 +430,17 @@ class BaseTree extends \kartik\tree\models\Tree
                 [
                     [
                         self::ATTR_ACCESS_READ,
+                    ],
+                    'default',
+                    'value' => self::$_all
+                ],
+                [
+                    [
                         self::ATTR_ACCESS_UPDATE,
                         self::ATTR_ACCESS_DELETE
                     ],
                     'default',
-                    'value' => self::$_all
+                    'value' => null
                 ],
                 [
                     [self::ATTR_DOMAIN_ID, self::ATTR_ACCESS_DOMAIN],
@@ -520,6 +526,15 @@ class BaseTree extends \kartik\tree\models\Tree
                     ],
                     'integer',
                     'integerOnly' => true,
+                ],
+                [
+                    [
+                        self::ATTR_ROOT,
+                        self::ATTR_ACCESS_OWNER,
+                        self::ATTR_COLLAPSED,
+                    ],
+                    'filter',
+                    'filter' => 'intval'
                 ],
                 [
                     [

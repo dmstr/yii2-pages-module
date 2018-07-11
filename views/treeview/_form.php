@@ -226,10 +226,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     </div>
 
-
-    <hr>
-    <h4><?= Yii::t('pages', 'Access') ?></h4>
-
     <div class="row">
         <div class="col-xs-12 col-sm-2">
             <?php
@@ -251,64 +247,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
     </div>
 
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-4">
-            <?= $form->field($node, $node::ATTR_ACCESS_DOMAIN)->widget(
-                Select2::classname(),
-                [
 
-                    'data' => $node::optsAccessDomain(),
-                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                    'pluginOptions' => ['allowClear' => true],
-                ]
-            ) ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-sm-4">
-            <?= $form->field($node, $node::ATTR_ACCESS_READ)->widget(
-                Select2::classname(),
-                [
-
-                    'data' => $userAuthItems,
-                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                    'pluginOptions' => ['allowClear' => true],
-                ]
-            )
-
-            ?>
-        </div>
-        <div class="col-xs-12 col-sm-4">
-            <?php if ($node->hasPermission($node::ATTR_ACCESS_UPDATE) || $node->isNewRecord) : ?>
-                <?= $form->field($node, $node::ATTR_ACCESS_UPDATE)->widget(
-                    Select2::classname(),
-                    [
-
-                        'data' => $userAuthItems,
-                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                        'pluginOptions' => ['allowClear' => true],
-                    ]
-                )
-
-                ?>
-            <?php endif; ?>
-        </div>
-        <div class="col-xs-12 col-sm-4">
-            <?php if ($node->hasPermission($node::ATTR_ACCESS_DELETE) || $node->isNewRecord) : ?>
-                <?= $form->field($node, $node::ATTR_ACCESS_DELETE)->widget(
-                    Select2::classname(),
-                    [
-
-                        'data' => $userAuthItems,
-                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                        'pluginOptions' => ['allowClear' => true],
-                    ]
-                )
-
-                ?>
-            <?php endif; ?>
-        </div>
-    </div>
 
     <?php Box::end() ?>
 
@@ -319,6 +258,19 @@ echo Html::hiddenInput('softDelete', $softDelete);
     ) ?>
     <div class="row">
 
+        <div class="col-xs-12">
+        <?= \dmstr\widgets\AccessInput::widget(
+            [
+                'form' => $form,
+                'model' => $node,
+                'accessFields' => [
+                    'domain',
+                    'read',
+                    'update',
+                    'delete'
+                ]
+            ]) ?>
+        </div>
 
         <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
