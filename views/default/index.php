@@ -15,10 +15,10 @@ $this->title = Inflector::titleize($this->context->module->id);
  */
 $headerTemplate = <<< HTML
 <div class="row">
-    <div class="col-sm-6" id="pages-detail-heading">
+    <div class="col-sm-6" id="dmstr-pages-detail-heading">
         {heading}
     </div>
-    <div class="col-sm-6" id="pages-detail-search">
+    <div class="col-sm-6" id="dmstr-pages-detail-search">
         {search}
     </div>
 </div>
@@ -78,12 +78,12 @@ if (\Yii::$app->has('settings') && \Yii::$app->hasModule('settings')) {
 
 $mainTemplate = <<< HTML
 <div class="row">
-    <div class="col-md-5" id="pages-detail-wrapper">
+    <div class="col-md-5" id="dmstr-pages-detail-wrapper">
         <div class="box box-solid">
         {wrapper}
         </div>
     </div>
-    <div class="col-md-7" id="pages-detail-panel">
+    <div class="col-md-7" id="dmstr-pages-detail-panel">
         {detail}
     </div>
 </div>

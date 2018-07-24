@@ -12,11 +12,11 @@ use yii\web\AssetBundle;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class PagesAsset extends AssetBundle
+class PagesBackendAsset extends AssetBundle
 {
     public $sourcePath = '@vendor/dmstr/yii2-pages-module/assets/less';
     public $css = [
-        'module.less',
+        'backend.less',
     ];
     public $depends = [
         'rmrevin\yii\fontawesome\AssetBundle',

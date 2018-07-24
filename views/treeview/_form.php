@@ -193,8 +193,22 @@ echo Html::hiddenInput('softDelete', $softDelete);
     </div>
     <?php Box::end() ?>
 
+    <div class="row">
+        <div class="col-xs-12 col-sm-12">
+            <div class="panel panel-<?= $node->isDisabled() ? 'warning':'success'?>">
+                <div class="panel-heading">
+                    <?php
+                    // set default value if value is null (translation_meta entry missing)
+                    $node->disabled = $node->isDisabled() ? 1 : 0;
+                    echo $form->field($node, 'disabled')->dropDownList([0=>'Online', 1=>'Offline'])->label('Status');
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php Box::begin() ?>
+
     <?php if ($node->getBehavior('translatable')->isFallbackTranslation): ?>
         <div class="row">
             <div class="col-xs-12">
@@ -205,7 +219,21 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 </div>
             </div>
         </div>
+    <?php else: ?>
+        <?= Html::a(
+            '<span class="glyphicon glyphicon-trash"></span> ' . \Yii::t('pages', 'Delete Translation'),
+            ['/pages/crud/tree-translation/delete', 'id' => $node->getTranslation()->id],
+            [
+                'class' => 'btn btn-default pull-right',
+                'data-confirm' => '' . \Yii::t('pages', 'Are you sure to delete the current translation?') . '',
+                'data-method' => 'post',
+            ]
+        ); ?>
     <?php endif; ?>
+
+
+
+
 
     <div class="row">
         <div class="col-sm-6">
@@ -226,6 +254,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     </div>
 
+
     <div class="row">
         <div class="col-xs-12 col-sm-2">
             <?php
@@ -235,17 +264,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ?>
         </div>
         <div class="col-xs-12 col-sm-2">
-            <?php
-            // set default value if value is null (translation_meta entry missing)
-            $node->disabled = $node->isDisabled() ? 1 : 0;
-            echo $form->field($node, 'disabled')->checkbox()
-            ?>
-        </div>
-        <div class="col-xs-12 col-sm-2">
             <?= $form->field($node, 'collapsed')->checkbox($flagOptions) ?>
         </div>
     </div>
-
 
 
 

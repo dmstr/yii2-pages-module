@@ -56,6 +56,7 @@ Configuration
 Enable module in application configuration
 
 ```
+// module configuration
 'pages' => [
 	'class' => 'dmstr\modules\pages\Module',
 	'layout' => '@admin-views/layouts/main',
@@ -68,7 +69,8 @@ Enable module in application configuration
 		'@app/views/site/index.php' => 'Index View',
 	],
 ],
-...
+
+
 // if used want a url suffix, e.g. '.html', add Url rules for that
 'urlManager' => [
 	...
@@ -78,6 +80,11 @@ Enable module in application configuration
 	],
 	...
 ],
+
+// register frontend asset for hiding pages via CookieButton
+'on '. \yii\web\Application::EVENT_BEFORE_ACTION => function () {
+    \dmstr\modules\pages\assets\PagesFrontendAsset::register(Yii::$app->controller->view);
+},
 ```
 
 Use settings module to configure additional controllers

@@ -264,6 +264,7 @@ class Tree extends BaseTree
                     [
                         'data-page-id' => $page->id,
                         'data-lvl' => $page->lvl,
+                        'class' => $page->isDisabled() ? 'dmstr-pages-invisible-frontend' : ''
                     ]
                 );
 
@@ -282,7 +283,7 @@ class Tree extends BaseTree
                 // prepare item template
                 $itemTemplate = [
                     'label' => $page->getMenuLabel(),
-                    'url' => $page->createRoute() ? $page->createRoute() : '#',
+                    'url' => $page->createRoute() ? $page->createRoute() : null,
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
                     'visible' => $visible,
