@@ -3,14 +3,12 @@
 namespace dmstr\modules\pages\views\treeview;
 
 use insolita\wgadminlte\Box;
-use insolita\wgadminlte\InfoBox;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
 use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
 
 /**
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
@@ -34,10 +32,11 @@ use yii\helpers\Inflector;
  * @var $showFormButtons boolean
  */
 
-$this->registerJs(
-    "$(function () {
-        $('[data-toggle=\'tooltip\']').tooltip({'html': false});
-    });"
+$this->registerJs(<<<JS
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip({'html': false});
+});
+JS
 );
 
 // Extract $_POST to @vars
@@ -117,17 +116,16 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 <?= $this->blocks['buttons'] ?>
 
-<div class="vertical-spacer"></div>
+<br>
 
-<h2>
-    <?= FA::icon($node->icon ?: 'file') ?>
-    <?= $node->name ?>
-    <small>
-        <span class="label label-default"><?= $node->getNameId() ?></span>
-    </small>
-</h2>
-
-<p><?= Html::a($nodeUrl, $nodeUrl) ?></p>
+<div class="small-box bg-aqua">
+    <div class="inner">
+        <h2 class="text-center"><?= $node->name ?></h2>
+    </div>
+    <a href="<?=$nodeUrl?>" class="small-box-footer">
+        <?= Yii::t('pages','Go to page {icon}',['icon' => FA::icon(FA::_ARROW_CIRCLE_O_RIGHT)])?>
+    </a>
+</div>
 
 
 <div class="clearfix"></div>
@@ -150,6 +148,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'data' => $node::optsRoute(),
                     'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
                     'pluginOptions' => ['allowClear' => true],
+                    'theme' => Select2::THEME_BOOTSTRAP
                 ]
             );
             ?>
@@ -162,6 +161,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'data' => $node::optsView(),
                     'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
                     'pluginOptions' => ['allowClear' => true],
+                    'theme' => Select2::THEME_BOOTSTRAP
                 ]
             ); ?>
         </div>
@@ -178,6 +178,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                             'escapeMarkup' => new \yii\web\JsExpression('function(m) { return m; }'),
                             'allowClear' => true,
                         ],
+                        'theme' => Select2::THEME_BOOTSTRAP
                     ]
                 ) ?>
             <?php else: ?>
@@ -195,12 +196,12 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
     <div class="row">
         <div class="col-xs-12 col-sm-12">
-            <div class="panel panel-<?= $node->isDisabled() ? 'warning':'success'?>">
+            <div class="panel panel-<?= $node->isDisabled() ? 'warning' : 'success' ?>">
                 <div class="panel-heading">
                     <?php
                     // set default value if value is null (translation_meta entry missing)
                     $node->disabled = $node->isDisabled() ? 1 : 0;
-                    echo $form->field($node, 'disabled')->dropDownList([0=>'Online', 1=>'Offline'])->label('Status');
+                    echo $form->field($node, 'disabled')->dropDownList([0 => 'Online', 1 => 'Offline'])->label('Status');
                     ?>
                 </div>
             </div>
@@ -215,7 +216,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 <div class="well well-sm alert-info">
                     <!-- using well instead of alert to not conflict with kv treeview JS -->
                     <?= \Yii::t('pages',
-                                'The currently displayed values are taken from the fallback language. If you change translated values a new translation will be stored for this page.') ?>
+                        'The currently displayed values are taken from the fallback language. If you change translated values a new translation will be stored for this page.') ?>
                 </div>
             </div>
         </div>
@@ -230,9 +231,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ]
         ); ?>
     <?php endif; ?>
-
-
-
 
 
     <div class="row">
@@ -269,7 +267,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
     </div>
 
 
-
     <?php Box::end() ?>
 
     <?php Box::begin(
@@ -280,23 +277,23 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <div class="row">
 
         <div class="col-xs-12">
-        <?= \dmstr\widgets\AccessInput::widget(
-            [
-                'form' => $form,
-                'model' => $node,
-                'accessFields' => [
-                    'domain',
-                    'read',
-                    'update',
-                    'delete'
-                ]
-            ]) ?>
+            <?= \dmstr\widgets\AccessInput::widget(
+                [
+                    'form' => $form,
+                    'model' => $node,
+                    'accessFields' => [
+                        'domain',
+                        'read',
+                        'update',
+                        'delete'
+                    ]
+                ]) ?>
         </div>
 
         <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
             )->widget(\devgroup\jsoneditor\Jsoneditor::className(),
-                      ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
+                ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
         </div>
 
         <div class="col-sm-6">
@@ -316,6 +313,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'pluginOptions' => [
                         'allowClear' => false,
                     ],
+                    'theme' => Select2::THEME_BOOTSTRAP
                 ]
             );
             ?>
