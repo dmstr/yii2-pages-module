@@ -229,7 +229,9 @@ class Tree extends BaseTree
                 self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)],
             ]
         );
-        $leavesQuery->with('translationsMeta');
+        $leavesQuery->with(['translationsMeta',
+//            'translations'
+        ]);
         $leaves = $leavesQuery->all();
 
         if ($leaves === null) {
