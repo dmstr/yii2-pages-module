@@ -352,6 +352,19 @@ class Tree extends BaseTree
      */
     protected function resolvePagePath($activeNode = false){
 
+        // get TreeCache singleton instance as cache
+        $cache = TreeCache::getInstance();
+
+        // define cache key fro model id + app->lang
+        $cacheKey = $this->id . Yii::$app->language;
+
+        // if set, return path from cache
+        if(isset($cache->path[$cacheKey])) {
+            return $cache->path[$cacheKey];
+        }
+
+        Yii::beginProfile('Resolving page path', __METHOD__);
+
         // return no path for root nodes
         $parent = $this->parents(1)->one();
         if (!$parent) {
@@ -376,6 +389,10 @@ class Tree extends BaseTree
         } else {
             $path = null;
         }
+        
+        // store path in cache
+        $cache->path[$cacheKey] = $path;
+        Yii::endProfile('Resolving page path', __METHOD__);
 
         return $path;
     }
