@@ -62,7 +62,8 @@ class Module extends \yii\base\Module
         if ($this->checkSettingsInstalled()) {
             $routes = explode("\n", \Yii::$app->settings->get('pages.availableRoutes'));
             foreach ($routes as $route) {
-                $this->availableRoutes[trim($route)] = trim($route);
+                $routeEntry = trim($route);
+                $this->availableRoutes[$routeEntry] = $routeEntry;
             }
 
             $views = explode("\n", \Yii::$app->settings->get('pages.availableViews'));
@@ -75,7 +76,8 @@ class Module extends \yii\base\Module
             if (!\Yii::$app instanceof Application && \Yii::$app->has('user') && \Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION)) {
                 $globalRoutes = explode("\n", \Yii::$app->settings->get('pages.availableGlobalRoutes'));
                 foreach ($globalRoutes as $globalRoute) {
-                    $this->availableRoutes[$globalRoute] = trim($globalRoute);
+                    $globalRouteEntry = trim($globalRoute);
+                    $this->availableRoutes[$globalRouteEntry] = $globalRouteEntry;
                 }
 
                 $globalViews = explode("\n", \Yii::$app->settings->get('pages.availableGlobalViews'));

@@ -117,81 +117,23 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 <?= $this->blocks['buttons'] ?>
 
-<div class="vertical-spacer"></div>
 
-<h2>
-    <?= FA::icon($node->icon ?: 'file') ?>
-    <?= $node->name ?>
-    <small>
-        <span class="label label-default"><?= $node->getNameId() ?></span>
-    </small>
+<h2 class="pull-left">
+    <?= $nodeUrl ? Html::a(FA::icon($node->icon ?: 'file').' '.$node->name, $nodeUrl) : $node->name ?>
 </h2>
 
-<p><?= Html::a($nodeUrl, $nodeUrl) ?></p>
+<p class="text-right">
+    <br/>
+    <?= $nodeUrl ?>
+    <br/>
+    <span class="label label-default"><?= $node->getNameId() ?></span>
+</p>
 
 
 <div class="clearfix"></div>
 
 
 <?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
-
-    <?php Box::begin(
-        [
-            'type' => Box::TYPE_PRIMARY
-        ]
-    ) ?>
-
-    <div class="row">
-        <div class="col-xs-12 col-lg-5">
-            <?= $form->field($node, $node::ATTR_ROUTE)->widget(
-                Select2::classname(),
-                [
-
-                    'data' => $node::optsRoute(),
-                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                    'pluginOptions' => ['allowClear' => true],
-                ]
-            );
-            ?>
-        </div>
-        <div class="col-xs-12 col-lg-7">
-            <?= $form->field($node, $node::ATTR_VIEW)->widget(
-                Select2::classname(),
-                [
-
-                    'data' => $node::optsView(),
-                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                    'pluginOptions' => ['allowClear' => true],
-                ]
-            ); ?>
-        </div>
-
-        <div class="col-sm-5">
-            <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] == true): ?>
-                <?= $form->field($node, $iconAttribute)->widget(
-                    Select2::classname(),
-                    [
-
-                        'data' => $node::optsIcon(true),
-                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                        'pluginOptions' => [
-                            'escapeMarkup' => new \yii\web\JsExpression('function(m) { return m; }'),
-                            'allowClear' => true,
-                        ],
-                    ]
-                ) ?>
-            <?php else: ?>
-                <?= $form->field($node, $iconAttribute)->textInput($inputOpts) ?>
-            <?php endif; ?>
-        </div>
-
-
-        <div class="col-xs-12 col-sm-7">
-            <?= $form->field($node, $node::ATTR_DOMAIN_ID)->textInput() ?>
-        </div>
-
-    </div>
-    <?php Box::end() ?>
 
     <div class="row">
         <div class="col-xs-12 col-sm-12">
@@ -231,10 +173,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
         ); ?>
     <?php endif; ?>
 
-
-
-
-
     <div class="row">
         <div class="col-sm-6">
             <?= $form->field($node, $node::ATTR_NAME) ?>
@@ -268,29 +206,43 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     </div>
 
-
-
     <?php Box::end() ?>
+
 
     <?php Box::begin(
         [
             'type' => Box::TYPE_PRIMARY
         ]
     ) ?>
+
     <div class="row">
 
+        <div class="col-xs-12 col-sm-7">
+            <?= $form->field($node, $node::ATTR_DOMAIN_ID)->textInput() ?>
+        </div>
+
         <div class="col-xs-12">
-        <?= \dmstr\widgets\AccessInput::widget(
-            [
-                'form' => $form,
-                'model' => $node,
-                'accessFields' => [
-                    'domain',
-                    'read',
-                    'update',
-                    'delete'
+            <?= $form->field($node, $node::ATTR_ROUTE)->widget(
+                Select2::classname(),
+                [
+
+                    'data' => $node::optsRoute(),
+                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                    'pluginOptions' => ['allowClear' => true],
                 ]
-            ]) ?>
+            );
+            ?>
+        </div>
+        <div class="col-xs-12">
+            <?= $form->field($node, $node::ATTR_VIEW)->widget(
+                Select2::classname(),
+                [
+
+                    'data' => $node::optsView(),
+                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                    'pluginOptions' => ['allowClear' => true],
+                ]
+            ); ?>
         </div>
 
         <div class="col-xs-12">
@@ -299,7 +251,31 @@ echo Html::hiddenInput('softDelete', $softDelete);
                       ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
         </div>
 
-        <div class="col-sm-6">
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-8">
+            <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] == true): ?>
+                <?= $form->field($node, $iconAttribute)->widget(
+                    Select2::classname(),
+                    [
+
+                        'data' => $node::optsIcon(true),
+                        'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                        'pluginOptions' => [
+                            'escapeMarkup' => new \yii\web\JsExpression('function(m) { return m; }'),
+                            'allowClear' => true,
+                        ],
+                    ]
+                ) ?>
+            <?php else: ?>
+                <?= $form->field($node, $iconAttribute)->textInput($inputOpts) ?>
+            <?php endif; ?>
+        </div>
+
+
+        <div class="col-sm-4">
             <?= $form->field($node, $iconTypeAttribute)->widget(
                 Select2::classname(),
                 [
@@ -320,6 +296,31 @@ echo Html::hiddenInput('softDelete', $softDelete);
             );
             ?>
         </div>
+
+
+
+    </div>
+
+    <div class="row">
+
+
+
+        <div class="col-xs-12">
+        <?= \dmstr\widgets\AccessInput::widget(
+            [
+                'form' => $form,
+                'model' => $node,
+                'accessFields' => [
+                    'domain',
+                    'read',
+                    'update',
+                    'delete'
+                ]
+            ]) ?>
+        </div>
+
+
+
     </div>
     <?php Box::end() ?>
 
