@@ -98,10 +98,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 FA::i(FA::_FLOPPY_O) . ' ' . Yii::t('pages', 'Apply'),
                 ['class' => 'btn btn-success']
             ) ?>
-            <?= Html::resetButton(
-                FA::i(FA::_REFRESH) . ' ' . Yii::t('pages', 'Reset'),
-                ['class' => 'btn btn-default pull-right']
-            ) ?>
         </div>
     </div>
 <?php endif; ?>
