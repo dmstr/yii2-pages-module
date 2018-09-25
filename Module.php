@@ -67,18 +67,22 @@ class Module extends \yii\base\Module
 
             $views = explode("\n", \Yii::$app->settings->get('pages.availableViews'));
             foreach ($views as $view) {
-                $this->availableViews[trim($view)] = trim($view);
+                // use custom name if appended after a semicolon (;)
+                $viewEntry = explode(';', trim($view));
+                $this->availableViews[$viewEntry[0]] = $viewEntry[1] ?? $viewEntry[0];
             }
 
             if (!\Yii::$app instanceof Application && \Yii::$app->has('user') && \Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION)) {
                 $globalRoutes = explode("\n", \Yii::$app->settings->get('pages.availableGlobalRoutes'));
-                foreach ($globalRoutes as $route) {
-                    $this->availableRoutes[trim($route)] = trim($route);
+                foreach ($globalRoutes as $globalRoute) {
+                    $this->availableRoutes[$globalRoute] = trim($globalRoute);
                 }
 
                 $globalViews = explode("\n", \Yii::$app->settings->get('pages.availableGlobalViews'));
-                foreach ($globalViews as $view) {
-                    $this->availableViews[trim($view)] = trim($view);
+                foreach ($globalViews as $globalView) {
+                    // use custom name if appended after a semicolon (;)
+                    $globalViewEntry = explode(';', trim($globalView));
+                    $this->availableViews[$globalViewEntry[0]] = $globalViewEntry[1] ?? $globalViewEntry[0];
                 }
             }
         }
