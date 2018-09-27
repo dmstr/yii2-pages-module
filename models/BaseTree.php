@@ -532,6 +532,7 @@ class BaseTree extends \kartik\tree\models\Tree
                         self::ATTR_ROOT,
                         self::ATTR_ACCESS_OWNER,
                         self::ATTR_COLLAPSED,
+                        self::ATTR_ICON_TYPE
                     ],
                     'filter',
                     'filter' => 'intval'
