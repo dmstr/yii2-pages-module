@@ -175,7 +175,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
 
         <div class="col-xs-12">
-            <?= $form->field($node, $node::ATTR_PAGE_TITLE)->textInput($inputOpts) ?>
+            <?= $form->field($node, $node::ATTR_PAGE_TITLE)->textInput() ?>
         </div>
     </div>
 
