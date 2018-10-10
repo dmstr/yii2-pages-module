@@ -33,7 +33,7 @@ $toolbar = [];
 /**
  * Links to settings and copy pages area for toolbar
  */
-if (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION, ['route' => true])) {
+if (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION)) {
     $copyPages = [
         'icon'    => 'copy',
         'url'     => ['/pages/copy'],
