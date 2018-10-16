@@ -68,6 +68,21 @@ class Tree extends BaseTree
     }
 
     /**
+     * Disallow node movement when user has no update permissions
+     *
+     * @param string $dir
+     * @return bool
+     */
+    public function isMovable($dir)
+    {
+        if (!$this->hasPermission('access_update')) {
+            return false;
+        } else {
+            return parent::isMovable($dir);
+        }
+    }
+
+    /**
      * @return array
      */
     public static function optsAccessDomain()
