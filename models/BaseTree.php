@@ -440,7 +440,7 @@ class BaseTree extends \kartik\tree\models\Tree
                         self::ATTR_ACCESS_DELETE
                     ],
                     'default',
-                    'value' => null
+                    'value' => static::getDefaultAccessUpdateDelete()
                 ],
                 [
                     [self::ATTR_DOMAIN_ID, self::ATTR_ACCESS_DOMAIN],
