@@ -3,14 +3,13 @@
 namespace dmstr\modules\pages\views\treeview;
 
 use insolita\wgadminlte\Box;
-use insolita\wgadminlte\InfoBox;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
 use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
+use yii\helpers\Url;
 
 /**
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
@@ -44,7 +43,7 @@ $this->registerJs(
 extract($params);
 
 // Set isAdmin @var
-$isAdmin = ($isAdmin == true || $isAdmin === 'true');
+$isAdmin = ($isAdmin === true || $isAdmin === 'true');
 
 if (empty($parentKey)) {
     $parent = $node->parents(1)->one();
@@ -75,9 +74,6 @@ $treeViewModule = TreeView::module();
 
 // create node Url
 $nodeUrl = $node->createUrl();
-
-/** @var array $userAuthItems */
-$userAuthItems = $node::getUsersAuthItems();
 
 // In case you are extending this form, it is mandatory to set
 // all these hidden inputs as defined below.
@@ -115,7 +111,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 
 <h2 class="pull-left">
-    <?= $nodeUrl ? Html::a(FA::icon($node->icon ?: 'file').' '.$node->name, $nodeUrl) : $node->name ?>
+    <?= $nodeUrl ? Html::a(FA::icon($node->icon ?: 'file') . ' ' . $node->name, $nodeUrl) : $node->name ?>
 </h2>
 
 <p class="text-right">
@@ -129,16 +125,16 @@ echo Html::hiddenInput('softDelete', $softDelete);
 <div class="clearfix"></div>
 
 
-<?php if ($iconsList == 'text' || $iconsList == 'none') : ?>
+<?php if ($iconsList === 'text' || $iconsList === 'none') : ?>
 
     <div class="row">
         <div class="col-xs-12 col-sm-12">
-            <div class="panel panel-<?= $node->isDisabled() ? 'warning':'success'?>">
+            <div class="panel panel-<?= $node->isDisabled() ? 'warning' : 'success' ?>">
                 <div class="panel-heading">
                     <?php
                     // set default value if value is null (translation_meta entry missing)
                     $node->disabled = $node->isDisabled() ? 1 : 0;
-                    echo $form->field($node, 'disabled')->dropDownList([0=>'Online', 1=>'Offline'])->label('Status');
+                    echo $form->field($node, 'disabled')->dropDownList([0 => 'Online', 1 => 'Offline'])->label('Status');
                     ?>
                 </div>
             </div>
@@ -153,7 +149,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                 <div class="well well-sm alert-info">
                     <!-- using well instead of alert to not conflict with kv treeview JS -->
                     <?= \Yii::t('pages',
-                                'The currently displayed values are taken from the fallback language. If you change translated values a new translation will be stored for this page.') ?>
+                        'The currently displayed values are taken from the fallback language. If you change translated values a new translation will be stored for this page.') ?>
                 </div>
             </div>
         </div>
@@ -219,11 +215,15 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
         <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_ROUTE)->widget(
-                Select2::classname(),
+                Select2::class,
                 [
 
                     'data' => $node::optsRoute(),
-                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
+                    'options' => [
+                        'placeholder' => Yii::t('pages', 'Select ...'),
+                        'data-request-url' => Url::to(['/pages/default/resolve-route-to-schema']),
+                        'data-editor-id' => 'requestParamEditor'
+                    ],
                     'pluginOptions' => ['allowClear' => true],
                 ]
             );
@@ -231,7 +231,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
         <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_VIEW)->widget(
-                Select2::classname(),
+                Select2::class,
                 [
 
                     'data' => $node::optsView(),
@@ -243,8 +243,14 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
         <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
-            )->widget(\devgroup\jsoneditor\Jsoneditor::className(),
-                      ['model' => $node, 'attribute' => $node::ATTR_REQUEST_PARAMS]) ?>
+            )->widget(\dmstr\JsonEditor\JsonEditorWidget::class,
+                [
+                    'schema' => $node->requestParamsSchema,
+                    'id' => 'requestParamEditor',
+                    'clientOptions' => [
+                        'theme' => 'bootstrap3',
+                    ]
+                ]) ?>
         </div>
 
     </div>
@@ -252,9 +258,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <div class="row">
 
         <div class="col-sm-8">
-            <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] == true): ?>
+            <?php if (isset($treeViewModule->treeViewSettings['fontAwesome']) && $treeViewModule->treeViewSettings['fontAwesome'] === true): ?>
                 <?= $form->field($node, $iconAttribute)->widget(
-                    Select2::classname(),
+                    Select2::class,
                     [
 
                         'data' => $node::optsIcon(true),
@@ -273,7 +279,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
         <div class="col-sm-4">
             <?= $form->field($node, $iconTypeAttribute)->widget(
-                Select2::classname(),
+                Select2::class,
                 [
 
                     'data' => [
@@ -294,27 +300,24 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
 
 
-
     </div>
 
     <div class="row">
 
 
-
         <div class="col-xs-12">
-        <?= \dmstr\widgets\AccessInput::widget(
-            [
-                'form' => $form,
-                'model' => $node,
-                'accessFields' => [
-                    'domain',
-                    'read',
-                    'update',
-                    'delete'
-                ]
-            ]) ?>
+            <?= \dmstr\widgets\AccessInput::widget(
+                [
+                    'form' => $form,
+                    'model' => $node,
+                    'accessFields' => [
+                        'domain',
+                        'read',
+                        'update',
+                        'delete'
+                    ]
+                ]) ?>
         </div>
-
 
 
     </div>
@@ -324,7 +327,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <div class="row">
         <div class="col-sm-6">
             <?= Html::activeHiddenInput($node, $iconTypeAttribute) ?>
-            <?= $form->field($node, $nameAttribute)->textArea(['rows' => 2] + $inputOpts) ?>
+            <?= $form->field($node, $nameAttribute)->textarea(['rows' => 2] + $inputOpts) ?>
         </div>
         <div class="col-sm-6">
             <?= $form->field($node, $iconAttribute)->multiselect(

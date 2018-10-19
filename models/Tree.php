@@ -10,6 +10,7 @@
 
 namespace dmstr\modules\pages\models;
 
+use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\Module as PagesModule;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
@@ -510,5 +511,13 @@ class Tree extends BaseTree
             \Yii::$app->session->set('error', $code . ': ' . $message);
         }
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestParamsSchema()
+    {
+        return PageHelper::routeToSchema($this->route);
     }
 }

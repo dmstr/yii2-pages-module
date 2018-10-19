@@ -14,6 +14,7 @@ use dmstr\modules\pages\Module as PagesModule;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
 use yii\web\HttpException;
 use bedezign\yii2\audit\AuditTrailBehavior;
 use dosamigos\translateable\TranslateableBehavior;
@@ -343,6 +344,12 @@ class BaseTree extends \kartik\tree\models\Tree
             'update' => self::ATTR_ACCESS_UPDATE,
             'delete' => self::ATTR_ACCESS_DELETE,
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+
+        return parent::beforeSave($insert);
     }
 
     /**

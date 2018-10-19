@@ -14,9 +14,12 @@ use yii\web\AssetBundle;
  */
 class PagesBackendAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/dmstr/yii2-pages-module/assets/less';
+    public $sourcePath = '@vendor/dmstr/yii2-pages-module/assets';
     public $css = [
-        'backend.less',
+        'less/backend.less',
+    ];
+    public $js = [
+        'js/page-route-items.js'
     ];
     public $depends = [
         'rmrevin\yii\fontawesome\AssetBundle',
