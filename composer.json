@@ -23,7 +23,7 @@
         "yiisoft/yii2": "^2.0.13",
         "kartik-v/yii2-tree-manager": ">=1.0.3 <=1.0.5",
         "kartik-v/yii2-widget-select2": "^2.0.1",
-        "2amigos/yii2-translateable-behavior": "^1.0.4",
+        "2amigos/yii2-translateable-behavior": "^1.1.0",
         "insolita/yii2-adminlte-widgets": "^1.1.4",
         "rmrevin/yii2-fontawesome": "~2.9",
         "devgroup/yii2-jsoneditor": "1.0.*",
