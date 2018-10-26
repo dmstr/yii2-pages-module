@@ -12,6 +12,7 @@ namespace dmstr\modules\pages\models;
 use dmstr\db\traits\ActiveRecordAccessTrait;
 use dmstr\modules\pages\Module as PagesModule;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\helpers\VarDumper;
@@ -384,7 +385,9 @@ class BaseTree extends \kartik\tree\models\Tree
                 self::ATTR_PAGE_TITLE,
                 self::ATTR_DEFAULT_META_KEYWORDS,
                 self::ATTR_DEFAULT_META_DESCRIPTION,
-            ]
+            ],
+            'deleteEvent' => ActiveRecord::EVENT_BEFORE_DELETE,
+            'restrictDeletion' => TranslateableBehavior::DELETE_LAST,
         ];
 
         $behaviors['translation_meta'] = [
@@ -396,7 +399,8 @@ class BaseTree extends \kartik\tree\models\Tree
             'translationAttributes' => [
                 self::ATTR_DISABLED,
                 self::ATTR_VISIBLE,
-            ]
+            ],
+            'deleteEvent' => ActiveRecord::EVENT_BEFORE_DELETE,
         ];
 
         return $behaviors;
@@ -447,7 +451,7 @@ class BaseTree extends \kartik\tree\models\Tree
                         self::ATTR_ACCESS_DELETE
                     ],
                     'default',
-                    'value' => null
+                    'value' => static::getDefaultAccessUpdateDelete()
                 ],
                 [
                     [self::ATTR_DOMAIN_ID, self::ATTR_ACCESS_DOMAIN],
