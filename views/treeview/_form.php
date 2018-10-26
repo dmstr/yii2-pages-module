@@ -249,6 +249,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'id' => 'requestParamEditor',
                     'clientOptions' => [
                         'theme' => 'bootstrap3',
+                        'disable_collapse' => true,
+                        'disable_edit_json' => true,
+                        'disable_properties' => true
                     ]
                 ]) ?>
         </div>

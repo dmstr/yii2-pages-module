@@ -30,7 +30,6 @@ class PageHelper
         /** @var Controller $controller */
         if (isset($answerCluster[0])) {
             $controller = $answerCluster[0];
-
             if ($controller instanceof PageTreeRouteItems) {
                 return $controller->getPageTreeRouteItems($route);
             }

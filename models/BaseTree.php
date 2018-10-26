@@ -347,12 +347,6 @@ class BaseTree extends \kartik\tree\models\Tree
         ];
     }
 
-    public function beforeSave($insert)
-    {
-
-        return parent::beforeSave($insert);
-    }
-
     /**
      * @inheritdoc
      *
