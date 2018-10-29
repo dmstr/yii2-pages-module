@@ -23,5 +23,5 @@ interface PageTreeRouteItems
      * @param $route
      * @return string|bool
      */
-    public function getPageTreeRouteItems($route);
+    public function getPageTreeRequestParamJson($route);
 }
