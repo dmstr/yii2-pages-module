@@ -10,6 +10,7 @@ use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\Json;
 
 /**
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
@@ -222,7 +223,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'options' => [
                         'placeholder' => Yii::t('pages', 'Select ...'),
                         'data-request-url' => Url::to(['/pages/default/resolve-route-to-schema']),
-                        'data-editor-id' => 'requestParamEditor'
+                        'data-editor-id' => 'tree-request_params-container'
                     ],
                     'pluginOptions' => ['allowClear' => true],
                 ]
@@ -245,13 +246,13 @@ echo Html::hiddenInput('softDelete', $softDelete);
             <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
             )->widget(\dmstr\JsonEditor\JsonEditorWidget::class,
                 [
-                    'schema' => $node->requestParamsSchema,
+                    'schema' => Json::decode($node->requestParamsSchema),
                     'id' => 'requestParamEditor',
                     'clientOptions' => [
                         'theme' => 'bootstrap3',
                         'disable_collapse' => true,
                         'disable_edit_json' => true,
-                        'disable_properties' => true
+//                        'disable_properties' => true
                     ]
                 ]) ?>
         </div>

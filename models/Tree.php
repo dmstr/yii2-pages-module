@@ -42,6 +42,8 @@ use yii\helpers\Url;
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property string requestParamsSchema
+ *
  * @package dmstr\modules\pages\models
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */

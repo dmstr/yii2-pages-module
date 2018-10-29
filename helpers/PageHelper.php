@@ -20,7 +20,7 @@ class PageHelper
 {
     /**
      * @param $route
-     * @return bool|string
+     * @return string
      * @throws \yii\base\InvalidConfigException
      */
     public static function routeToSchema($route)
@@ -34,6 +34,6 @@ class PageHelper
                 return $controller->getPageTreeRequestParamJson($route);
             }
         }
-        return '{"type": "opject"}';
-}
+        return '{}';
+    }
 }
