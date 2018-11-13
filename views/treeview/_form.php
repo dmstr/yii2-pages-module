@@ -11,6 +11,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\Json;
+use dmstr\jsoneditor\JsonEditorWidget;
 
 /**
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
@@ -244,7 +245,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
         <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
-            )->widget(\dmstr\JsonEditor\JsonEditorWidget::class,
+            )->widget(JsonEditorWidget::class,
                 [
                     'schema' => Json::decode($node->requestParamsSchema),
                     'id' => 'requestParamEditor',
