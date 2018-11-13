@@ -156,7 +156,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     <?php else: ?>
         <?= Html::a(
-            '<span class="glyphicon glyphicon-trash"></span> ' . \Yii::t('pages', 'Delete Translation'),
+            '<span class="glyphicon glyphicon-remove"></span> ' . \Yii::t('pages', 'Delete Translation'),
             ['/pages/crud/tree-translation/delete', 'id' => $node->getTranslation()->id],
             [
                 'class' => 'btn btn-default pull-right',
