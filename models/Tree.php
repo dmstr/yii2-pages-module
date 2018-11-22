@@ -324,6 +324,9 @@ class Tree extends BaseTree
                     'url' => $page->createRoute() ? $page->createRoute() : null,
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
+                    'dropDownOptions' => [
+                        'data-parent-domain-id' => $page->domain_id,
+                    ],
                     'visible' => $visible,
                 ];
                 $item = $itemTemplate;
