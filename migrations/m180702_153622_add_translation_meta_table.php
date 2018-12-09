@@ -43,7 +43,7 @@ class m180702_153622_add_translation_meta_table extends Migration
         foreach ($pages as $page) {
             $this->insert('{{%dmstr_page_translation_meta}}', [
                 'page_id' => $page['id'],
-                'language' => 'en',
+                'language' => Yii::$app->language,
                 'disabled' => $page['disabled'],
                 'visible' => $page['visible'],
             ]);
