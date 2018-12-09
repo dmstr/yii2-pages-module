@@ -9,6 +9,7 @@
 
 namespace dmstr\modules\pages\models;
 
+use yii\caching\TagDependency;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -21,6 +22,19 @@ use yii\db\Expression;
  */
 class TreeTranslationMeta extends ActiveRecord
 {
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        TagDependency::invalidate(\Yii::$app->cache, 'pages');
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        TagDependency::invalidate(\Yii::$app->cache, 'pages');
+    }
+
     /**
      * @inheritdoc
      *

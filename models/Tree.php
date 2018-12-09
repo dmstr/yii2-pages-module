@@ -13,6 +13,7 @@ namespace dmstr\modules\pages\models;
 use dmstr\modules\pages\Module as PagesModule;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
+use yii\caching\TagDependency;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
@@ -55,6 +56,18 @@ class Tree extends BaseTree
         $this->setNameId($this->domain_id.'_'.$this->access_domain);
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        TagDependency::invalidate(\Yii::$app->cache, 'pages');
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        TagDependency::invalidate(\Yii::$app->cache, 'pages');
+    }
+
     /**
      * Override isDisabled method if you need as shown in the
      * example below. You can override similarly other methods
@@ -65,6 +78,21 @@ class Tree extends BaseTree
     public function isDisabled()
     {
         return parent::isDisabled();
+    }
+
+    /**
+     * Disallow node movement when user has no update permissions
+     *
+     * @param string $dir
+     * @return bool
+     */
+    public function isMovable($dir)
+    {
+        if (!$this->hasPermission('access_update')) {
+            return false;
+        } else {
+            return parent::isMovable($dir);
+        }
     }
 
     /**
@@ -205,6 +233,15 @@ class Tree extends BaseTree
      */
     public static function getMenuItems($domainId, $checkUserPermissions = false, array $linkOptions = [])
     {
+        $cache = Yii::$app->cache;
+        $cacheKey = Json::encode([self::class,Yii::$app->language,$domainId,$checkUserPermissions,$linkOptions]);
+        $data = $cache->get($cacheKey);
+
+        if ($data !== false && Yii::$app->user->isGuest) {
+            return $data;
+        }
+
+        Yii::trace(["Building menu items", $cacheKey], __METHOD__);
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
         $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)];
@@ -263,6 +300,7 @@ class Tree extends BaseTree
                     $linkOptions,
                     [
                         'data-page-id' => $page->id,
+                        'data-domain-id' => $page->domain_id,
                         'data-lvl' => $page->lvl,
                         'class' => $page->isDisabled() ? 'dmstr-pages-invisible-frontend' : ''
                     ]
@@ -286,6 +324,9 @@ class Tree extends BaseTree
                     'url' => $page->createRoute() ? $page->createRoute() : null,
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
+                    'dropDownOptions' => [
+                        'data-parent-domain-id' => $page->domain_id,
+                    ],
                     'visible' => $visible,
                 ];
                 $item = $itemTemplate;
@@ -317,12 +358,19 @@ class Tree extends BaseTree
             }
         }
 
-        return array_filter($treeMap);
+        $data = array_filter($treeMap);
+
+        if (Yii::$app->user->isGuest) {
+            $cacheDependency = new TagDependency(['tags' => 'pages']);
+            $cache->set($cacheKey, $data, 3600, $cacheDependency);
+        }
+
+        return $data;
     }
 
     public function getMenuLabel()
     {
-        return !empty($this->name) ? $this->name : "({$this->domain_id})";
+        return !empty($this->name) ? htmlentities($this->name) : "({$this->domain_id})";
     }
 
     /**
