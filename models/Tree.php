@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\helpers\VarDumper;
 
 /**
  * Class Tree
@@ -562,7 +563,7 @@ class Tree extends BaseTree
      */
     public function beforeSave($insert)
     {
-//        var_dump($this->request_params);exit;
+//        VarDumper::dump($this->attributes,10,1);exit;
         return parent::beforeSave($insert);
     }
 }

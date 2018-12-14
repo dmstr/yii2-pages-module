@@ -9,7 +9,8 @@
 
 namespace dmstr\modules\pages\helpers;
 
-use dmstr\modules\pages\interfaces\PageTreeRouteItems;
+use dmstr\modules\pages\traits\RequestParamActionTrait;
+use yii\base\BaseObject;
 
 /**
  * Class PageHelper
@@ -25,14 +26,15 @@ class PageHelper
      */
     public static function routeToSchema($route)
     {
-        $answerCluster = \Yii::$app->createController($route);
+        $responseCluster = \Yii::$app->createController($route);
 
-        /** @var Controller $controller */
-        if (isset($answerCluster[0])) {
-            $controller = $answerCluster[0];
-            if ($controller instanceof PageTreeRouteItems) {
-                return $controller->getPageTreeRequestParamJson($route);
-            }
+        if (isset($responseCluster[0])) {
+            $controller = $responseCluster[0];
+            /** @var BaseObject $controller */
+            if ($controller->hasMethod('parametersFromAction')) {
+                /** @var RequestParamActionTrait $controller */
+                return $controller->jsonFromAction($route);
+                }
         }
         return '{}';
     }
