@@ -31,10 +31,10 @@ class PageHelper
         if (isset($responseCluster[0])) {
             $controller = $responseCluster[0];
             /** @var BaseObject $controller */
-            if ($controller->hasMethod('parametersFromAction')) {
+            if ($controller->hasMethod('jsonFromAction')) {
                 /** @var RequestParamActionTrait $controller */
                 return $controller->jsonFromAction($route);
-                }
+            }
         }
         return '{}';
     }
