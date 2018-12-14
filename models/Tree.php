@@ -556,14 +556,5 @@ class Tree extends BaseTree
     {
         return PageHelper::routeToSchema($this->route);
     }
-
-    /**
-     * @param $insert
-     * @return bool
-     */
-    public function beforeSave($insert)
-    {
-//        VarDumper::dump($this->attributes,10,1);exit;
-        return parent::beforeSave($insert);
-    }
+    
 }

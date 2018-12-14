@@ -20,13 +20,17 @@ $(function () {
 
             editor.destroy();
 
-            jsonEditorList[jsonEditorList.indexOf(editor)] = new JSONEditor(element, {
+            var editorIndex = jsonEditorList.indexOf(editor);
+            jsonEditorList[editorIndex] = new JSONEditor(element, {
               schema: JSON.parse(schema),
               theme: "bootstrap3",
               disable_collapse: true,
               disable_edit_json: true,
               disable_properties: true
             });
+
+            $('input[name="Tree[request_params]"]').val(JSON.stringify(jsonEditorList[editorIndex].getValue()));
+
           } else {
             console.error('Editor not found.');
           }
