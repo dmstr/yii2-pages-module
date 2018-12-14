@@ -303,6 +303,7 @@ class Tree extends BaseTree
                     $linkOptions,
                     [
                         'data-page-id' => $page->id,
+                        'data-domain-id' => $page->domain_id,
                         'data-lvl' => $page->lvl,
                         'class' => $page->isDisabled() ? 'dmstr-pages-invisible-frontend' : ''
                     ]
@@ -326,6 +327,9 @@ class Tree extends BaseTree
                     'url' => $page->createRoute() ? $page->createRoute() : null,
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
+                    'dropDownOptions' => [
+                        'data-parent-domain-id' => $page->domain_id,
+                    ],
                     'visible' => $visible,
                 ];
                 $item = $itemTemplate;
@@ -369,7 +373,7 @@ class Tree extends BaseTree
 
     public function getMenuLabel()
     {
-        return !empty($this->name) ? $this->name : "({$this->domain_id})";
+        return !empty($this->name) ? htmlentities($this->name) : "({$this->domain_id})";
     }
 
     /**
