@@ -40,6 +40,11 @@ use yii\helpers\Inflector;
  * return ArrayHelper::map(Product::find()->all(),'id','name');
  *
  *
+ * Hint:
+ *
+ * If the method as described above returns false, then this property will be ignored.
+ *
+ *
  * @package dmstr\modules\pages\traits
  * @author Elias Luhr <e.luhr@herzogkommunikation.de>
  */
@@ -93,6 +98,10 @@ trait RequestParamActionTrait
             // use data from method if it exist.
             if ($this->hasMethod($methodName)) {
                 $enumData = $this->$methodName();
+
+                if ($enumData === false) {
+                    continue;
+                }
 
                 $keys = '"' . implode('","', array_keys($enumData)) . '"';
                 $values = '"' . implode('","', $enumData) . '"';
