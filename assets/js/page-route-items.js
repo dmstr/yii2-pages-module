@@ -29,7 +29,13 @@ $(function () {
               disable_properties: true
             });
 
+            // inital update of value
             $('input[name="Tree[request_params]"]').val(JSON.stringify(jsonEditorList[editorIndex].getValue()));
+
+            // update of value for newly inserted editor
+            $('#tree-request_params-container').on('change', function () {
+              $('input[name="Tree[request_params]"]').val(JSON.stringify(jsonEditorList[editorIndex].getValue()));
+            });
 
           } else {
             console.error('Editor not found.');
