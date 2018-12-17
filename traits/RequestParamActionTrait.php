@@ -12,6 +12,8 @@ namespace dmstr\modules\pages\traits;
 
 use ReflectionClass;
 use ReflectionException;
+use ReflectionMethod;
+use ReflectionParameter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
@@ -44,13 +46,29 @@ use yii\helpers\Inflector;
  *
  * If the method as described above returns false, then this property will be ignored.
  *
+ * If the method as described above returns true, then this property will be displayed. This functionality can be used to maniulate e.g. title or description (see class propertie `$allowedProperties`)
+ *
+ * You can use php doc block to add option to properties:
+ *
+ * Example:
+ *
+ * /**
+ * * @editor title My Title
+ * *\/
+ * public function detailActionParamProductName() {
+ *  return true;
+ * }
+ *
+ * This will generate a input with defined title for an *existing* parameter
+ *
+ *
+ *
  *
  * @package dmstr\modules\pages\traits
  * @author Elias Luhr <e.luhr@herzogkommunikation.de>
  */
 trait RequestParamActionTrait
 {
-
 
     // get json by route
     public function jsonFromAction($route)
@@ -69,10 +87,10 @@ trait RequestParamActionTrait
             $actionRefl = $controllerRefl->getMethod($actionName);
 
             // map parameter names to key value paired array
-            $parameterNames = ArrayHelper::map($actionRefl->getParameters(), 'name', 'name');
+
 
             // return json for json editor
-            return $this->generateJson($parameterNames, $actionId);
+            return $this->generateJson($actionRefl->getParameters(), $actionId);
 
         } catch (ReflectionException $e) {
             return '{}';
@@ -82,64 +100,149 @@ trait RequestParamActionTrait
 
     /**
      * Generate json for request param json editor
-    */
+     *
+     * @param ReflectionParameter[] $parameters
+     * @param string $actionId
+     * @return string
+     * @throws ReflectionException
+     */
     private function generateJson($parameters, $actionId)
     {
 
         $properties = [];
-        foreach ($parameters as $parameterName) {
+        $requiredFields =[];
+        $debug = [];
+        foreach ($parameters as $parameter) {
+            // get name
+            $parameterName = $parameter->name;
 
-            // title for property in json
-            $title = Inflector::camel2words($parameterName);
+            $debug[] = $parameterName;
 
             // nameActionParamId
             $methodName = $actionId . 'ActionParam' . ucfirst($parameterName);
-
             // use data from method if it exist.
             if ($this->hasMethod($methodName)) {
                 $enumData = $this->$methodName();
 
+                // hide field if method returns false
                 if ($enumData === false) {
                     continue;
                 }
 
-                $keys = '"' . implode('","', array_keys($enumData)) . '"';
-                $values = '"' . implode('","', $enumData) . '"';
+                // instanciate reflection of this methods
+                $methodRefl = new ReflectionMethod($this, $methodName);
 
-                $properties[] = <<<JSON
+                // get docs from method
+                $docs = $methodRefl->getDocComment();
+                $additionalData = [];
+                if ($docs !== false) {
+                    // matches e.g.
+                    // @descrition My custom description
+                    // in php doc blocks
+                    preg_match_all('/@editor (\$[a-z]+) (.*)\n/', $docs, $matches);
+                    if (isset($matches[1], $matches[2]) && \count($matches[1]) === \count($matches[2])) {
+                        $matchIndex = 0;
+                        foreach ($matches[1] as $propertyName) {
+                            $additionalData[$propertyName] = $matches[2][$matchIndex];
+                            $matchIndex++;
+                        }
+                    }
+                }
+
+                // additional properties from docs
+                $extraProperties = [];
+
+                // set title to auto gen title if not defined
+                if (!isset($additionalData['title'])) {
+                    $additionalData['title'] = Inflector::camel2words($parameterName);
+                }
+                // set type to string if not defined
+                if (!isset($additionalData['type'])) {
+                    $additionalData['type'] = 'string';
+                }
+
+                // add to required if not is optional
+                if (!$parameter->isOptional()) {
+                    $requiredFields[] = $parameterName;
+                }
+
+                foreach ($additionalData as $name => $value) {
+                    // if value not is object or array
+                    if (substr($value, 0, 2) !== '{"' && substr($value, 0, 1) !== '[' && substr($value, -1, 2) !== '"}' && substr($value, -1) !== ']') {
+                        $value = '"' . $value . '"';
+                    }
+                    $extraProperties[] = '"' . $name . '": ' . $value;
+                }
+
+                if (!empty($extraProperties)) {
+                    $extraProperties = implode(',', $extraProperties);
+                } else {
+                    $extraProperties = '';
+                }
+
+                if (\is_array($enumData)) {
+                    $keys = $this->jsonListFromArray(array_keys($enumData));
+                    $values = $this->jsonListFromArray($enumData);
+
+                    $properties[] = <<<JSON
 "{$parameterName}": {
-      "type": "string",
       "enum": [{$keys}],
-      "title": "{$title}",
+      {$extraProperties},
       "options": {
         "enum_titles": [{$values}]
       }
 }
 JSON;
+                } else {
+                    $properties[] = $this->defaultFieldJson($parameterName, $extraProperties);
+                }
+
             } else {
+
+                // add defaults here again to guarantee same behavior as if property would have a corresponding method
+                $extraProperties = '"type": "string","title": "' . Inflector::camel2words($parameterName) . '"';
+
+                if (!$parameter->isOptional()) {
+                    $requiredFields[] = $parameterName;
+                }
+
                 // generate default if nothing else is defined
-                $properties[] = <<<JSON
-"{$parameterName}": {
-      "type": "string",
-      "title": "{$title}"
-}
-JSON;
+                $properties[] = $this->defaultFieldJson($parameterName, $extraProperties);
             }
         }
 
-
         $properties = implode(',' . PHP_EOL, $properties);
+
+        $requiredProperties = '';
+        if (!empty($requiredFields)) {
+            $requiredProperties = '"required": [' . $this->jsonListFromArray($requiredFields) . '],';
+        }
+
         // build json
         return <<<JSON
 {
   "title": "Request Params",
   "type": "object",
+  {$requiredProperties}
   "properties": {
-    $properties
+    {$properties}
   }
 }
 JSON;
 
+    }
+
+    protected function jsonListFromArray($array) {
+        return '"' . implode('","', $array) . '"';
+    }
+
+    protected function defaultFieldJson($parameterName, $extraProperties = [])
+    {
+        return <<<JSON
+"{$parameterName}": {
+      {$extraProperties}
+}
+JSON;
     }
 
 }

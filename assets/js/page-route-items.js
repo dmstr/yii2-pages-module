@@ -1,5 +1,6 @@
 $(function () {
 
+  // var viewInput = $('.field-tree-view');
 
   $('button.kv-create').on('click', function () {
     window.jsonEditors = [];
@@ -7,6 +8,14 @@ $(function () {
 
   $(document).on('change', 'select[name="Tree[route]"]', function () {
     var self = $(this);
+
+    // display view dropdown only if value is /pages/default/page
+    // if (self.val() === '/pages/default/page') {
+    //   viewInput.removeClass('hidden');
+    // } else {
+    //   viewInput.addClass('hidden');
+    // }
+
     $.post(self.data('request-url'), {value: self.val()}, function (resp, status) {
       if (status === 'success') {
         var schema = resp.schema;
@@ -24,9 +33,10 @@ $(function () {
             jsonEditorList[editorIndex] = new JSONEditor(element, {
               schema: JSON.parse(schema),
               theme: "bootstrap3",
-              disable_collapse: true,
-              disable_edit_json: true,
-              disable_properties: true
+              ajax: true,
+              // disable_collapse: true,
+              // disable_edit_json: true,
+              // disable_properties: true
             });
 
             // inital update of value

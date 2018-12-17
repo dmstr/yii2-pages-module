@@ -2,6 +2,7 @@
 
 namespace dmstr\modules\pages\views\treeview;
 
+use dmstr\jsoneditor\JsonEditorWidget;
 use insolita\wgadminlte\Box;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
@@ -9,9 +10,8 @@ use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\helpers\Json;
-use dmstr\jsoneditor\JsonEditorWidget;
+use yii\helpers\Url;
 
 /**
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
@@ -232,7 +232,8 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ?>
         </div>
         <div class="col-xs-12">
-            <?= $form->field($node, $node::ATTR_VIEW)->widget(
+            <?php // display is managed in assets via javascript ?>
+            <?= $form->field($node, $node::ATTR_VIEW, ['options' => ['class' => 'hidden']])->widget(
                 Select2::class,
                 [
 
@@ -251,8 +252,9 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'id' => 'requestParamEditor',
                     'clientOptions' => [
                         'theme' => 'bootstrap3',
-                        'disable_collapse' => true,
-                        'disable_edit_json' => true,
+                        'ajax' => true,
+//                        'disable_collapse' => true,
+//                        'disable_edit_json' => true,
 //                        'disable_properties' => true
                     ]
                 ]) ?>
