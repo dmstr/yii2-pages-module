@@ -9,13 +9,6 @@ $(function () {
   $(document).on('change', 'select[name="Tree[route]"]', function () {
     var self = $(this);
 
-    // display view dropdown only if value is /pages/default/page
-    // if (self.val() === '/pages/default/page') {
-    //   viewInput.removeClass('hidden');
-    // } else {
-    //   viewInput.addClass('hidden');
-    // }
-
     $.post(self.data('request-url'), {value: self.val()}, function (resp, status) {
       if (status === 'success') {
         var schema = resp.schema;

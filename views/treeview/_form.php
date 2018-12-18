@@ -232,8 +232,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
             ?>
         </div>
         <div class="col-xs-12">
-            <?php // display is managed in assets via javascript ?>
-            <?= $form->field($node, $node::ATTR_VIEW, ['options' => ['class' => 'hidden']])->widget(
+            <?= $form->field($node, $node::ATTR_VIEW)->widget(
                 Select2::class,
                 [
 
