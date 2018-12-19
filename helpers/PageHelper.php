@@ -36,6 +36,17 @@ class PageHelper
                 return $controller->jsonFromAction($route);
             }
         }
-        return '{}';
+        return static::defaultJsonSchema();
+    }
+
+    public static function defaultJsonSchema()
+    {
+        return <<<JSON
+{
+    "title": "Request Params",
+    "type": "object"
+}
+JSON;
+
     }
 }

@@ -82,7 +82,7 @@ $nodeUrl = $node->createUrl();
 echo Html::hiddenInput(Html::getInputName($node, $keyAttribute), $node->id);
 echo Html::hiddenInput('treeNodeModify', $node->isNewRecord);
 echo Html::hiddenInput('parentKey', $parentKey);
-echo Html::hiddenInput('currUrl', $currUrl);
+echo Html::hiddenInput('currUrl', Url::to(['/pages', 'pageId' => $node->id]));
 echo Html::hiddenInput('modelClass', $modelClass);
 echo Html::hiddenInput('softDelete', $softDelete);
 ?>
@@ -121,6 +121,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <?= $nodeUrl ?>
     <br/>
     <span class="label label-default"><?= $node->getNameId() ?></span>
+    <span class="label label-default"><?= $node->id ?></span>
 </p>
 
 
@@ -252,7 +253,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'clientOptions' => [
                         'theme' => 'bootstrap3',
                         'ajax' => true,
-//                        'disable_collapse' => true,
+                        'disable_collapse' => true,
 //                        'disable_edit_json' => true,
 //                        'disable_properties' => true
                     ]

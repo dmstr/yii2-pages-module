@@ -10,11 +10,11 @@
 namespace dmstr\modules\pages\traits;
 
 
+use dmstr\modules\pages\helpers\PageHelper;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
 /**
@@ -93,7 +93,7 @@ trait RequestParamActionTrait
             return $this->generateJson($actionRefl->getParameters(), $actionId);
 
         } catch (ReflectionException $e) {
-            return '{}';
+            return PageHelper::defaultJsonSchema();
         }
     }
 
@@ -110,7 +110,7 @@ trait RequestParamActionTrait
     {
 
         $properties = [];
-        $requiredFields =[];
+        $requiredFields = [];
         $debug = [];
         foreach ($parameters as $parameter) {
             // get name
@@ -232,7 +232,8 @@ JSON;
 
     }
 
-    protected function jsonListFromArray($array) {
+    protected function jsonListFromArray($array)
+    {
         return '"' . implode('","', $array) . '"';
     }
 

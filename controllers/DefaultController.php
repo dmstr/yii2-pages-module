@@ -30,9 +30,10 @@ class DefaultController extends Controller
     /**
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($pageId = null)
     {
-        if (!$this->module->getLocalizedRootNode()) {
+        $localicedRootNode = $this->module->getLocalizedRootNode();
+        if (!$localicedRootNode) {
             $language = mb_strtolower(\Yii::$app->language);
             $rootNodePrefix = Tree::ROOT_NODE_PREFIX;
 
@@ -53,6 +54,10 @@ JS;
 
             $this->getView()->registerJs($js, View::POS_LOAD);
             \Yii::$app->session->addFlash('warning', $msg);
+        } else {
+            if (!empty($pageId)) {
+                Yii::$app->session->set('kvNodeId', $pageId);
+            }
         }
 
         /**
