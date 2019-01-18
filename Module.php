@@ -17,6 +17,8 @@ use yii\console\Application;
  * Class Module.
  *
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
+ *
+ * @property mixed|object $localizedRootNode
  */
 class Module extends \yii\base\Module
 {
@@ -115,9 +117,6 @@ class Module extends \yii\base\Module
      */
     private function checkSettingsInstalled()
     {
-        if (\Yii::$app->hasModule('settings') && \Yii::$app->has('settings')) {
-            return true;
-        }
-        return false;
+        return \Yii::$app->hasModule('settings') && \Yii::$app->has('settings');
     }
 }

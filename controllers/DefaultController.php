@@ -10,10 +10,12 @@
 
 namespace dmstr\modules\pages\controllers;
 
+use dmstr\modules\backend\interfaces\ContextMenuItemsInterface;
 use dmstr\modules\pages\assets\PagesBackendAsset;
 use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\models\Tree;
 use Yii;
+use yii\base\Event;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
@@ -25,8 +27,21 @@ use yii\web\View;
  * @package dmstr\modules\pages\controllers
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
-class DefaultController extends Controller
+class DefaultController extends Controller implements ContextMenuItemsInterface
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        if (\Yii::$app->user->can('pages', ['route' => true])) {
+            \Yii::$app->trigger('registerMenuItems', new Event(['sender' => $this]));
+        }
+
+        parent::init();
+    }
+
     /**
      * @return mixed
      */
@@ -144,7 +159,7 @@ JS;
                     throw new HttpException(403, \Yii::t('pages', 'Forbidden'));
                 }
 
-                return $this->redirect(\Yii::$app->user->loginUrl, 302);
+                return $this->redirect(\Yii::$app->user->loginUrl);
             }
         }
 
@@ -166,12 +181,19 @@ JS;
                 throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
             }
         }
+
+        if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
+            \Yii::trace('Resolved fallback URL for ' . $fallbackPage->id, __METHOD__);
+            return $this->redirect($fallbackPage->createUrl(['language' => $fallbackPage->access_domain]));
+        }
+
+        throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
     }
 
 
     /**
      * @param $pageId
-     * @return array|bool
+     * @return Tree|bool
      */
     private function resolveFallbackPage($pageId)
     {
@@ -181,5 +203,19 @@ JS;
             return false;
         }
         return Tree::find()->andWhere(['domain_id' => $original->domain_id])->one();
+    }
+
+    /**
+     * @return array
+     */
+    public function getMenuItems()
+    {
+        return [
+            [
+                'label' => Yii::t('pages', 'Edit page'),
+                'url' => ['/' . $this->module->id . '/default/index', 'pageId' => Yii::$app->request->get('pageId')]
+
+            ]
+        ];
     }
 }
