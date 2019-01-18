@@ -7,10 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace dmstr\modules\pages\controllers;
 
+use dmstr\modules\backend\interfaces\ContextMenuItemsInterface;
 use dmstr\modules\pages\assets\PagesBackendAsset;
 use dmstr\modules\pages\models\Tree;
+use Yii;
+use yii\base\Event;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
@@ -21,8 +25,21 @@ use yii\web\View;
  * @package dmstr\modules\pages\controllers
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
-class DefaultController extends Controller
+class DefaultController extends Controller implements ContextMenuItemsInterface
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        if (\Yii::$app->user->can('pages', ['route' => true])) {
+            \Yii::$app->trigger('registerMenuItems', new Event(['sender' => $this]));
+        }
+
+        parent::init();
+    }
+
     /**
      * @return mixed
      */
@@ -68,7 +85,7 @@ JS;
             )
             ->orderBy('root, lft');
 
-        return $this->render('index', ['queryTree'=>$queryTree]);
+        return $this->render('index', ['queryTree' => $queryTree]);
     }
 
     /**
@@ -112,14 +129,14 @@ JS;
         # reactivate access_* check in ActiveRecordAccessTrait::find for further queries
         Tree::$activeAccessTrait = true;
         // check if page has access_read permissions set, if yes check if user is allowed
-        if ((!empty($page->access_read) && ($page->access_read != '*'))) {
+        if (!empty($page->access_read) && $page->access_read !== '*') {
             if (!\Yii::$app->user->can($page->access_read)) {
                 # if userIsGuest, redirect to login page
                 if (!\Yii::$app->user->isGuest) {
                     throw new HttpException(403, \Yii::t('pages', 'Forbidden'));
-                } else {
-                    return $this->redirect(\Yii::$app->user->loginUrl,302);
                 }
+
+                return $this->redirect(\Yii::$app->user->loginUrl);
             }
         }
 
@@ -133,27 +150,42 @@ JS;
 
             // Render view
             return $this->render($page->view, ['page' => $page]);
-        } else {
-            if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
-                \Yii::trace('Resolved fallback URL for '.$fallbackPage->id, __METHOD__);
-                return $this->redirect($fallbackPage->createUrl(['language' => $fallbackPage->access_domain]));
-            } else {
-                throw new HttpException(404, \Yii::t('pages', 'Page not found.').' [ID: '.$pageId.']');
-            }
         }
+
+        if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
+            \Yii::trace('Resolved fallback URL for ' . $fallbackPage->id, __METHOD__);
+            return $this->redirect($fallbackPage->createUrl(['language' => $fallbackPage->access_domain]));
+        }
+
+        throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
     }
 
 
     /**
-     * @return array
+     * @param $pageId
+     * @return Tree|bool
      */
     private function resolveFallbackPage($pageId)
     {
         $original = Tree::find()->where(['id' => $pageId])->one();
 
-        if (empty($original)){
-              return false;
+        if (empty($original)) {
+            return false;
         }
         return Tree::find()->andWhere(['domain_id' => $original->domain_id])->one();
+    }
+
+    /**
+     * @return array
+     */
+    public function getMenuItems()
+    {
+        return [
+            [
+                'label' => Yii::t('pages', 'Edit page'),
+                'url' => ['/' . $this->module->id . '/default/index', 'pageId' => Yii::$app->request->get('pageId')]
+
+            ]
+        ];
     }
 }
