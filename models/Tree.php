@@ -10,6 +10,7 @@
 
 namespace dmstr\modules\pages\models;
 
+use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\Module as PagesModule;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
@@ -42,6 +43,8 @@ use yii\helpers\Url;
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property string requestParamsSchema
+ *
  * @package dmstr\modules\pages\models
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
@@ -53,7 +56,7 @@ class Tree extends BaseTree
     public function afterFind()
     {
         parent::afterFind();
-        $this->setNameId($this->domain_id.'_'.$this->access_domain);
+        $this->setNameId($this->domain_id . '_' . $this->access_domain);
     }
 
     public function afterSave($insert, $changedAttributes)
@@ -234,7 +237,7 @@ class Tree extends BaseTree
     public static function getMenuItems($domainId, $checkUserPermissions = false, array $linkOptions = [])
     {
         $cache = Yii::$app->cache;
-        $cacheKey = Json::encode([self::class,Yii::$app->language,$domainId,$checkUserPermissions,$linkOptions]);
+        $cacheKey = Json::encode([self::class, Yii::$app->language, $domainId, $checkUserPermissions, $linkOptions]);
         $data = $cache->get($cacheKey);
 
         if ($data !== false && Yii::$app->user->isGuest) {
@@ -244,7 +247,7 @@ class Tree extends BaseTree
         Yii::trace(["Building menu items", $cacheKey], __METHOD__);
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
-        $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)];
+        $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)];
         $rootNode = self::findOne($rootCondition);
 
         if ($rootNode === null) {
@@ -263,7 +266,7 @@ class Tree extends BaseTree
         $leavesQuery = $rootNode->children()->andWhere(
             [
                 self::ATTR_ACTIVE => self::ACTIVE,
-                self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)],
+                self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)],
             ]
         );
         $leavesQuery->with('translationsMeta');
@@ -276,7 +279,7 @@ class Tree extends BaseTree
         // filter out invisible models and disabled models (if needed)
         // this is not done in the SQL query to reflect translation_meta values for "visible" and "disabled" attributes.
         $canAccessPages = Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION);
-        $leaves = array_filter($leaves, function(Tree $leave) use ($canAccessPages) {
+        $leaves = array_filter($leaves, function (Tree $leave) use ($canAccessPages) {
             if (!$leave->isVisible()) {
                 return false;
             }
@@ -315,7 +318,6 @@ class Tree extends BaseTree
                         $visible = Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]);
                     }
                 }
-
 
 
                 // prepare item template
@@ -398,7 +400,8 @@ class Tree extends BaseTree
      *
      * @return null|string
      */
-    protected function resolvePagePath($activeNode = false){
+    protected function resolvePagePath($activeNode = false)
+    {
 
         // get TreeCache singleton instance as cache
         $cache = TreeCache::getInstance();
@@ -407,7 +410,7 @@ class Tree extends BaseTree
         $cacheKey = $this->id . Yii::$app->language;
 
         // if set, return path from cache
-        if(isset($cache->path[$cacheKey])) {
+        if (isset($cache->path[$cacheKey])) {
             return $cache->path[$cacheKey];
         }
 
@@ -427,17 +430,17 @@ class Tree extends BaseTree
 
         if (!$activeNode && $parent->isRoot()) {
             // start-point for building path
-            $path = Inflector::slug(($this->page_title?:$this->name));
+            $path = Inflector::slug(($this->page_title ?: $this->name));
         } else if (!$activeNode) {
             // if not active, build up path
-            $path = $parent->resolvePagePath(false).'/'.Inflector::slug(($this->page_title?:$this->name));
+            $path = $parent->resolvePagePath(false) . '/' . Inflector::slug(($this->page_title ?: $this->name));
         } else if ($activeNode && !$parent->isRoot()) {
             // building path finished
             $path = $parent->resolvePagePath(false);
         } else {
             $path = null;
         }
-        
+
         // store path in cache
         $cache->path[$cacheKey] = $path;
         Yii::endProfile('Resolving page path', __METHOD__);
@@ -452,7 +455,7 @@ class Tree extends BaseTree
      */
     public function isPage()
     {
-        switch(true) {
+        switch (true) {
             case $this->isRoot():
             case $this->isLeaf():
             case $this->isNewRecord:
@@ -482,7 +485,7 @@ class Tree extends BaseTree
         // Disable access trait access_domain checks in find
         self::$activeAccessTrait = false;
 
-        if ($sourceId === null && ! $this->isNewRecord) {
+        if ($sourceId === null && !$this->isNewRecord) {
             $sourcePage = $this;
         } else {
             /**
@@ -492,7 +495,7 @@ class Tree extends BaseTree
              */
             $sourcePage = self::findOne($sourceId);
             if ($sourcePage === null) {
-                $message   = \Yii::t(
+                $message = \Yii::t(
                     'pages',
                     'Page with id {PAGE_ID} not found!"',
                     ['PAGE_ID' => $sourceId]
@@ -509,17 +512,17 @@ class Tree extends BaseTree
          */
         $destinationPage = self::findOne(
             [
-                self::ATTR_DOMAIN_ID     => $sourcePage->domain_id,
+                self::ATTR_DOMAIN_ID => $sourcePage->domain_id,
                 self::ATTR_ACCESS_DOMAIN => mb_strtolower($targetLanguage)
             ]
         );
         if ($destinationPage === null) {
-            $message   = \Yii::t(
+            $message = \Yii::t(
                 'pages',
                 'Page with domain_id {DOMAIN_ID} in language "{LANGUAGE}" does not exists!',
                 [
                     'DOMAIN_ID' => $sourcePage->domain_id,
-                    'LANGUAGE'  => mb_strtolower($targetLanguage)
+                    'LANGUAGE' => mb_strtolower($targetLanguage)
                 ]
             );
             $errorCode = 404;
@@ -543,5 +546,13 @@ class Tree extends BaseTree
             \Yii::$app->session->set('error', $code . ': ' . $message);
         }
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestParamsSchema()
+    {
+        return PageHelper::routeToSchema($this->route);
     }
 }

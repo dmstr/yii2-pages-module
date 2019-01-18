@@ -12,12 +12,14 @@ namespace dmstr\modules\pages\controllers;
 
 use dmstr\modules\backend\interfaces\ContextMenuItemsInterface;
 use dmstr\modules\pages\assets\PagesBackendAsset;
+use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\models\Tree;
 use Yii;
 use yii\base\Event;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\View;
 
 /**
@@ -43,9 +45,10 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
     /**
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($pageId = null)
     {
-        if (!$this->module->getLocalizedRootNode()) {
+        $localicedRootNode = $this->module->getLocalizedRootNode();
+        if (!$localicedRootNode) {
             $language = mb_strtolower(\Yii::$app->language);
             $rootNodePrefix = Tree::ROOT_NODE_PREFIX;
 
@@ -66,6 +69,10 @@ JS;
 
             $this->getView()->registerJs($js, View::POS_LOAD);
             \Yii::$app->session->addFlash('warning', $msg);
+        } else {
+            if (!empty($pageId)) {
+                Yii::$app->session->set('kvNodeId', $pageId);
+            }
         }
 
         /**
@@ -86,6 +93,22 @@ JS;
             ->orderBy('root, lft');
 
         return $this->render('index', ['queryTree' => $queryTree]);
+    }
+
+    /**
+     * @return \yii\web\Response
+     * @throws MethodNotAllowedHttpException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionResolveRouteToSchema()
+    {
+        if (Yii::$app->request->isAjax && Yii::$app->request->post('value') !== null) {
+            $route = Yii::$app->request->post('value');
+
+            $response['schema'] = PageHelper::routeToSchema($route);
+            return $this->asJson($response);
+        }
+        throw new MethodNotAllowedHttpException(Yii::t('pages', 'You are not allowed to access this page like this'));
     }
 
     /**
@@ -150,6 +173,13 @@ JS;
 
             // Render view
             return $this->render($page->view, ['page' => $page]);
+        } else {
+            if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
+                \Yii::trace('Resolved fallback URL for ' . $fallbackPage->id, __METHOD__);
+                return $this->redirect($fallbackPage->createUrl(['language' => $fallbackPage->access_domain]));
+            } else {
+                throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
+            }
         }
 
         if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
