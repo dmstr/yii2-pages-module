@@ -14,7 +14,7 @@ use yii\web\AssetBundle;
  */
 class PagesBackendAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/dmstr/yii2-pages-module/assets/less';
+    public $sourcePath = __DIR__.'/less';
     public $css = [
         'backend.less',
     ];

@@ -13,8 +13,9 @@ use yii\rbac\PhpManager;
 use yii\web\Application;
 
 // prefer autoloaded classes from tests/project
-$testVendorPath = '/repo/tests/project/vendor';
-require($testVendorPath.'/autoload.php');
+# TODO: cleanup autoloading
+#$testVendorPath = '/repo/tests/project/vendor';
+#require($testVendorPath.'/autoload.php');
 
 Yii::$classMap['dmstr\modules\pages\Module'] = '/repo/Module.php';
 Yii::$classMap['app\components\EditorIdentity'] = '/repo/tests/project/src/components/EditorIdentity.php';
@@ -27,6 +28,7 @@ $common = [
     'aliases' => [
         'repo' => '/repo',
         'dmstr/modules/pages' => '/repo',
+        'vendor/dmstr/yii2-pages-module' => '/repo',
         'tests' => '@repo/tests',
         #'backend'             => '@vendor/dmstr/yii2-backend-module/src',
     ],
@@ -43,7 +45,7 @@ $common = [
             'username' => getenv('DATABASE_USER'),
             'password' => getenv('DATABASE_PASSWORD'),
             'charset' => 'utf8',
-            'tablePrefix' => getenv('DATABASE_TABLE_PREFIX'),
+            'tablePrefix' => 'test_'.getenv('DATABASE_TABLE_PREFIX'),
             'enableSchemaCache' => YII_ENV_PROD ? true : false,
         ],
         'i18n' => [
