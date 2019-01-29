@@ -12,6 +12,7 @@ namespace dmstr\modules\pages\models;
 
 use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\Module as PagesModule;
+use dosamigos\translateable\TranslateableBehavior;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\caching\TagDependency;
@@ -45,6 +46,7 @@ use yii\helpers\Url;
  *
  * @property string $menuLabel
  * @property string|mixed $nameId
+ * @property bool $isDeletable
  * @property string requestParamsSchema
  *
  * @package dmstr\modules\pages\models
@@ -65,6 +67,20 @@ class Tree extends BaseTree
     {
         parent::afterSave($insert, $changedAttributes);
         TagDependency::invalidate(\Yii::$app->cache, 'pages');
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        if (!$this->isDeletable) {
+            // send message to user so he knows whats going on
+            Yii::$app->session->addFlash('info', Yii::t('pages', 'You can not delete this record. There is still a translation that uses this entry as a reference.'));
+        }
+
+        return parent::beforeDelete();
     }
 
     public function afterDelete()
@@ -546,5 +562,23 @@ class Tree extends BaseTree
     public function getRequestParamsSchema()
     {
         return PageHelper::routeToSchema($this->route);
+    }
+
+
+    /**
+     * Checks if model can be deleted in case it has only one (or less) translation left
+     *
+     * @return bool
+     */
+    public function getIsDeletable()
+    {
+        /** @var TranslateableBehavior $translatableBehavior */
+        $translatableBehavior = $this->getBehavior('translatable');
+
+        if ($translatableBehavior->restrictDeletion === TranslateableBehavior::DELETE_LAST) {
+            return (int)$this->getTranslations()->count() <= 1;
+        }
+
+        return true;
     }
 }
