@@ -43,6 +43,8 @@ use yii\helpers\Url;
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property string $menuLabel
+ * @property string|mixed $nameId
  * @property string requestParamsSchema
  *
  * @package dmstr\modules\pages\models
@@ -72,18 +74,6 @@ class Tree extends BaseTree
     }
 
     /**
-     * Override isDisabled method if you need as shown in the
-     * example below. You can override similarly other methods
-     * like isActive, isMovable etc.
-     *
-     * @return bool
-     */
-    public function isDisabled()
-    {
-        return parent::isDisabled();
-    }
-
-    /**
      * Disallow node movement when user has no update permissions
      *
      * @param string $dir
@@ -93,9 +83,9 @@ class Tree extends BaseTree
     {
         if (!$this->hasPermission('access_update')) {
             return false;
-        } else {
-            return parent::isMovable($dir);
         }
+
+        return parent::isMovable($dir);
     }
 
     /**
@@ -124,8 +114,8 @@ class Tree extends BaseTree
 
         // find all root nodes but global access domain nodes
         $rootNodes = self::find()
-            ->where([Tree::ATTR_LVL => Tree::ROOT_NODE_LVL])
-            ->andWhere(['NOT', [Tree::ATTR_ACCESS_DOMAIN => Tree::GLOBAL_ACCESS_DOMAIN]])
+            ->where([self::ATTR_LVL => self::ROOT_NODE_LVL])
+            ->andWhere(['NOT', [self::ATTR_ACCESS_DOMAIN => self::GLOBAL_ACCESS_DOMAIN]])
             ->all();
 
         if (empty($rootNodes)) {
@@ -159,6 +149,7 @@ class Tree extends BaseTree
      * Get all icon constants for dropdown list in example
      * @param bool $html whether to render icon as array value prefix
      * @return array
+     * @throws \ReflectionException
      */
     public static function optsIcon($html = false)
     {
@@ -166,7 +157,7 @@ class Tree extends BaseTree
         foreach ((new \ReflectionClass(FA::class))->getConstants() as $constant) {
             $key = $constant;
 
-            $result[$key] = ($html)
+            $result[$key] = $html
                 ? FA::icon($constant) . '&nbsp;&nbsp;' . $constant
                 : $constant;
         }
@@ -176,7 +167,7 @@ class Tree extends BaseTree
     /**
      * @param array $additionalParams
      *
-     * @return null|string
+     * @return array|string|null
      */
     public function createRoute($additionalParams = [])
     {
@@ -191,7 +182,7 @@ class Tree extends BaseTree
         // us this params only for the default page route
         if ($this->route === self::DEFAULT_PAGE_ROUTE) {
             $pageId = $this->id;
-            $slug = ($this->page_title)
+            $slug = $this->page_title
                 ? Inflector::slug($this->page_title)
                 : Inflector::slug($this->name);
             $slugFolder = $this->resolvePagePath(true);
@@ -244,7 +235,7 @@ class Tree extends BaseTree
             return $data;
         }
 
-        Yii::trace(["Building menu items", $cacheKey], __METHOD__);
+        Yii::trace(['Building menu items', $cacheKey], __METHOD__);
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
         $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)];
@@ -312,7 +303,7 @@ class Tree extends BaseTree
                 $visible = true;
                 if ($checkUserPermissions) {
                     if ($page->access_read !== '*') {
-                        \Yii::trace("Checking Access_read permissions for page " . $page->id, __METHOD__);
+                        \Yii::trace('Checking Access_read permissions for page ' . $page->id, __METHOD__);
                         $visible = Yii::$app->user->can($page->access_read);
                     } else if (!empty($page->route)) {
                         $visible = Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]);
@@ -323,7 +314,7 @@ class Tree extends BaseTree
                 // prepare item template
                 $itemTemplate = [
                     'label' => $page->getMenuLabel(),
-                    'url' => $page->createRoute() ? $page->createRoute() : null,
+                    'url' => $page->createRoute() ?: null,
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
                     'dropDownOptions' => [
@@ -433,10 +424,10 @@ class Tree extends BaseTree
             $path = Inflector::slug(($this->page_title ?: $this->name));
         } else if (!$activeNode) {
             // if not active, build up path
-            $path = $parent->resolvePagePath(false) . '/' . Inflector::slug(($this->page_title ?: $this->name));
+            $path = $parent->resolvePagePath() . '/' . Inflector::slug(($this->page_title ?: $this->name));
         } else if ($activeNode && !$parent->isRoot()) {
             // building path finished
-            $path = $parent->resolvePagePath(false);
+            $path = $parent->resolvePagePath();
         } else {
             $path = null;
         }
@@ -478,7 +469,7 @@ class Tree extends BaseTree
      */
     public function sibling($targetLanguage, $sourceId = null, $route = self::DEFAULT_PAGE_ROUTE)
     {
-        if (strpos(Tree::DEFAULT_PAGE_ROUTE, $route) === false) {
+        if (strpos(self::DEFAULT_PAGE_ROUTE, $route) === false) {
             return null;
         }
 
@@ -540,16 +531,17 @@ class Tree extends BaseTree
      */
     protected function outputError($message, $code)
     {
-        if (php_sapi_name() === 'cli') {
+        if (PHP_SAPI === 'cli') {
             throw new \yii\console\Exception($message, $code);
-        } else {
-            \Yii::$app->session->set('error', $code . ': ' . $message);
         }
+
+        \Yii::$app->session->set('error', $code . ': ' . $message);
         return false;
     }
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function getRequestParamsSchema()
     {
