@@ -27,7 +27,7 @@ use yii\web\View;
  * @package dmstr\modules\pages\controllers
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
-class DefaultController extends Controller
+class DefaultController extends Controller implements ContextMenuItemsInterface
 {
 
     /**
