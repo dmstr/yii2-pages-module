@@ -21,9 +21,9 @@ services:
           - APP_CONFIG_FILE=/repo/tests/project/config/test.php
         volumes:
           # mount this repository read-only
-          - ./..:/repo:ro
-          # mount test-project
-          - ./project:/repo/tests/project
+          - ./..:/repo:rw
+          # mount tests
+          - ./:/repo/tests
           # composer cache
           - ~/.composer-docker/cache:/root/.composer/cache:delegated
         networks:
