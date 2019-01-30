@@ -21,7 +21,7 @@ services:
           - APP_CONFIG_FILE=/repo/tests/project/config/test.php
         volumes:
           # mount this repository read-only
-          - ./..:/repo:rw
+          - ./..:/repo:ro
           # mount tests
           - ./:/repo/tests
           # composer cache
