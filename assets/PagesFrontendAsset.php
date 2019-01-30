@@ -14,7 +14,7 @@ use yii\web\JqueryAsset;
 
 class PagesFrontendAsset extends AssetBundle
 {
-    public $sourcePath = __DIR__.'/less';
+    public $sourcePath = __DIR__.'/frontend';
     public $css = [
         'frontend.less',
     ];

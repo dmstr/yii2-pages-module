@@ -26,7 +26,7 @@
         "2amigos/yii2-translateable-behavior": "^1.1.0",
         "insolita/yii2-adminlte-widgets": "^1.1.4",
         "rmrevin/yii2-fontawesome": "~2.9",
-        "devgroup/yii2-jsoneditor": "1.0.*",
+        "dmstr/yii2-json-editor": "^0.2.2",
         "dmstr/yii2-web": "^0.4.0",
         "dmstr/yii2-db": "1.0.0",
         "bedezign/yii2-audit": "^1.1",
