@@ -26,7 +26,8 @@ use yii\helpers\Inflector;
  *
  * By default it will generate a text field per action parameter.
  *
- * For customization you can create a public method for each individual action parameter by adding a method which name have to follow this schema:
+ * For customization you can create a public method for each individual action parameter by adding a method which name
+ * have to follow this schema:
  *
  * `camelizedActionId` + ActionParam + `ParameterName`
  *
@@ -35,34 +36,38 @@ use yii\helpers\Inflector;
  *
  * Example: detailActionParamProductId
  *
- * This method must return a array (key-value pairs), where the keys should refer to the actual value and the value will be the label
+ * This method must return a array (key-value pairs), where the keys should refer to the actual value and the value will
+ * be the label
  *
  * Example:
  *
  * return ArrayHelper::map(Product::find()->all(),'id','name');
  *
  *
- * Hint:
+ * Hints:
  *
- * If the method as described above returns false, then this property will be ignored.
+ * - If the method as described above returns false, then this property will be ignored.
  *
- * If the method as described above returns true, then this property will be displayed. This functionality can be used to maniulate e.g. title or description (see class propertie `$allowedProperties`)
+ * - If the method as described above returns true, then this property will be displayed. This functionality can be used
+ *   to manipulate e.g. title or description (see class property `$allowedProperties`)
  *
- * You can use php doc block to add option to properties:
+ * - You can use php doc block to add options to properties:
  *
- * Example:
+ *   Example:
  *
- * /**
- * * @editor title My Title
- * *\/
- * public function detailActionParamProductName() {
- *  return true;
- * }
+ *   /**
+ *    * @editor title My Title
+ *   *\/
+ *   public function detailActionParamProductName() {
+ *     return true;
+ *   }
  *
- * This will generate a input with defined title for an *existing* parameter
+ *   This will generate a input with defined title for an *existing* parameter
  *
- *
- *
+ * - If property is NOT optional, it will be set as required in json schema.
+ *   However, since this only implies that the property must be set in the data, but not that a value must also be set,
+ *   a validation rule should be defined using notations (see above). For properties of type 'string' a minLength: 1
+ *   option is set as fallback.
  *
  * @package dmstr\modules\pages\traits
  * @author Elias Luhr <e.luhr@herzogkommunikation.de>
@@ -111,12 +116,9 @@ trait RequestParamActionTrait
 
         $properties = [];
         $requiredFields = [];
-        $debug = [];
         foreach ($parameters as $parameter) {
             // get name
             $parameterName = $parameter->name;
-
-            $debug[] = $parameterName;
 
             // nameActionParamId
             $methodName = $actionId . 'ActionParam' . ucfirst($parameterName);
@@ -137,9 +139,9 @@ trait RequestParamActionTrait
                 $additionalData = [];
                 if ($docs !== false) {
                     // matches e.g.
-                    // @descrition My custom description
+                    // @editor description My custom description
                     // in php doc blocks
-                    preg_match_all('/@editor (\$[a-z]+) (.*)\n/', $docs, $matches);
+                    preg_match_all('/@editor[\s]+([a-zA-Z-_]+)[\s]+(.*)\n/', $docs, $matches);
                     if (isset($matches[1], $matches[2]) && \count($matches[1]) === \count($matches[2])) {
                         $matchIndex = 0;
                         foreach ($matches[1] as $propertyName) {
@@ -164,6 +166,11 @@ trait RequestParamActionTrait
                 // add to required if not is optional
                 if (!$parameter->isOptional()) {
                     $requiredFields[] = $parameterName;
+                    // TODO: how to check other types?
+                    if (($additionalData['type'] === 'string') && (!isset($additionalData['minLength']))) {
+                        $extraProperties[] = '"minLength": 1';
+                    }
+
                 }
 
                 foreach ($additionalData as $name => $value) {
@@ -204,6 +211,7 @@ JSON;
 
                 if (!$parameter->isOptional()) {
                     $requiredFields[] = $parameterName;
+                    $extraProperties[] = '"minLength": 1';
                 }
 
                 // generate default if nothing else is defined

@@ -32,7 +32,8 @@
         "dmstr/yii2-backend-module": "^1.0.0-beta12",
         "bedezign/yii2-audit": "^1.1",
         "mikehaertl/php-shellcommand": "^1.2.4",
-        "pheme/yii2-settings": "^0.5.0"
+        "pheme/yii2-settings": "^0.5.0",
+        "justinrainbow/json-schema": "^5.2.0"
     },
     "require-dev": {
         "codeception/codeception": "^2.2"

@@ -20,6 +20,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use JsonSchema\Validator;
 
 /**
  * Class Tree
@@ -54,6 +55,36 @@ use yii\helpers\Url;
  */
 class Tree extends BaseTree
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return ArrayHelper::merge(
+            parent::rules(),
+            [
+                [
+                    self::ATTR_REQUEST_PARAMS,
+                    function ($attribute, $params) {
+
+                        $validator = new Validator();
+
+                        $obj = Json::decode($this->requestParamsSchema, false);
+                        $data = Json::decode($this->{$attribute}, false);
+                        $validator->check($data, $obj);
+                        if ($validator->getErrors()) {
+                            foreach ($validator->getErrors() as $error) {
+                                $this->addError($error['property'], "{$error['property']}: {$error['message']}");
+                            }
+                        }
+
+                    },
+                ],
+            ]
+        );
+    }
+
     /**
      * @inheritdoc
      */
