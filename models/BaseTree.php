@@ -111,26 +111,6 @@ class BaseTree extends \kartik\tree\models\Tree
     const ROOT_NODE_LVL = 0;
 
     /**
-     * The default page route
-     */
-    const DEFAULT_PAGE_ROUTE = '/pages/default/page';
-
-    /**
-     * The request param for a page identifier
-     */
-    const REQUEST_PARAM_ID = 'pageId';
-
-    /**
-     * The request param for a page slug
-     */
-    const REQUEST_PARAM_SLUG = 'pageSlug';
-
-    /**
-     * The request param for a page path
-     */
-    const REQUEST_PARAM_PATH = 'pagePath';
-
-    /**
      * Column attribute 'id'
      */
     const ATTR_ID = 'id';
