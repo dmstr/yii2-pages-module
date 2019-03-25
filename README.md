@@ -64,21 +64,7 @@ Enable module in application configuration
 	'defaultPageLayout' => '@app/modules/frontend/layouts/main',
 	'availableRoutes' => [
 		'site/index' => 'Index Route',
-	],
-	'availableViews' => [
-		'@app/views/site/index.php' => 'Index View',
-	],
-],
-
-
-// if used want a url suffix, e.g. '.html', add Url rules for that
-'urlManager' => [
-	...
-	'rules' => [
-		'<pagePath:[a-zA-Z0-9_\-\./\+]*>/<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
-		'<pageSlug:[a-zA-Z0-9_\-\.]*>-<pageId:[0-9]*>.html' => 'pages/default/page',
-	],
-	...
+	]
 ],
 
 // register frontend asset for hiding pages via CookieButton
@@ -94,9 +80,7 @@ Use settings module to configure additional controllers
 ### Settings
 
 - `pages.availableRoutes` - routes per access_domain (for non-admin users)
-- `pages.availableViews` - views per access_domain (for non-admin users)
 - `pages.availableGlobalRoutes` - global routes (for admin users)
-- `pages.availableGlobalViews` - global views(for admin users)
 
 
 Usage
@@ -192,37 +176,6 @@ Example 2:
 $targetPage = (new Tree())->sibling('de', 12, '/pages/default/page')
 
 ```
-
-
-Copy pages
----
-
-**Console config**
-
-```
-'controllerMap'       => [
-	'copy-pages' => '\dmstr\modules\pages\commands\CopyController',
-]
-```
-
-**CLI**
-
-Command: `yii copy-pages/root-node --rootId --destinationLanguage`
-
-**Web UI**
-
-Url: `/pages/copy`
-
-**RBAC permission**
-
-`pages_copy`
-
-**Usage**
-
-* Switch to the application language you want to copy page root nodes to -> `/pages/copy`
-* Select the root node you whant to copy
-* Select the target language or you can select the global domain if you have permissions to
-* Start Copy
 
 
 Testing

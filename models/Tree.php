@@ -172,16 +172,6 @@ class Tree extends BaseTree
     }
 
     /**
-     * Get all configured views
-     *
-     * @return array list of options
-     */
-    public static function optsView()
-    {
-        return \Yii::$app->getModule(PagesModule::NAME)->availableViews;
-    }
-
-    /**
      * Get all configured routs
      *
      * @return array list of options
@@ -220,10 +210,6 @@ class Tree extends BaseTree
         if (!$this->route) {
             return null;
         }
-
-        $pageId = null;
-        $slug = null;
-        $slugFolder = null;
 
         $route = [$this->route];
 
