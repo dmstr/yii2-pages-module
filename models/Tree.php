@@ -225,19 +225,7 @@ class Tree extends BaseTree
         $slug = null;
         $slugFolder = null;
 
-        // us this params only for the default page route
-        if ($this->route === self::DEFAULT_PAGE_ROUTE) {
-            $pageId = $this->id;
-            $slug = Inflector::slug($this->name);
-            $slugFolder = $this->resolvePagePath(true);
-        }
-
-        $route = [
-            $this->route,
-            self::REQUEST_PARAM_ID => $pageId,
-            self::REQUEST_PARAM_SLUG => $slug,
-            self::REQUEST_PARAM_PATH => $slugFolder
-        ];
+        $route = [$this->route];
 
         if (Json::decode($this->request_params)) {
             $route = ArrayHelper::merge($route, Json::decode($this->request_params));
@@ -509,16 +497,13 @@ class Tree extends BaseTree
      *
      * @param string $targetLanguage
      * @param integer $sourceId
-     * @param string $route
      *
      * @return Tree|null
      * @throws \yii\console\Exception
      */
-    public function sibling($targetLanguage, $sourceId = null, $route = self::DEFAULT_PAGE_ROUTE)
+    public function sibling($targetLanguage, $sourceId = null)
     {
-        if (strpos(self::DEFAULT_PAGE_ROUTE, $route) === false) {
-            return null;
-        }
+
 
         // Disable access trait access_domain checks in find
         self::$activeAccessTrait = false;

@@ -15,16 +15,18 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
-use yii\helpers\VarDumper;
 use yii\web\HttpException;
 use bedezign\yii2\audit\AuditTrailBehavior;
 use dosamigos\translateable\TranslateableBehavior;
-use dmstr\modules\pages\models\TreeTranslation;
 
 /**
  * Class BaseTree
+ *
  * @package dmstr\modules\pages\models
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
+ *
+ * @property \yii\db\ActiveQuery $translations
+ * @property \yii\db\ActiveQuery $translationsMeta
  */
 class BaseTree extends \kartik\tree\models\Tree
 {
@@ -427,17 +429,6 @@ class BaseTree extends \kartik\tree\models\Tree
                     'match',
                     'pattern' => '@^/[^/]@i',
                     'message' => \Yii::t('pages', '{0} should begin with one slash!', ['{attribute}'])
-                ],
-                [
-                    'view',
-                    'required',
-                    'when' => function ($model) {
-                        return $model->route === self::DEFAULT_PAGE_ROUTE;
-                    },
-                    'whenClient' => 'function (attribute, value) {
-                        return $("#tree-route").find(":selected").val() == "' . self::DEFAULT_PAGE_ROUTE . '";
-                    }',
-                    'message' => 'Route ' . self::DEFAULT_PAGE_ROUTE . ' requires a view.'
                 ],
                 [
                     [
