@@ -12,14 +12,18 @@ namespace dmstr\modules\pages\assets;
 use yii\web\AssetBundle;
 use yii\web\JqueryAsset;
 
+/**
+ * @package dmstr\modules\pages\assets
+ * @author Elias Luhr <e.luhr@herzogkommunikation.de>
+ */
 class PagesFrontendAsset extends AssetBundle
 {
-    public $sourcePath = __DIR__.'/frontend';
+    public $sourcePath = __DIR__.'/frontend/web';
     public $css = [
-        'frontend.less',
+        'less/frontend.less',
     ];
     public $js = [
-        'frontend.js',
+        'js/frontend.js',
     ];
     public $depends = [
         JqueryAsset::class

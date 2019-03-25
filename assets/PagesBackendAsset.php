@@ -15,13 +15,13 @@ use yii\web\JqueryAsset;
  */
 class PagesBackendAsset extends AssetBundle
 {
-    public $sourcePath = __DIR__.'/backend';
+    public $sourcePath = __DIR__ . '/backend/web';
     public $css = [
-        #'less/backend.less',
+        'less/backend.less',
     ];
     public $js = [
-        'page-route-items.js',
-        'page-select.js'
+        'js/page-route-items.js',
+        'js/page-select.js'
     ];
     public $depends = [
         JqueryAsset::class,

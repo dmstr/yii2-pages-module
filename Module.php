@@ -98,7 +98,7 @@ class Module extends \yii\base\Module
     public function getLocalizedRootNode()
     {
         $localizedRoot = Tree::ROOT_NODE_PREFIX.'_'.\Yii::$app->language;
-        \Yii::trace('localizedRoot: '.$localizedRoot, __METHOD__);
+        \Yii::debug('localizedRoot: '.$localizedRoot, __METHOD__);
         $rootNode = Tree::findOne(
             [
                 Tree::ATTR_DOMAIN_ID => Tree::ROOT_NODE_PREFIX,

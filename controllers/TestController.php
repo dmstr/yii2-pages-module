@@ -19,6 +19,9 @@ use yii\web\Controller;
  */
 class TestController extends Controller
 {
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
         $tree = Tree::getMenuItems('_test');

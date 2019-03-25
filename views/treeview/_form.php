@@ -158,7 +158,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     <?php else: ?>
         <?= Html::a(
-            '<span class="glyphicon glyphicon-remove"></span> ' . \Yii::t('pages', 'Delete Translation'),
+             FA::icon(FA::_REMOVE). ' ' . \Yii::t('pages', 'Delete Translation'),
             ['/pages/crud/tree-translation/delete', 'id' => $node->getTranslation()->id],
             [
                 'class' => 'btn btn-default pull-right',
@@ -169,24 +169,10 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <?php endif; ?>
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_NAME) ?>
         </div>
-
-        <div class="col-xs-12">
-            <?= $form->field($node, $node::ATTR_PAGE_TITLE)->textInput() ?>
-        </div>
     </div>
-
-    <div class="row">
-        <div class="col-xs-12 col-lg-12">
-            <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS)->textInput() ?>
-        </div>
-        <div class="col-xs-12 col-lg-12">
-            <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION)->textarea(['rows' => 5]) ?>
-        </div>
-    </div>
-
 
     <div class="row">
         <div class="col-xs-12 col-sm-2">
@@ -212,8 +198,8 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
     <div class="row">
 
-        <div class="col-xs-12 col-sm-7">
-            <?= $form->field($node, $node::ATTR_DOMAIN_ID)->textInput() ?>
+        <div class="col-xs-12">
+            <?= $form->field($node, $node::ATTR_DOMAIN_ID) ?>
         </div>
 
         <div class="col-xs-12">
@@ -232,17 +218,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
             );
             ?>
         </div>
-        <div class="col-xs-12">
-            <?= $form->field($node, $node::ATTR_VIEW)->widget(
-                Select2::class,
-                [
-
-                    'data' => $node::optsView(),
-                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                    'pluginOptions' => ['allowClear' => true],
-                ]
-            ); ?>
-        </div>
 
         <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
@@ -253,9 +228,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'clientOptions' => [
                         'theme' => 'bootstrap3',
                         'ajax' => true,
-                        'disable_collapse' => true,
-//                        'disable_edit_json' => true,
-//                        'disable_properties' => true
+                        'disable_collapse' => true
                     ]
                 ]) ?>
         </div>
@@ -309,6 +282,12 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
     </div>
 
+    <?php Box::end() ?>
+
+<?php Box::begin([
+        'type' => Box::TYPE_WARNING
+    ])?>
+
     <div class="row">
 
 
@@ -328,7 +307,8 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 
     </div>
-    <?php Box::end() ?>
+
+<?php Box::end(); ?>
 
 <?php else : ?>
     <div class="row">

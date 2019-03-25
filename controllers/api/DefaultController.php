@@ -2,6 +2,9 @@
 
 namespace dmstr\modules\pages\controllers\api;
 
+use dmstr\modules\pages\models\Tree;
+use yii\rest\IndexAction;
+
 /**
  * This is the class for REST controller "DefaultController".
  *
@@ -14,7 +17,7 @@ class DefaultController extends \yii\rest\ActiveController
      */
     const QUERY_LIMIT = 2000;
 
-    public $modelClass = 'dmstr\modules\pages\models\Tree';
+    public $modelClass = Tree::class;
 
     /**
      * {@inheritdoc}
@@ -31,7 +34,7 @@ class DefaultController extends \yii\rest\ActiveController
              * @param dmstr\modules\pages\models\Tree::ATTR_ACCESS_DOMAIN
              */
             'index' => [
-                'class' => 'yii\rest\IndexAction',
+                'class' => IndexAction::class,
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
                 'prepareDataProvider' => function () {

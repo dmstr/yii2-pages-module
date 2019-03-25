@@ -11,6 +11,9 @@
 namespace dmstr\modules\pages\models;
 
 
+/**
+ * @package dmstr\modules\pages\models
+ */
 class TreeCache
 {
 

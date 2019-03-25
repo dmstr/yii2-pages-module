@@ -28,14 +28,9 @@ use JsonSchema\Validator;
  * This is the tree model class, extended from \kartik\tree\models\Tree.
  *
  * @property string $name
- * @property string $page_title
  * @property string $name_id
  * @property string $domain_id
- * @property string $slug
  * @property string $route
- * @property string $view
- * @property string $default_meta_keywords
- * @property string $default_meta_description
  * @property string $request_params
  * @property int $access_owner
  * @property string $access_domain
@@ -66,7 +61,7 @@ class Tree extends BaseTree
             [
                 [
                     self::ATTR_REQUEST_PARAMS,
-                    function ($attribute, $params) {
+                    function ($attribute) {
 
                         $validator = new Validator();
 
@@ -94,6 +89,10 @@ class Tree extends BaseTree
         $this->setNameId($this->domain_id . '_' . $this->access_domain);
     }
 
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -229,9 +228,7 @@ class Tree extends BaseTree
         // us this params only for the default page route
         if ($this->route === self::DEFAULT_PAGE_ROUTE) {
             $pageId = $this->id;
-            $slug = $this->page_title
-                ? Inflector::slug($this->page_title)
-                : Inflector::slug($this->name);
+            $slug = Inflector::slug($this->name);
             $slugFolder = $this->resolvePagePath(true);
         }
 
@@ -282,7 +279,7 @@ class Tree extends BaseTree
             return $data;
         }
 
-        Yii::trace(['Building menu items', $cacheKey], __METHOD__);
+        Yii::debug(['Building menu items', $cacheKey], __METHOD__);
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
         $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)];
@@ -350,7 +347,7 @@ class Tree extends BaseTree
                 $visible = true;
                 if ($checkUserPermissions) {
                     if ($page->access_read !== '*') {
-                        \Yii::trace('Checking Access_read permissions for page ' . $page->id, __METHOD__);
+                        \Yii::debug('Checking Access_read permissions for page ' . $page->id, __METHOD__);
                         $visible = Yii::$app->user->can($page->access_read);
                     } else if (!empty($page->route)) {
                         $visible = Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]);
@@ -408,6 +405,9 @@ class Tree extends BaseTree
         return $data;
     }
 
+    /**
+     * @return string
+     */
     public function getMenuLabel()
     {
         return !empty($this->name) ? htmlentities($this->name) : "({$this->domain_id})";
@@ -468,10 +468,10 @@ class Tree extends BaseTree
 
         if (!$activeNode && $parent->isRoot()) {
             // start-point for building path
-            $path = Inflector::slug(($this->page_title ?: $this->name));
+            $path = Inflector::slug($this->name);
         } else if (!$activeNode) {
             // if not active, build up path
-            $path = $parent->resolvePagePath() . '/' . Inflector::slug(($this->page_title ?: $this->name));
+            $path = $parent->resolvePagePath() . '/' . Inflector::slug($this->name);
         } else if ($activeNode && !$parent->isRoot()) {
             // building path finished
             $path = $parent->resolvePagePath();
