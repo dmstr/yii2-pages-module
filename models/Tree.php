@@ -267,7 +267,7 @@ class Tree extends BaseTree
             return [];
         }
 
-        /*
+        /**
          * @var $leaves Tree[]
          */
 

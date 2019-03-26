@@ -16,16 +16,17 @@ use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\models\Tree;
 use Yii;
 use yii\base\Event;
-use yii\helpers\Url;
 use yii\web\Controller;
-use yii\web\HttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\View;
 
 /**
  * Class DefaultController
+ *
  * @package dmstr\modules\pages\controllers
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
+ *
+ * @property array $menuItems
  */
 class DefaultController extends Controller implements ContextMenuItemsInterface
 {
