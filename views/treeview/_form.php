@@ -3,6 +3,7 @@
 namespace dmstr\modules\pages\views\treeview;
 
 use dmstr\jsoneditor\JsonEditorWidget;
+use dmstr\widgets\AccessInput;
 use insolita\wgadminlte\Box;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
@@ -28,7 +29,7 @@ use yii\helpers\Url;
  * @var $currUrl string
  * @var $modelClass string
  * @var $softDelete boolean
- * @var $iconsList string
+ * @var $iconsList array
  * @var $nameAttribute string
  * @var $iconAttribute string
  * @var $iconTypeAttribute string
@@ -292,16 +293,10 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 
         <div class="col-xs-12">
-            <?= \dmstr\widgets\AccessInput::widget(
+            <?= AccessInput::widget(
                 [
                     'form' => $form,
-                    'model' => $node,
-                    'accessFields' => [
-                        'domain',
-                        'read',
-                        'update',
-                        'delete'
-                    ]
+                    'model' => $node
                 ]) ?>
         </div>
 

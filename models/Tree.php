@@ -123,6 +123,7 @@ class Tree extends BaseTree
      * Disallow node movement when user has no update permissions
      *
      * @param string $dir
+     *
      * @return bool
      */
     public function isMovable($dir)
@@ -151,6 +152,7 @@ class Tree extends BaseTree
 
     /**
      * Renders all available root nodes as mapped array, `id` => `name_id`
+     *
      * @return array
      */
     public static function optsSourceRootId()
@@ -183,7 +185,9 @@ class Tree extends BaseTree
 
     /**
      * Get all icon constants for dropdown list in example
+     *
      * @param bool $html whether to render icon as array value prefix
+     *
      * @return array
      * @throws \ReflectionException
      */
@@ -211,7 +215,11 @@ class Tree extends BaseTree
             return null;
         }
 
-        $route = [$this->route];
+        $route = [
+            $this->route,
+            'slugged_menu_path' => Inflector::slug($this->resolvePagePath(true)),
+            'slugged_menu_name' => Inflector::slug($this->name)
+        ];
 
         if (Json::decode($this->request_params)) {
             $route = ArrayHelper::merge($route, Json::decode($this->request_params));
