@@ -217,9 +217,14 @@ class Tree extends BaseTree
 
         $route = [
             $this->route,
-            'slugged_menu_path' => Inflector::slug($this->resolvePagePath(true)),
             'slugged_menu_name' => Inflector::slug($this->name)
         ];
+
+        $resolved_path = Inflector::slug($this->resolvePagePath(true));
+
+        if (!empty($resolved_path)) {
+            $route['slugged_menu_path'] = $resolved_path;
+        }
 
         if (Json::decode($this->request_params)) {
             $route = ArrayHelper::merge($route, Json::decode($this->request_params));
