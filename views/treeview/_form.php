@@ -293,6 +293,11 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 
         <div class="col-xs-12">
+            <div class="text-warning">
+                <?=Yii::t('pages','{icon} Access permissions only effect displaying menu items, not accessing the route itself.',['icon' => FA::icon(FA::_WARNING)])?>
+            </div>
+        </div>
+        <div class="col-xs-12">
             <?= AccessInput::widget(
                 [
                     'form' => $form,
