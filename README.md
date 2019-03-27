@@ -61,16 +61,11 @@ Enable module in application configuration
 	'class' => 'dmstr\modules\pages\Module',
 	'layout' => '@admin-views/layouts/main',
 	'roles' => ['Admin', 'Editor'],
-	'defaultPageLayout' => '@app/modules/frontend/layouts/main',
 	'availableRoutes' => [
 		'site/index' => 'Index Route',
 	]
 ],
 
-// register frontend asset for hiding pages via CookieButton
-'on '. \yii\web\Application::EVENT_BEFORE_ACTION => function () {
-    \dmstr\modules\pages\assets\PagesFrontendAsset::register(Yii::$app->controller->view);
-},
 ```
 
 Use settings module to configure additional controllers

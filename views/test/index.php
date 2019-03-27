@@ -4,7 +4,6 @@ namespace _;
 
 /* @var $tree \dmstr\modules\pages\models\Tree */
 
-use dmstr\modules\pages\models\Tree;
 use yii\bootstrap\Nav;
 use yii\helpers\VarDumper;
 
