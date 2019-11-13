@@ -10,13 +10,17 @@
 
 namespace dmstr\modules\pages\models;
 
+use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\Module as PagesModule;
+use dosamigos\translateable\TranslateableBehavior;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
+use yii\caching\TagDependency;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use JsonSchema\Validator;
 
 /**
  * Class Tree
@@ -41,30 +45,94 @@ use yii\helpers\Url;
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property string $menuLabel
+ * @property string|mixed $nameId
+ * @property bool $isDeletable
+ * @property string requestParamsSchema
+ *
  * @package dmstr\modules\pages\models
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  */
 class Tree extends BaseTree
 {
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return ArrayHelper::merge(
+            parent::rules(),
+            [
+                [
+                    self::ATTR_REQUEST_PARAMS,
+                    function ($attribute, $params) {
+
+                        $validator = new Validator();
+
+                        $obj = Json::decode($this->requestParamsSchema, false);
+                        $data = Json::decode($this->{$attribute}, false);
+                        $validator->check($data, $obj);
+                        if ($validator->getErrors()) {
+                            foreach ($validator->getErrors() as $error) {
+                                $this->addError($error['property'], "{$error['property']}: {$error['message']}");
+                            }
+                        }
+
+                    },
+                ],
+            ]
+        );
+    }
+
     /**
      * @inheritdoc
      */
     public function afterFind()
     {
         parent::afterFind();
-        $this->setNameId($this->domain_id.'_'.$this->access_domain);
+        $this->setNameId($this->domain_id . '_' . $this->access_domain);
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        TagDependency::invalidate(\Yii::$app->cache, 'pages');
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        if (!$this->isDeletable) {
+            // send message to user so he knows whats going on
+            Yii::$app->session->addFlash('info', Yii::t('pages', 'You can not delete this record. There is still a translation that uses this entry as a reference.'));
+        }
+
+        return parent::beforeDelete();
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        TagDependency::invalidate(\Yii::$app->cache, 'pages');
     }
 
     /**
-     * Override isDisabled method if you need as shown in the
-     * example below. You can override similarly other methods
-     * like isActive, isMovable etc.
+     * Disallow node movement when user has no update permissions
      *
+     * @param string $dir
      * @return bool
      */
-    public function isDisabled()
+    public function isMovable($dir)
     {
-        return parent::isDisabled();
+        if (!$this->hasPermission('access_update')) {
+            return false;
+        }
+
+        return parent::isMovable($dir);
     }
 
     /**
@@ -93,8 +161,8 @@ class Tree extends BaseTree
 
         // find all root nodes but global access domain nodes
         $rootNodes = self::find()
-            ->where([Tree::ATTR_LVL => Tree::ROOT_NODE_LVL])
-            ->andWhere(['NOT', [Tree::ATTR_ACCESS_DOMAIN => Tree::GLOBAL_ACCESS_DOMAIN]])
+            ->where([self::ATTR_LVL => self::ROOT_NODE_LVL])
+            ->andWhere(['NOT', [self::ATTR_ACCESS_DOMAIN => self::GLOBAL_ACCESS_DOMAIN]])
             ->all();
 
         if (empty($rootNodes)) {
@@ -128,6 +196,7 @@ class Tree extends BaseTree
      * Get all icon constants for dropdown list in example
      * @param bool $html whether to render icon as array value prefix
      * @return array
+     * @throws \ReflectionException
      */
     public static function optsIcon($html = false)
     {
@@ -135,7 +204,7 @@ class Tree extends BaseTree
         foreach ((new \ReflectionClass(FA::class))->getConstants() as $constant) {
             $key = $constant;
 
-            $result[$key] = ($html)
+            $result[$key] = $html
                 ? FA::icon($constant) . '&nbsp;&nbsp;' . $constant
                 : $constant;
         }
@@ -145,7 +214,7 @@ class Tree extends BaseTree
     /**
      * @param array $additionalParams
      *
-     * @return null|string
+     * @return array|string|null
      */
     public function createRoute($additionalParams = [])
     {
@@ -160,7 +229,7 @@ class Tree extends BaseTree
         // us this params only for the default page route
         if ($this->route === self::DEFAULT_PAGE_ROUTE) {
             $pageId = $this->id;
-            $slug = ($this->page_title)
+            $slug = $this->page_title
                 ? Inflector::slug($this->page_title)
                 : Inflector::slug($this->name);
             $slugFolder = $this->resolvePagePath(true);
@@ -205,15 +274,25 @@ class Tree extends BaseTree
      */
     public static function getMenuItems($domainId, $checkUserPermissions = false, array $linkOptions = [])
     {
+        $cache = Yii::$app->cache;
+        $cacheKey = Json::encode([self::class, Yii::$app->language, $domainId, $checkUserPermissions, $linkOptions]);
+        $data = $cache->get($cacheKey);
+
+        if ($data !== false && Yii::$app->user->isGuest) {
+            return $data;
+        }
+
+        Yii::trace(['Building menu items', $cacheKey], __METHOD__);
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
-        $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)];
-        if (!Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
-            $rootCondition[self::ATTR_DISABLED] = self::NOT_DISABLED;
-        }
+        $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)];
         $rootNode = self::findOne($rootCondition);
 
         if ($rootNode === null) {
+            return [];
+        }
+
+        if ($rootNode->isDisabled() && !Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
             return [];
         }
 
@@ -225,23 +304,29 @@ class Tree extends BaseTree
         $leavesQuery = $rootNode->children()->andWhere(
             [
                 self::ATTR_ACTIVE => self::ACTIVE,
-                self::ATTR_VISIBLE => self::VISIBLE,
-                self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN,mb_strtolower(\Yii::$app->language)],
+                self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)],
             ]
         );
-        if (!Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
-            $leavesQuery->andWhere(
-                [
-                    self::ATTR_DISABLED => self::NOT_DISABLED,
-                ]
-            );
-        }
-
+        $leavesQuery->with('translationsMeta');
         $leaves = $leavesQuery->all();
 
         if ($leaves === null) {
             return [];
         }
+
+        // filter out invisible models and disabled models (if needed)
+        // this is not done in the SQL query to reflect translation_meta values for "visible" and "disabled" attributes.
+        $canAccessPages = Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION);
+        $leaves = array_filter($leaves, function (Tree $leave) use ($canAccessPages) {
+            if (!$leave->isVisible()) {
+                return false;
+            }
+            if (!$canAccessPages && $leave->isDisabled()) {
+                return false;
+            }
+            return true;
+        });
+
 
         // tree mapping and leave stack
         $treeMap = [];
@@ -256,20 +341,33 @@ class Tree extends BaseTree
                     $linkOptions,
                     [
                         'data-page-id' => $page->id,
+                        'data-domain-id' => $page->domain_id,
                         'data-lvl' => $page->lvl,
+                        'class' => $page->isDisabled() ? 'dmstr-pages-invisible-frontend' : ''
                     ]
                 );
 
+                $visible = true;
+                if ($checkUserPermissions) {
+                    if ($page->access_read !== '*') {
+                        \Yii::trace('Checking Access_read permissions for page ' . $page->id, __METHOD__);
+                        $visible = Yii::$app->user->can($page->access_read);
+                    } else if (!empty($page->route)) {
+                        $visible = Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]);
+                    }
+                }
+
+
                 // prepare item template
                 $itemTemplate = [
-                    'label' => $page->name,
-                    'url' => $page->createRoute(),
+                    'label' => $page->getMenuLabel(),
+                    'url' => $page->createRoute() ?: null,
                     'icon' => $page->icon,
                     'linkOptions' => $linkOptions,
-                    // always show node, if it's a folder (TODO add check permissions)
-                    'visible' => ($checkUserPermissions && !empty($page->route)) ?
-                        Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]) :
-                        true,
+                    'dropDownOptions' => [
+                        'data-parent-domain-id' => $page->domain_id,
+                    ],
+                    'visible' => $visible,
                 ];
                 $item = $itemTemplate;
 
@@ -300,7 +398,19 @@ class Tree extends BaseTree
             }
         }
 
-        return array_filter($treeMap);
+        $data = array_filter($treeMap);
+
+        if (Yii::$app->user->isGuest) {
+            $cacheDependency = new TagDependency(['tags' => 'pages']);
+            $cache->set($cacheKey, $data, 3600, $cacheDependency);
+        }
+
+        return $data;
+    }
+
+    public function getMenuLabel()
+    {
+        return !empty($this->name) ? htmlentities($this->name) : "({$this->domain_id})";
     }
 
     /**
@@ -328,7 +438,21 @@ class Tree extends BaseTree
      *
      * @return null|string
      */
-    protected function resolvePagePath($activeNode = false){
+    protected function resolvePagePath($activeNode = false)
+    {
+
+        // get TreeCache singleton instance as cache
+        $cache = TreeCache::getInstance();
+
+        // define cache key fro model id + app->lang
+        $cacheKey = $this->id . Yii::$app->language;
+
+        // if set, return path from cache
+        if (isset($cache->path[$cacheKey])) {
+            return $cache->path[$cacheKey];
+        }
+
+        Yii::beginProfile('Resolving page path', __METHOD__);
 
         // return no path for root nodes
         $parent = $this->parents(1)->one();
@@ -344,16 +468,20 @@ class Tree extends BaseTree
 
         if (!$activeNode && $parent->isRoot()) {
             // start-point for building path
-            $path = Inflector::slug(($this->page_title?:$this->name));
+            $path = Inflector::slug(($this->page_title ?: $this->name));
         } else if (!$activeNode) {
             // if not active, build up path
-            $path = $parent->resolvePagePath(false).'/'.Inflector::slug(($this->page_title?:$this->name));
+            $path = $parent->resolvePagePath() . '/' . Inflector::slug(($this->page_title ?: $this->name));
         } else if ($activeNode && !$parent->isRoot()) {
             // building path finished
-            $path = $parent->resolvePagePath(false);
+            $path = $parent->resolvePagePath();
         } else {
             $path = null;
         }
+
+        // store path in cache
+        $cache->path[$cacheKey] = $path;
+        Yii::endProfile('Resolving page path', __METHOD__);
 
         return $path;
     }
@@ -365,7 +493,7 @@ class Tree extends BaseTree
      */
     public function isPage()
     {
-        switch(true) {
+        switch (true) {
             case $this->isRoot():
             case $this->isLeaf():
             case $this->isNewRecord:
@@ -388,14 +516,14 @@ class Tree extends BaseTree
      */
     public function sibling($targetLanguage, $sourceId = null, $route = self::DEFAULT_PAGE_ROUTE)
     {
-        if (strpos(Tree::DEFAULT_PAGE_ROUTE, $route) === false) {
+        if (strpos(self::DEFAULT_PAGE_ROUTE, $route) === false) {
             return null;
         }
 
         // Disable access trait access_domain checks in find
         self::$activeAccessTrait = false;
 
-        if ($sourceId === null && ! $this->isNewRecord) {
+        if ($sourceId === null && !$this->isNewRecord) {
             $sourcePage = $this;
         } else {
             /**
@@ -405,7 +533,7 @@ class Tree extends BaseTree
              */
             $sourcePage = self::findOne($sourceId);
             if ($sourcePage === null) {
-                $message   = \Yii::t(
+                $message = \Yii::t(
                     'pages',
                     'Page with id {PAGE_ID} not found!"',
                     ['PAGE_ID' => $sourceId]
@@ -422,17 +550,17 @@ class Tree extends BaseTree
          */
         $destinationPage = self::findOne(
             [
-                self::ATTR_DOMAIN_ID     => $sourcePage->domain_id,
+                self::ATTR_DOMAIN_ID => $sourcePage->domain_id,
                 self::ATTR_ACCESS_DOMAIN => mb_strtolower($targetLanguage)
             ]
         );
         if ($destinationPage === null) {
-            $message   = \Yii::t(
+            $message = \Yii::t(
                 'pages',
                 'Page with domain_id {DOMAIN_ID} in language "{LANGUAGE}" does not exists!',
                 [
                     'DOMAIN_ID' => $sourcePage->domain_id,
-                    'LANGUAGE'  => mb_strtolower($targetLanguage)
+                    'LANGUAGE' => mb_strtolower($targetLanguage)
                 ]
             );
             $errorCode = 404;
@@ -450,11 +578,38 @@ class Tree extends BaseTree
      */
     protected function outputError($message, $code)
     {
-        if (php_sapi_name() === 'cli') {
+        if (PHP_SAPI === 'cli') {
             throw new \yii\console\Exception($message, $code);
-        } else {
-            \Yii::$app->session->set('error', $code . ': ' . $message);
         }
+
+        \Yii::$app->session->set('error', $code . ': ' . $message);
         return false;
+    }
+
+    /**
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getRequestParamsSchema()
+    {
+        return PageHelper::routeToSchema($this->route);
+    }
+
+
+    /**
+     * Checks if model can be deleted in case it has only one (or less) translation left
+     *
+     * @return bool
+     */
+    public function getIsDeletable()
+    {
+        /** @var TranslateableBehavior $translatableBehavior */
+        $translatableBehavior = $this->getBehavior('translatable');
+
+        if ($translatableBehavior->restrictDeletion === TranslateableBehavior::DELETE_LAST) {
+            return (int)$this->getTranslations()->count() <= 1;
+        }
+
+        return true;
     }
 }

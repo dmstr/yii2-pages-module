@@ -3,6 +3,7 @@
 namespace dmstr\modules\pages\assets;
 
 use yii\web\AssetBundle;
+use yii\web\JqueryAsset;
 
 /**
  * @link http://www.diemeisterei.de/
@@ -12,13 +13,18 @@ use yii\web\AssetBundle;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class PagesAsset extends AssetBundle
+class PagesBackendAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/dmstr/yii2-pages-module/assets/less';
+    public $sourcePath = __DIR__.'/backend';
     public $css = [
-        'module.less',
+        #'less/backend.less',
+    ];
+    public $js = [
+        'page-route-items.js',
+        'page-select.js'
     ];
     public $depends = [
+        JqueryAsset::class,
         'rmrevin\yii\fontawesome\AssetBundle',
     ];
 }

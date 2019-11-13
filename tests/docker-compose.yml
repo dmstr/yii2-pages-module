@@ -20,7 +20,11 @@ services:
           - YII_DEBUG=1
           - APP_CONFIG_FILE=/repo/tests/project/config/test.php
         volumes:
-          - ./..:/repo
+          # mount this repository read-only
+          - ./..:/repo:ro
+          # mount tests
+          - ./:/repo/tests
+          # composer cache
           - ~/.composer-docker/cache:/root/.composer/cache:delegated
         networks:
           default:

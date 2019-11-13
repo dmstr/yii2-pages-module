@@ -17,6 +17,8 @@ use yii\console\Application;
  * Class Module.
  *
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
+ *
+ * @property mixed|object $localizedRootNode
  */
 class Module extends \yii\base\Module
 {
@@ -62,23 +64,29 @@ class Module extends \yii\base\Module
         if ($this->checkSettingsInstalled()) {
             $routes = explode("\n", \Yii::$app->settings->get('pages.availableRoutes'));
             foreach ($routes as $route) {
-                $this->availableRoutes[trim($route)] = trim($route);
+                $routeEntry = trim($route);
+                $this->availableRoutes[$routeEntry] = $routeEntry;
             }
 
             $views = explode("\n", \Yii::$app->settings->get('pages.availableViews'));
             foreach ($views as $view) {
-                $this->availableViews[trim($view)] = trim($view);
+                // use custom name if appended after a semicolon (;)
+                $viewEntry = explode(';', trim($view));
+                $this->availableViews[$viewEntry[0]] = $viewEntry[1] ?? $viewEntry[0];
             }
 
             if (!\Yii::$app instanceof Application && \Yii::$app->has('user') && \Yii::$app->user->can(Tree::GLOBAL_ACCESS_PERMISSION)) {
                 $globalRoutes = explode("\n", \Yii::$app->settings->get('pages.availableGlobalRoutes'));
-                foreach ($globalRoutes as $route) {
-                    $this->availableRoutes[trim($route)] = trim($route);
+                foreach ($globalRoutes as $globalRoute) {
+                    $globalRouteEntry = trim($globalRoute);
+                    $this->availableRoutes[$globalRouteEntry] = $globalRouteEntry;
                 }
 
                 $globalViews = explode("\n", \Yii::$app->settings->get('pages.availableGlobalViews'));
-                foreach ($globalViews as $view) {
-                    $this->availableViews[trim($view)] = trim($view);
+                foreach ($globalViews as $globalView) {
+                    // use custom name if appended after a semicolon (;)
+                    $globalViewEntry = explode(';', trim($globalView));
+                    $this->availableViews[$globalViewEntry[0]] = $globalViewEntry[1] ?? $globalViewEntry[0];
                 }
             }
         }
@@ -91,13 +99,16 @@ class Module extends \yii\base\Module
     {
         $localizedRoot = Tree::ROOT_NODE_PREFIX.'_'.\Yii::$app->language;
         \Yii::trace('localizedRoot: '.$localizedRoot, __METHOD__);
-        return Tree::findOne(
+        $rootNode = Tree::findOne(
             [
                 Tree::ATTR_DOMAIN_ID => Tree::ROOT_NODE_PREFIX,
                 Tree::ATTR_ACTIVE => Tree::ACTIVE,
-                Tree::ATTR_VISIBLE => Tree::VISIBLE,
             ]
         );
+        if ($rootNode !== null && !$rootNode->isVisible()) {
+            return null;
+        }
+        return $rootNode;
     }
 
     /**
@@ -106,9 +117,6 @@ class Module extends \yii\base\Module
      */
     private function checkSettingsInstalled()
     {
-        if (\Yii::$app->hasModule('settings') && \Yii::$app->has('settings')) {
-            return true;
-        }
-        return false;
+        return \Yii::$app->hasModule('settings') && \Yii::$app->has('settings');
     }
 }

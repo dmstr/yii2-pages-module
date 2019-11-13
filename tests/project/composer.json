@@ -10,8 +10,7 @@
         }
     ],
     "require": {
-        "wikimedia/composer-merge-plugin": "~1.4",
-        "dmstr/yii2-pages-module": "dev-develop"
+        "wikimedia/composer-merge-plugin": "~1.4"
     },
     "extra": {
         "merge-plugin": {

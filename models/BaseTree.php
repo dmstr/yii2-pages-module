@@ -12,9 +12,14 @@ namespace dmstr\modules\pages\models;
 use dmstr\db\traits\ActiveRecordAccessTrait;
 use dmstr\modules\pages\Module as PagesModule;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
 use yii\web\HttpException;
+use bedezign\yii2\audit\AuditTrailBehavior;
+use dosamigos\translateable\TranslateableBehavior;
+use dmstr\modules\pages\models\TreeTranslation;
 
 /**
  * Class BaseTree
@@ -317,7 +322,7 @@ class BaseTree extends \kartik\tree\models\Tree
      */
     public static function tableName()
     {
-        return 'dmstr_page';
+        return '{{%dmstr_page}}';
     }
 
     /**
@@ -351,21 +356,66 @@ class BaseTree extends \kartik\tree\models\Tree
      */
     public function behaviors()
     {
-        return ArrayHelper::merge(
-            parent::behaviors(),
-            [
-                'audit' => [
-                    'class' => 'bedezign\yii2\audit\AuditTrailBehavior'
-                ],
-                'timestamp' =>[
-                    'class'              => TimestampBehavior::className(),
-                    'createdAtAttribute' => self::ATTR_CREATED_AT,
-                    'updatedAtAttribute' => self::ATTR_UPDATED_AT,
-                    'value'              => new Expression('NOW()'),
-                ],
-            ]
-        );
+
+        $behaviors = parent::behaviors();
+
+        $behaviors['audit'] = [
+            'class' => AuditTrailBehavior::class
+        ];
+
+        $behaviors['timestamp'] = [
+            'class'              => TimestampBehavior::class,
+            'createdAtAttribute' => self::ATTR_CREATED_AT,
+            'updatedAtAttribute' => self::ATTR_UPDATED_AT,
+            'value'              => new Expression('NOW()'),
+        ];
+
+        $behaviors['translatable'] = [
+            'class' => TranslateableBehavior::class,
+            'languageField' => 'language',
+            'skipSavingDuplicateTranslation' => true,
+            'translationAttributes' => [
+                self::ATTR_NAME,
+                self::ATTR_PAGE_TITLE,
+                self::ATTR_DEFAULT_META_KEYWORDS,
+                self::ATTR_DEFAULT_META_DESCRIPTION,
+            ],
+            'deleteEvent' => ActiveRecord::EVENT_BEFORE_DELETE,
+            'restrictDeletion' => TranslateableBehavior::DELETE_LAST,
+        ];
+
+        $behaviors['translation_meta'] = [
+            'class' => TranslateableBehavior::class,
+            'relation' => 'translationsMeta',
+            'languageField' => 'language',
+            'fallbackLanguage' => false,
+            'skipSavingDuplicateTranslation' => false,
+            'translationAttributes' => [
+                self::ATTR_DISABLED,
+                self::ATTR_VISIBLE,
+            ],
+            'deleteEvent' => ActiveRecord::EVENT_BEFORE_DELETE,
+        ];
+
+        return $behaviors;
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTranslations()
+    {
+        return $this->hasMany(TreeTranslation::class, ['page_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTranslationsMeta()
+    {
+        return $this->hasMany(TreeTranslationMeta::class, ['page_id' => 'id']);
+    }
+
 
     /**
      * @inheritdoc
@@ -385,11 +435,17 @@ class BaseTree extends \kartik\tree\models\Tree
                 [
                     [
                         self::ATTR_ACCESS_READ,
+                    ],
+                    'default',
+                    'value' => self::$_all
+                ],
+                [
+                    [
                         self::ATTR_ACCESS_UPDATE,
                         self::ATTR_ACCESS_DELETE
                     ],
                     'default',
-                    'value' => self::$_all
+                    'value' => static::getDefaultAccessUpdateDelete()
                 ],
                 [
                     [self::ATTR_DOMAIN_ID, self::ATTR_ACCESS_DOMAIN],
@@ -475,6 +531,24 @@ class BaseTree extends \kartik\tree\models\Tree
                     ],
                     'integer',
                     'integerOnly' => true,
+                ],
+                [
+                    [
+                        self::ATTR_ROOT,
+                        self::ATTR_ACCESS_OWNER,
+                        self::ATTR_COLLAPSED,
+                        self::ATTR_ICON_TYPE
+                    ],
+                    'filter',
+                    'filter' => 'intval'
+                ],
+                [
+                    [
+                        self::ATTR_PAGE_TITLE,
+                        self::ATTR_DEFAULT_META_KEYWORDS,
+                        self::ATTR_DEFAULT_META_DESCRIPTION,
+                    ],
+                    'default',
                 ],
                 [
                     [
