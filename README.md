@@ -215,6 +215,10 @@ Url: `/pages/copy`
 
 **RBAC permission**
 
+`pages.globalAccess`
+
+Whether a user can select `*` (global) for a menu item.
+
 `pages_copy`
 
 **Usage**
