@@ -9,13 +9,13 @@
 
 namespace dmstr\modules\pages;
 
-use dmstr\modules\pages\components\PageUrlRule;
-use dmstr\modules\pages\models\Tree;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
+use kartik\tree\Module As TreeModule;
 
 /**
  * Class Bootstrap
+ *
  * @package dmstr\modules\pages
  * @author Marc Mautz <marc@diemeisterei.de>
  */
@@ -36,7 +36,7 @@ class Bootstrap implements BootstrapInterface
             $app->setModule(
                 'treemanager',
                 [
-                    'class' => 'kartik\tree\Module',
+                    'class' => TreeModule::class,
                     'layout' => '@admin-views/layouts/main',
                     'treeViewSettings' => [
                         'nodeView' => '@vendor/dmstr/yii2-pages-module/views/treeview/_form',
@@ -46,26 +46,5 @@ class Bootstrap implements BootstrapInterface
                 ]
             );
         }
-
-        // provide default page url rule
-        $app->urlManager->addRules(
-            [
-                // pages default page route
-                ['class' => PageUrlRule::className()],
-                [
-                    'pattern' => 'p/<'.Tree::REQUEST_PARAM_PATH.':[a-zA-Z0-9_\-\./\+]*>/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html',
-                    'route' => 'pages/default/page',
-                    'encodeParams' => false,
-                ],
-                'p/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
-
-                // Backward compatibility
-                'page/<'.Tree::REQUEST_PARAM_PATH.':[a-zA-Z0-9_\-\./\+]*>/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
-                'page/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>.html' => 'pages/default/page',
-                '<'.Tree::REQUEST_PARAM_PATH.':[a-zA-Z0-9_\-\./\+]*>/<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>' => 'pages/default/page',
-                '<'.Tree::REQUEST_PARAM_SLUG.':[a-zA-Z0-9_\-\.]*>-<'.Tree::REQUEST_PARAM_ID.':[0-9]*>' => 'pages/default/page',
-            ],
-            true
-        );
     }
 }

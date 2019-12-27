@@ -2,7 +2,6 @@
 
 // @group mandatory
 
-use dmstr\modules\pages\tests\codeception\_pages\LoginPage;
 
 $I = new E2eTester($scenario);
 $I->wantTo('ensure that Pages works');

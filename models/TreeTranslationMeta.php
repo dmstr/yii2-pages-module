@@ -23,6 +23,10 @@ use yii\db\Expression;
 class TreeTranslationMeta extends ActiveRecord
 {
 
+    /**
+     * @param $insert
+     * @param $changedAttributes
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

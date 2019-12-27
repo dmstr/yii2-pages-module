@@ -28,14 +28,9 @@ use JsonSchema\Validator;
  * This is the tree model class, extended from \kartik\tree\models\Tree.
  *
  * @property string $name
- * @property string $page_title
  * @property string $name_id
  * @property string $domain_id
- * @property string $slug
  * @property string $route
- * @property string $view
- * @property string $default_meta_keywords
- * @property string $default_meta_description
  * @property string $request_params
  * @property int $access_owner
  * @property string $access_domain
@@ -66,7 +61,7 @@ class Tree extends BaseTree
             [
                 [
                     self::ATTR_REQUEST_PARAMS,
-                    function ($attribute, $params) {
+                    function ($attribute) {
 
                         $validator = new Validator();
 
@@ -94,6 +89,10 @@ class Tree extends BaseTree
         $this->setNameId($this->domain_id . '_' . $this->access_domain);
     }
 
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -124,6 +123,7 @@ class Tree extends BaseTree
      * Disallow node movement when user has no update permissions
      *
      * @param string $dir
+     *
      * @return bool
      */
     public function isMovable($dir)
@@ -152,6 +152,7 @@ class Tree extends BaseTree
 
     /**
      * Renders all available root nodes as mapped array, `id` => `name_id`
+     *
      * @return array
      */
     public static function optsSourceRootId()
@@ -173,16 +174,6 @@ class Tree extends BaseTree
     }
 
     /**
-     * Get all configured views
-     *
-     * @return array list of options
-     */
-    public static function optsView()
-    {
-        return \Yii::$app->getModule(PagesModule::NAME)->availableViews;
-    }
-
-    /**
      * Get all configured routs
      *
      * @return array list of options
@@ -194,7 +185,9 @@ class Tree extends BaseTree
 
     /**
      * Get all icon constants for dropdown list in example
+     *
      * @param bool $html whether to render icon as array value prefix
+     *
      * @return array
      * @throws \ReflectionException
      */
@@ -222,25 +215,16 @@ class Tree extends BaseTree
             return null;
         }
 
-        $pageId = null;
-        $slug = null;
-        $slugFolder = null;
-
-        // us this params only for the default page route
-        if ($this->route === self::DEFAULT_PAGE_ROUTE) {
-            $pageId = $this->id;
-            $slug = $this->page_title
-                ? Inflector::slug($this->page_title)
-                : Inflector::slug($this->name);
-            $slugFolder = $this->resolvePagePath(true);
-        }
-
         $route = [
             $this->route,
-            self::REQUEST_PARAM_ID => $pageId,
-            self::REQUEST_PARAM_SLUG => $slug,
-            self::REQUEST_PARAM_PATH => $slugFolder
+            'slugged_menu_name' => Inflector::slug($this->name)
         ];
+
+        $resolved_path = Inflector::slug($this->resolvePagePath(true));
+
+        if (!empty($resolved_path)) {
+            $route['slugged_menu_path'] = $resolved_path;
+        }
 
         if (Json::decode($this->request_params)) {
             $route = ArrayHelper::merge($route, Json::decode($this->request_params));
@@ -282,7 +266,7 @@ class Tree extends BaseTree
             return $data;
         }
 
-        Yii::trace(['Building menu items', $cacheKey], __METHOD__);
+        Yii::debug(['Building menu items', $cacheKey], __METHOD__);
         // Get root node by domain id
         $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
         $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)];
@@ -296,7 +280,7 @@ class Tree extends BaseTree
             return [];
         }
 
-        /*
+        /**
          * @var $leaves Tree[]
          */
 
@@ -350,7 +334,7 @@ class Tree extends BaseTree
                 $visible = true;
                 if ($checkUserPermissions) {
                     if ($page->access_read !== '*') {
-                        \Yii::trace('Checking Access_read permissions for page ' . $page->id, __METHOD__);
+                        \Yii::debug('Checking Access_read permissions for page ' . $page->id, __METHOD__);
                         $visible = Yii::$app->user->can($page->access_read);
                     } else if (!empty($page->route)) {
                         $visible = Yii::$app->user->can(substr(str_replace('/', '_', $page->route), 1), ['route' => true]);
@@ -408,6 +392,9 @@ class Tree extends BaseTree
         return $data;
     }
 
+    /**
+     * @return string
+     */
     public function getMenuLabel()
     {
         return !empty($this->name) ? htmlentities($this->name) : "({$this->domain_id})";
@@ -468,10 +455,10 @@ class Tree extends BaseTree
 
         if (!$activeNode && $parent->isRoot()) {
             // start-point for building path
-            $path = Inflector::slug(($this->page_title ?: $this->name));
+            $path = Inflector::slug($this->name);
         } else if (!$activeNode) {
             // if not active, build up path
-            $path = $parent->resolvePagePath() . '/' . Inflector::slug(($this->page_title ?: $this->name));
+            $path = $parent->resolvePagePath() . '/' . Inflector::slug($this->name);
         } else if ($activeNode && !$parent->isRoot()) {
             // building path finished
             $path = $parent->resolvePagePath();
@@ -509,16 +496,13 @@ class Tree extends BaseTree
      *
      * @param string $targetLanguage
      * @param integer $sourceId
-     * @param string $route
      *
      * @return Tree|null
      * @throws \yii\console\Exception
      */
-    public function sibling($targetLanguage, $sourceId = null, $route = self::DEFAULT_PAGE_ROUTE)
+    public function sibling($targetLanguage, $sourceId = null)
     {
-        if (strpos(self::DEFAULT_PAGE_ROUTE, $route) === false) {
-            return null;
-        }
+
 
         // Disable access trait access_domain checks in find
         self::$activeAccessTrait = false;

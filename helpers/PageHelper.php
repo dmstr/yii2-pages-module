@@ -39,6 +39,9 @@ class PageHelper
         return static::defaultJsonSchema();
     }
 
+    /**
+     * @return string
+     */
     public static function defaultJsonSchema()
     {
         return <<<JSON

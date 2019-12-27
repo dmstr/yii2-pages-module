@@ -1,7 +1,5 @@
 $(function () {
 
-  // var viewInput = $('.field-tree-view');
-
   $('button.kv-create').on('click', function () {
     window.jsonEditors = [];
   })
@@ -28,9 +26,7 @@ $(function () {
               schema: JSON.parse(schema),
               theme: "bootstrap3",
               ajax: true,
-              disable_collapse: true,
-              // disable_edit_json: true,
-              // disable_properties: true
+              disable_collapse: true
             });
 
             // inital update of value

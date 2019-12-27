@@ -23,6 +23,10 @@ use yii\db\Expression;
  */
 class TreeTranslation extends ActiveRecord
 {
+    /**
+     * @param $insert
+     * @param $changedAttributes
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -76,15 +80,6 @@ class TreeTranslation extends ActiveRecord
             [['page_id'], 'integer'],
             [['language'], 'required'],
             [['name'], 'string', 'max' => 60],
-            [
-                [
-                    BaseTree::ATTR_PAGE_TITLE,
-                    BaseTree::ATTR_DEFAULT_META_KEYWORDS,
-                ],
-                'string',
-                'max' => 255,
-            ],
-            [[BaseTree::ATTR_DEFAULT_META_DESCRIPTION], 'safe'],
             [
                 ['page_id'],
                 'exist',

@@ -15,16 +15,18 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
-use yii\helpers\VarDumper;
 use yii\web\HttpException;
 use bedezign\yii2\audit\AuditTrailBehavior;
 use dosamigos\translateable\TranslateableBehavior;
-use dmstr\modules\pages\models\TreeTranslation;
 
 /**
  * Class BaseTree
+ *
  * @package dmstr\modules\pages\models
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
+ *
+ * @property \yii\db\ActiveQuery $translations
+ * @property \yii\db\ActiveQuery $translationsMeta
  */
 class BaseTree extends \kartik\tree\models\Tree
 {
@@ -111,26 +113,6 @@ class BaseTree extends \kartik\tree\models\Tree
     const ROOT_NODE_LVL = 0;
 
     /**
-     * The default page route
-     */
-    const DEFAULT_PAGE_ROUTE = '/pages/default/page';
-
-    /**
-     * The request param for a page identifier
-     */
-    const REQUEST_PARAM_ID = 'pageId';
-
-    /**
-     * The request param for a page slug
-     */
-    const REQUEST_PARAM_SLUG = 'pageSlug';
-
-    /**
-     * The request param for a page path
-     */
-    const REQUEST_PARAM_PATH = 'pagePath';
-
-    /**
      * Column attribute 'id'
      */
     const ATTR_ID = 'id';
@@ -146,11 +128,6 @@ class BaseTree extends \kartik\tree\models\Tree
     const ATTR_DOMAIN_ID = 'domain_id';
 
     /**
-     * Column attribute 'slug'
-     */
-    const ATTR_SLUG = 'slug';
-
-    /**
      * Column attribute 'root'
      */
     const ATTR_ROOT = 'root';
@@ -161,29 +138,9 @@ class BaseTree extends \kartik\tree\models\Tree
     const ATTR_LVL = 'lvl';
 
     /**
-     * Column attribute 'page_title'
-     */
-    const ATTR_PAGE_TITLE = 'page_title';
-
-    /**
      * Column attribute 'route'
      */
     const ATTR_ROUTE = 'route';
-
-    /**
-     * Column attribute 'view'
-     */
-    const ATTR_VIEW = 'view';
-
-    /**
-     * Column attribute 'default_meta_keywords'
-     */
-    const ATTR_DEFAULT_META_KEYWORDS = 'default_meta_keywords';
-
-    /**
-     * Column attribute 'default_meta_description'
-     */
-    const ATTR_DEFAULT_META_DESCRIPTION = 'default_meta_description';
 
     /**
      * Column attribute 'request_params'
@@ -274,11 +231,6 @@ class BaseTree extends \kartik\tree\models\Tree
      * RBAC permission name to manage global access domain page nodes
      */
     const GLOBAL_ACCESS_PERMISSION = 'pages.globalAccess';
-
-    /**
-     * RBAC permission name to copy page root nodes
-     */
-    const COPY_ACCESS_PERMISSION = 'pages_copy';
 
     /**
      * RBAC permission name to copy page root nodes
@@ -375,10 +327,7 @@ class BaseTree extends \kartik\tree\models\Tree
             'languageField' => 'language',
             'skipSavingDuplicateTranslation' => true,
             'translationAttributes' => [
-                self::ATTR_NAME,
-                self::ATTR_PAGE_TITLE,
-                self::ATTR_DEFAULT_META_KEYWORDS,
-                self::ATTR_DEFAULT_META_DESCRIPTION,
+                self::ATTR_NAME
             ],
             'deleteEvent' => ActiveRecord::EVENT_BEFORE_DELETE,
             'restrictDeletion' => TranslateableBehavior::DELETE_LAST,
@@ -465,12 +414,8 @@ class BaseTree extends \kartik\tree\models\Tree
                 [
                     [
                         self::ATTR_DOMAIN_ID,
-                        self::ATTR_PAGE_TITLE,
-                        self::ATTR_SLUG,
                         self::ATTR_ROUTE,
-                        self::ATTR_VIEW,
                         self::ATTR_ICON,
-                        self::ATTR_DEFAULT_META_KEYWORDS,
                         self::ATTR_REQUEST_PARAMS,
                         self::ATTR_ACCESS_READ,
                         self::ATTR_ACCESS_UPDATE,
@@ -484,24 +429,6 @@ class BaseTree extends \kartik\tree\models\Tree
                     'match',
                     'pattern' => '@^/[^/]@i',
                     'message' => \Yii::t('pages', '{0} should begin with one slash!', ['{attribute}'])
-                ],
-                [
-                    'view',
-                    'required',
-                    'when' => function ($model) {
-                        return $model->route === self::DEFAULT_PAGE_ROUTE;
-                    },
-                    'whenClient' => 'function (attribute, value) {
-                        return $("#tree-route").find(":selected").val() == "' . self::DEFAULT_PAGE_ROUTE . '";
-                    }',
-                    'message' => 'Route ' . self::DEFAULT_PAGE_ROUTE . ' requires a view.'
-                ],
-                [
-                    [
-                        self::ATTR_DEFAULT_META_DESCRIPTION,
-                    ],
-                    'string',
-                    'max' => 160,
                 ],
                 [
                     [
@@ -544,22 +471,9 @@ class BaseTree extends \kartik\tree\models\Tree
                 ],
                 [
                     [
-                        self::ATTR_PAGE_TITLE,
-                        self::ATTR_DEFAULT_META_KEYWORDS,
-                        self::ATTR_DEFAULT_META_DESCRIPTION,
-                    ],
-                    'default',
-                ],
-                [
-                    [
                         self::ATTR_DOMAIN_ID,
-                        self::ATTR_PAGE_TITLE,
                         self::ATTR_NAME,
-                        self::ATTR_SLUG,
                         self::ATTR_ROUTE,
-                        self::ATTR_VIEW,
-                        self::ATTR_DEFAULT_META_KEYWORDS,
-                        self::ATTR_DEFAULT_META_DESCRIPTION,
                         self::ATTR_REQUEST_PARAMS,
                         self::ATTR_ACCESS_DOMAIN,
                         self::ATTR_ACCESS_OWNER,

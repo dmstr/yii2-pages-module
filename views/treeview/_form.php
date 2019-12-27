@@ -3,6 +3,7 @@
 namespace dmstr\modules\pages\views\treeview;
 
 use dmstr\jsoneditor\JsonEditorWidget;
+use dmstr\widgets\AccessInput;
 use insolita\wgadminlte\Box;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
@@ -28,7 +29,7 @@ use yii\helpers\Url;
  * @var $currUrl string
  * @var $modelClass string
  * @var $softDelete boolean
- * @var $iconsList string
+ * @var $iconsList array
  * @var $nameAttribute string
  * @var $iconAttribute string
  * @var $iconTypeAttribute string
@@ -158,7 +159,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
         </div>
     <?php else: ?>
         <?= Html::a(
-            '<span class="glyphicon glyphicon-remove"></span> ' . \Yii::t('pages', 'Delete Translation'),
+             FA::icon(FA::_REMOVE). ' ' . \Yii::t('pages', 'Delete Translation'),
             ['/pages/crud/tree-translation/delete', 'id' => $node->getTranslation()->id],
             [
                 'class' => 'btn btn-default pull-right',
@@ -169,24 +170,10 @@ echo Html::hiddenInput('softDelete', $softDelete);
     <?php endif; ?>
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_NAME) ?>
         </div>
-
-        <div class="col-xs-12">
-            <?= $form->field($node, $node::ATTR_PAGE_TITLE)->textInput() ?>
-        </div>
     </div>
-
-    <div class="row">
-        <div class="col-xs-12 col-lg-12">
-            <?= $form->field($node, $node::ATTR_DEFAULT_META_KEYWORDS)->textInput() ?>
-        </div>
-        <div class="col-xs-12 col-lg-12">
-            <?= $form->field($node, $node::ATTR_DEFAULT_META_DESCRIPTION)->textarea(['rows' => 5]) ?>
-        </div>
-    </div>
-
 
     <div class="row">
         <div class="col-xs-12 col-sm-2">
@@ -212,8 +199,8 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
     <div class="row">
 
-        <div class="col-xs-12 col-sm-7">
-            <?= $form->field($node, $node::ATTR_DOMAIN_ID)->textInput() ?>
+        <div class="col-xs-12">
+            <?= $form->field($node, $node::ATTR_DOMAIN_ID) ?>
         </div>
 
         <div class="col-xs-12">
@@ -232,17 +219,6 @@ echo Html::hiddenInput('softDelete', $softDelete);
             );
             ?>
         </div>
-        <div class="col-xs-12">
-            <?= $form->field($node, $node::ATTR_VIEW)->widget(
-                Select2::class,
-                [
-
-                    'data' => $node::optsView(),
-                    'options' => ['placeholder' => Yii::t('pages', 'Select ...')],
-                    'pluginOptions' => ['allowClear' => true],
-                ]
-            ); ?>
-        </div>
 
         <div class="col-xs-12">
             <?= $form->field($node, $node::ATTR_REQUEST_PARAMS
@@ -253,9 +229,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                     'clientOptions' => [
                         'theme' => 'bootstrap3',
                         'ajax' => true,
-                        'disable_collapse' => true,
-//                        'disable_edit_json' => true,
-//                        'disable_properties' => true
+                        'disable_collapse' => true
                     ]
                 ]) ?>
         </div>
@@ -309,26 +283,32 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
     </div>
 
+    <?php Box::end() ?>
+
+<?php Box::begin([
+        'type' => Box::TYPE_WARNING
+    ])?>
+
     <div class="row">
 
 
         <div class="col-xs-12">
-            <?= \dmstr\widgets\AccessInput::widget(
+            <div class="text-warning">
+                <?=Yii::t('pages','{icon} Access permissions only effect displaying menu items, not accessing the route itself.',['icon' => FA::icon(FA::_WARNING)])?>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <?= AccessInput::widget(
                 [
                     'form' => $form,
-                    'model' => $node,
-                    'accessFields' => [
-                        'domain',
-                        'read',
-                        'update',
-                        'delete'
-                    ]
+                    'model' => $node
                 ]) ?>
         </div>
 
 
     </div>
-    <?php Box::end() ?>
+
+<?php Box::end(); ?>
 
 <?php else : ?>
     <div class="row">

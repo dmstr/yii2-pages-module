@@ -76,6 +76,11 @@ trait RequestParamActionTrait
 {
 
     // get json by route
+    /**
+     * @param $route
+     *
+     * @return string
+     */
     public function jsonFromAction($route)
     {
         try {
