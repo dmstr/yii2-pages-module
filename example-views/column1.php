@@ -11,7 +11,6 @@ use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
 
 /* @var $this yii\web\View */
-$this->title = $page->page_title;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
