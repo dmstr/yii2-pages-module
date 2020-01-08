@@ -168,8 +168,13 @@ JS;
             $this->view->title = $page->page_title ?: $page->name;
 
             // Register default SEO meta tags
-            $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords],'meta-keywords');
-            $this->view->registerMetaTag(['name' => 'description', 'content' => $page->default_meta_description], 'meta-description');
+            if (!empty($page->default_meta_keywords)) {
+                $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords],'meta-keywords');
+            }
+
+            if (!empty($page->default_meta_description)) {
+                $this->view->registerMetaTag(['name' => 'description', 'content' => $page->default_meta_description], 'meta-description');
+            }
 
             // Render view
             return $this->render($page->view, ['page' => $page]);
