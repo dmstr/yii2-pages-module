@@ -169,11 +169,11 @@ JS;
 
             // Register default SEO meta tags
             if (!empty($page->default_meta_keywords)) {
-                $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords],'meta-keywords');
+                $this->view->registerMetaTag(['name' => 'keywords', 'content' => $page->default_meta_keywords],'keywords');
             }
 
             if (!empty($page->default_meta_description)) {
-                $this->view->registerMetaTag(['name' => 'description', 'content' => $page->default_meta_description], 'meta-description');
+                $this->view->registerMetaTag(['name' => 'description', 'content' => $page->default_meta_description], 'description');
             }
 
             // Render view
