@@ -28,7 +28,7 @@
         "rmrevin/yii2-fontawesome": "~2.9",
         "dmstr/yii2-json-editor": "^0.3.5",
         "dmstr/yii2-web": "^0.4.0",
-        "dmstr/yii2-db": "1.0.0",
+        "dmstr/yii2-db": "^1.0.0",
         "dmstr/yii2-backend-module": "^1.0.0-beta12",
         "bedezign/yii2-audit": "^1.1",
         "mikehaertl/php-shellcommand": "^1.2.4",
