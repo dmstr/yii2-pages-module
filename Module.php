@@ -52,7 +52,22 @@ class Module extends \yii\base\Module
      * @var array
      */
     public $availableViews = [];
-    
+
+    /**
+     * Whether access_domain should be used as constraint in default/page action select
+     *
+     * @var bool
+     */
+    public $pageCheckAccessDomain = false;
+
+    /**
+     * Whether to search fallbackPage according to domain_id
+     *
+     * see: \dmstr\modules\pages\controllers\DefaultController::resolveFallbackPage
+     * @var bool
+     */
+    public $pageUseFallbackPage = true;
+
     /**
      * @inheritdoc
      */
