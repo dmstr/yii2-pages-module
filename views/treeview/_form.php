@@ -313,7 +313,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
 
 
         <div class="col-xs-12">
-            <?= \dmstr\widgets\AccessInput::widget(
+            <?= \dmstr\activeRecordPermissions\AccessInput::widget(
                 [
                     'form' => $form,
                     'model' => $node,

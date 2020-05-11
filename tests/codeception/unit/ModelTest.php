@@ -132,7 +132,7 @@ class ModelTestCase extends \Codeception\Test\Unit
 
     /**
      * Test find records only for current access domain, feature from
-     * \dmstr\db\traits\ActiveRecordAccessTrait
+     * \dmstr\activeRecordPermissions\ActiveRecordAccessTrait
      */
     public function testAccessDomainCheckOnFind()
     {

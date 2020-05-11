@@ -9,7 +9,7 @@
 
 namespace dmstr\modules\pages\models;
 
-use dmstr\db\traits\ActiveRecordAccessTrait;
+use dmstr\activeRecordPermissions\ActiveRecordAccessTrait;
 use dmstr\modules\pages\Module as PagesModule;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
