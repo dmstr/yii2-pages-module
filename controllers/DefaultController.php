@@ -10,6 +10,7 @@
 
 namespace dmstr\modules\pages\controllers;
 
+use dmstr\db\traits\ActiveRecordAccessTrait;
 use dmstr\modules\backend\interfaces\ContextMenuItemsInterface;
 use dmstr\modules\pages\assets\PagesBackendAsset;
 use dmstr\modules\pages\helpers\PageHelper;
@@ -140,6 +141,10 @@ JS;
             ]
         );
 
+        if ($this->module->pageCheckAccessDomain) {
+            $pageQuery->andWhere(['access_domain' => [\Yii::$app->language, ActiveRecordAccessTrait::$_all]]);
+        }
+
         // get page
         /** @var $page Tree */
         $page = $pageQuery->one();
@@ -202,6 +207,11 @@ JS;
      */
     private function resolveFallbackPage($pageId)
     {
+
+        if (!$this->module->pageUseFallbackPage) {
+            return false;
+        }
+
         $original = Tree::find()->where(['id' => $pageId])->one();
 
         if (empty($original)) {
