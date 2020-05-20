@@ -1,4 +1,4 @@
-function toggleCellOutline () {
+function togglePagesInvisibility () {
     if (typeof $.cookie === 'function' && $.cookie('app-frontend-view-mode')) {
         $('.dmstr-pages-invisible-frontend').hide();
     } else {
@@ -6,5 +6,5 @@ function toggleCellOutline () {
     }
 }
 
-$(document).ready(toggleCellOutline);
-$(document).on('cookieUpdate', toggleCellOutline);
+$(document).ready(togglePagesInvisibility);
+$(document).on('cookieUpdate', togglePagesInvisibility);
