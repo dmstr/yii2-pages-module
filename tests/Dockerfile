@@ -1,4 +1,4 @@
-FROM dmstr/yii2-app:0.6.2
+FROM dmstr/yii2-app:0.7.1
 
 # Install npm and lessc
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
