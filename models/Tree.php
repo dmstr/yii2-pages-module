@@ -56,6 +56,8 @@ use JsonSchema\Validator;
 class Tree extends BaseTree
 {
 
+    public static $enableRecursiveRoles = true;
+
     /**
      * @inheritdoc
      */
