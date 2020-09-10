@@ -69,6 +69,27 @@ class Module extends \yii\base\Module
     public $pageUseFallbackPage = true;
 
     /**
+     * Whether Tree::getMenuItems() should remove all childs for all invisible nodes from menu tree
+     *
+     * @var bool
+     */
+    public $menuRemoveInvisibleRecursive = false;
+
+    /**
+     * Whether Tree::getMenuItems() should return an empty array for invisible root nodes
+     *
+     * @var bool
+     */
+    public $menuRemoveInvisibleRoot = false;
+
+    /**
+     *  Whether Tree::getMenuItems() should remove all childs for all disabled nodes from menu tree
+     *
+     * @var bool
+     */
+    public $menuRemoveDisabledRecursive = false;
+
+    /**
      * @inheritdoc
      */
     public function init()
