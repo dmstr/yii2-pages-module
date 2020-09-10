@@ -214,6 +214,33 @@ class Tree extends BaseTree
     }
 
     /**
+     * get property from module config
+     * @return bool
+     */
+    public static function menuRemoveInvisibleRecursive()
+    {
+        return \Yii::$app->getModule(PagesModule::NAME)->menuRemoveInvisibleRecursive;
+    }
+
+    /**
+     * get property from module config
+     * @return bool
+     */
+    public static function menuRemoveInvisibleRoot()
+    {
+        return \Yii::$app->getModule(PagesModule::NAME)->menuRemoveInvisibleRoot;
+    }
+
+    /**
+     * get property from module config
+     * @return bool
+     */
+    public static function menuRemoveDisabledRecursive()
+    {
+        return \Yii::$app->getModule(PagesModule::NAME)->menuRemoveDisabledRecursive;
+    }
+
+    /**
      * @param array $additionalParams
      *
      * @return array|string|null
@@ -297,6 +324,10 @@ class Tree extends BaseTree
         if ($rootNode->isDisabled() && !Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION)) {
             return [];
         }
+        // return empty array if root is invisible and module menuRemoveInvisibleRoot flag is set to true
+        if (!$rootNode->isVisible() && self::menuRemoveInvisibleRoot()) {
+            return [];
+        }
 
         /*
          * @var $leaves Tree[]
@@ -310,6 +341,7 @@ class Tree extends BaseTree
             ]
         );
         $leavesQuery->with('translationsMeta');
+        $leavesQuery->indexBy('id');
         $leaves = $leavesQuery->all();
 
         if ($leaves === null) {
@@ -319,16 +351,33 @@ class Tree extends BaseTree
         // filter out invisible models and disabled models (if needed)
         // this is not done in the SQL query to reflect translation_meta values for "visible" and "disabled" attributes.
         $canAccessPages = Yii::$app->user->can(self::PAGES_ACCESS_PERMISSION);
-        $leaves = array_filter($leaves, function (Tree $leave) use ($canAccessPages) {
+        // should invisible or disabled leaves be removed recursive?
+        $removeInvisible = self::menuRemoveInvisibleRecursive();
+        $removeDisabled = self::menuRemoveDisabledRecursive();
+        // arrays of child ids which should be "removed" afterwards
+        $invisibleByParent = [];
+        $disabledByParent = [];
+        $leaves = array_filter($leaves, function (Tree $leave) use ($canAccessPages, &$invisibleByParent, &$disabledByParent, &$removeInvisible, &$removeDisabled) {
             if (!$leave->isVisible()) {
+                // get/remember Ids from leave childs to be able to "delete" these leave nodes afterwards
+                if ($removeInvisible) {
+                    $invisibleByParent = array_merge($invisibleByParent, self::getChildIds($leave));
+                }
                 return false;
             }
             if (!$canAccessPages && $leave->isDisabled()) {
+                if ($removeDisabled) {
+                    $disabledByParent = array_merge($disabledByParent, self::getChildIds($leave));
+                }
                 return false;
             }
             return true;
         });
 
+        // remove invisible leaves recursive if set in module config
+        $removeInvisible && self::removeIdsFromLeavesArray($leaves, $invisibleByParent);
+        // remove disabled leaves recursive if set in module config
+        $removeDisabled && self::removeIdsFromLeavesArray($leaves, $disabledByParent);
 
         // tree mapping and leave stack
         $treeMap = [];
@@ -408,6 +457,38 @@ class Tree extends BaseTree
         }
 
         return $data;
+    }
+
+    /**
+     * get array of child IDs from given $leave
+     *
+     * @param $leave
+     *
+     * @return array
+     */
+    public static function getChildIds($leave)
+    {
+        $childs = $leave->children()->asArray()->select('id')->indexBy('id')->all();
+        if (empty($childs)) {
+            return [];
+        }
+        return array_keys($childs);
+    }
+
+    /**
+     * remove all items from leaves array by model-id (which is also the array key)
+     * Attention: this method work on a $leaves reference!
+     *
+     * @param $leaves
+     * @param $ids
+     */
+    public static function removeIdsFromLeavesArray(&$leaves, array $ids)
+    {
+        foreach($ids as $id) {
+            if (isset($leaves[$id])) {
+                unset($leaves[$id]);
+            }
+        }
     }
 
     public function getMenuLabel()
