@@ -12,6 +12,8 @@ class m180702_153622_add_translation_meta_table extends Migration
      */
     public function safeUp()
     {
+        $tableOptions = $this->db->getDriverName() === 'mysql' ? 'CHARACTER SET utf8 COLLATE utf8_unicode_ci' : null;
+
         $this->createTable('{{%dmstr_page_translation_meta}}', [
             'id' => $this->primaryKey(),
             'page_id' => $this->integer()->notNull(),
@@ -20,7 +22,7 @@ class m180702_153622_add_translation_meta_table extends Migration
             'visible' => $this->smallInteger()->defaultValue(1),
             'created_at' => $this->dateTime(),
             'updated_at' => $this->dateTime(),
-        ], 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB');
+        ], $tableOptions);
 
         $this->addForeignKey(
             'fk_page_page_translation_meta_id',
