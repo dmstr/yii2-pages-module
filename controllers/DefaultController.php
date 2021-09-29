@@ -10,7 +10,7 @@
 
 namespace dmstr\modules\pages\controllers;
 
-use dmstr\db\traits\ActiveRecordAccessTrait;
+use dmstr\activeRecordPermissions\ActiveRecordAccessTrait;
 use dmstr\modules\backend\interfaces\ContextMenuItemsInterface;
 use dmstr\modules\pages\assets\PagesBackendAsset;
 use dmstr\modules\pages\helpers\PageHelper;
