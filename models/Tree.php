@@ -13,6 +13,7 @@ namespace dmstr\modules\pages\models;
 use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\Module as PagesModule;
 use dosamigos\translateable\TranslateableBehavior;
+use kartik\tree\models\TreeQuery;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\caching\TagDependency;
@@ -266,6 +267,38 @@ class Tree extends BaseTree
     }
 
     /**
+     * get Root node by given domainId
+     *
+     * @param $domainId
+     *
+     * @return Tree|null
+     */
+    public static function getRootByDomainId($domainId)
+    {
+        $rootCondition[self::ATTR_DOMAIN_ID]     = $domainId;
+        $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)];
+        return self::findOne($rootCondition);
+    }
+
+    /**
+     * return activeQuery that select children for given root Node
+     *
+     * @param Tree $rootNode
+     *
+     * @return TreeQuery
+     */
+    public static function getLeavesFromRoot(Tree $rootNode)
+    {
+        $leavesQuery = $rootNode->children()->andWhere(
+            [
+                self::ATTR_ACTIVE => self::ACTIVE,
+                self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)],
+            ]
+        );
+        return $leavesQuery->with('translationsMeta');
+    }
+
+    /**
      * Build array with active and visible menu nodes for the current application language
      *
      * @param string $domainId the domain id of the root node
@@ -286,9 +319,7 @@ class Tree extends BaseTree
 
         Yii::trace(['Building menu items', $cacheKey], __METHOD__);
         // Get root node by domain id
-        $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
-        $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)];
-        $rootNode = self::findOne($rootCondition);
+        $rootNode = self::getRootByDomainId($domainId);
 
         if ($rootNode === null) {
             return [];
@@ -303,15 +334,7 @@ class Tree extends BaseTree
          */
 
         // Get all leaves from this root node
-        $leavesQuery = $rootNode->children()->andWhere(
-            [
-                self::ATTR_ACTIVE => self::ACTIVE,
-                self::ATTR_ACCESS_DOMAIN => [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)],
-            ]
-        );
-        $leavesQuery->with('translationsMeta');
-        $leaves = $leavesQuery->all();
-
+        $leaves = self::getLeavesFromRoot($rootNode)->all();
         if ($leaves === null) {
             return [];
         }
