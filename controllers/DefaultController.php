@@ -15,12 +15,18 @@ use dmstr\modules\backend\interfaces\ContextMenuItemsInterface;
 use dmstr\modules\pages\assets\PagesBackendAsset;
 use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\models\Tree;
+use dmstr\modules\pages\Module;
+use dmstr\modules\pages\traits\RequestParamActionTrait;
+use pheme\settings\components\Settings;
 use Yii;
 use yii\base\Event;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\View;
 
 /**
@@ -30,6 +36,69 @@ use yii\web\View;
  */
 class DefaultController extends Controller implements ContextMenuItemsInterface
 {
+
+    use RequestParamActionTrait;
+
+    /**
+     * ignore pageId param as req-param for actionPage as the id is provided from model->id itself
+     * required as we use RequestParamActionTrait in this controller
+     *
+     * @return false
+     */
+    protected function pageActionParamPageId()
+    {
+        return false;
+    }
+
+    /**
+     * pageId param provider for actionRefPage()
+     * pages are fetched from defined rootIds
+     *
+     * @return array
+     */
+    protected function refPageActionParamPageId()
+    {
+
+        $rootIds = [Tree::ROOT_NODE_PREFIX];
+        /** @var Settings \Yii::$app->settings */
+        if (Module::checkSettingsInstalled() && Yii::$app->settings->get('refPageRootIds', 'pages', null)) {
+            $tmp = explode("\n", \Yii::$app->settings->get('pages.refPageRootIds'));
+            $tmp = array_filter(array_map('trim', $tmp));
+            $rootIds = $tmp ?? $rootIds;
+        }
+
+        $pages = [];
+        foreach ($rootIds as $rootId) {
+            $rootNode = Tree::getRootByDomainId($rootId);
+            if ($rootNode) {
+                $leaves = Tree::getLeavesFromRoot($rootNode)->andWhere(['route' => Tree::DEFAULT_PAGE_ROUTE])->all();
+                if (!empty($leaves)) {
+                    $leaves = array_filter($leaves, function($leave) {
+                        if (!empty($leave->request_params)) {
+                            $params = Json::decode($leave->request_params);
+                            if (!empty($params) && isset($params->pageId) && $params->pageId == $leave->id) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+                    /** @var Tree $leave */
+                    foreach ($leaves as $leave) {
+                        Yii::debug(ArrayHelper::map($leave->parents()->all(), 'id', 'name'));
+                        if (!$leave->isPage()) {
+                            continue;
+                        }
+                        // build human-readable label for each leave
+                        $pages[$leave->id] = implode(' :: ', ArrayHelper::merge(ArrayHelper::map($leave->parents()->all(), 'id', 'name'), [$leave->name . ' (' . $leave->id . ')']));
+                    }
+                }
+            }
+        }
+
+        $params = ArrayHelper::merge(['' => Yii::t('pages', 'Select target page')], $pages);
+        return $params;
+
+    }
 
     /**
      * @inheritdoc
@@ -110,6 +179,26 @@ JS;
             return $this->asJson($response);
         }
         throw new MethodNotAllowedHttpException(Yii::t('pages', 'You are not allowed to access this page like this'));
+    }
+
+
+    /**
+     * Redirect to URL for given pageId
+     * This is useful if one will create multiple menu items to one existing content page
+     *
+     * @param $pageId
+     *
+     * @throws NotFoundHttpException
+     */
+    public function actionRefPage($pageId)
+    {
+
+        $page = Tree::findOne(['id' => $pageId]);
+        if ($page && $page instanceof Tree) {
+            $this->redirect($page->createUrl());
+        } else {
+            throw new NotFoundHttpException();
+        }
     }
 
     /**
