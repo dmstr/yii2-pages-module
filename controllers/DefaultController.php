@@ -124,7 +124,7 @@ JS;
     public function actionPage($pageId)
     {
         Url::remember();
-        \Yii::$app->session['__crudReturnUrl'] = null;
+        \Yii::$app->session->set('__crudReturnUrl', null);
 
         // Set layout
         $this->layout = $this->module->defaultPageLayout;
