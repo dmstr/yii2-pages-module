@@ -207,7 +207,7 @@ JSON;
             } else {
 
                 // add defaults here again to guarantee same behavior as if property would have a corresponding method
-                $extraProperties = '"type": "string","title": "' . Inflector::camel2words($parameterName) . '"';
+                $extraProperties = ['"type": "string"','"title": "' . Inflector::camel2words($parameterName) . '"'];
 
                 if (!$parameter->isOptional()) {
                     $requiredFields[] = $parameterName;
@@ -215,6 +215,7 @@ JSON;
                 }
 
                 // generate default if nothing else is defined
+                $extraProperties = implode(',', $extraProperties);
                 $properties[] = $this->defaultFieldJson($parameterName, $extraProperties);
             }
         }
