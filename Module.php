@@ -76,7 +76,7 @@ class Module extends \yii\base\Module
         parent::init();
 
         // add routes from settings module
-        if ($this->checkSettingsInstalled()) {
+        if (self::checkSettingsInstalled()) {
             $routes = explode("\n", \Yii::$app->settings->get('pages.availableRoutes'));
             foreach ($routes as $route) {
                 $routeEntry = trim($route);
@@ -130,7 +130,7 @@ class Module extends \yii\base\Module
      * Check for "pheme/yii2-settings" component and module
      * @return bool
      */
-    private function checkSettingsInstalled()
+    public static function checkSettingsInstalled()
     {
         return \Yii::$app->hasModule('settings') && \Yii::$app->has('settings');
     }
