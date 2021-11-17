@@ -20,31 +20,25 @@ $(function () {
 
           if (editor !== undefined) {
             var element = editor.element;
-
-            editor.destroy();
-
             var editorIndex = jsonEditorList.indexOf(editor);
-            jsonEditorList[editorIndex] = new JSONEditor(element, {
-              schema: JSON.parse(schema),
-              theme: "bootstrap3",
-              ajax: true,
-              disable_collapse: true,
-              // disable_edit_json: true,
-              // disable_properties: true
-            });
+            // we only want to change schema, so get defined options from current editor.
+            var editorOptions = editor.options;
+            editorOptions.schema = JSON.parse(schema);
+            // recreate Editor
+            editor.destroy();
+            jsonEditorList[editorIndex] = new JSONEditor(element, editorOptions);
 
             // inital update of value
             $('input[name="Tree[request_params]"]').val(JSON.stringify(jsonEditorList[editorIndex].getValue()));
 
-            // update of value for newly inserted editor
-            $('#tree-request_params-container').on('change', function () {
+            // update/init change callback for newly inserted editor which update the input value
+            jsonEditorList[editorIndex].on('change', function () {
               $('input[name="Tree[request_params]"]').val(JSON.stringify(jsonEditorList[editorIndex].getValue()));
             });
 
           } else {
             console.error('Editor not found.');
           }
-
 
         }
       } else {
