@@ -21,6 +21,7 @@ use pheme\settings\components\Settings;
 use Yii;
 use yii\base\Event;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -89,13 +90,13 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
                             continue;
                         }
                         // build human-readable label for each leave
-                        $pages[$leave->id] = implode(' :: ', ArrayHelper::merge(ArrayHelper::map($leave->parents()->all(), 'id', 'name'), [$leave->name . ' (' . $leave->id . ')']));
+                        $pages[$leave->id] = Html::encode(implode(' :: ', ArrayHelper::merge(ArrayHelper::map($leave->parents()->all(), 'id', 'name'), [$leave->name . ' (' . $leave->id . ')'])));
                     }
                 }
             }
         }
 
-        $params = ArrayHelper::merge(['' => Yii::t('pages', 'Select target page')], $pages);
+        $params = ArrayHelper::merge(['' => Html::encode(Yii::t('pages', 'Select target page'))], $pages);
         return $params;
 
     }
