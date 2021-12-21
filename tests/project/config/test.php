@@ -184,8 +184,7 @@ $console = [
                 '@bedezign/yii2/audit/migrations',
                 '@tests/migrations',
             ],
-        ],
-        'copy-pages' => '\dmstr\modules\pages\commands\CopyController',
+        ]
     ],
 ];
 

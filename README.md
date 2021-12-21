@@ -193,42 +193,6 @@ $targetPage = (new Tree())->sibling('de', 12, '/pages/default/page')
 
 ```
 
-
-Copy pages
----
-
-**Console config**
-
-```
-'controllerMap'       => [
-	'copy-pages' => '\dmstr\modules\pages\commands\CopyController',
-]
-```
-
-**CLI**
-
-Command: `yii copy-pages/root-node --rootId --destinationLanguage`
-
-**Web UI**
-
-Url: `/pages/copy`
-
-**RBAC permission**
-
-`pages.globalAccess`
-
-Whether a user can select `*` (global) for a menu item.
-
-`pages_copy`
-
-**Usage**
-
-* Switch to the application language you want to copy page root nodes to -> `/pages/copy`
-* Select the root node you whant to copy
-* Select the target language or you can select the global domain if you have permissions to
-* Start Copy
-
-
 Testing
 -------
 

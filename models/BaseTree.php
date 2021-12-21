@@ -276,12 +276,7 @@ class BaseTree extends \kartik\tree\models\Tree
     const GLOBAL_ACCESS_PERMISSION = 'pages.globalAccess';
 
     /**
-     * RBAC permission name to copy page root nodes
-     */
-    const COPY_ACCESS_PERMISSION = 'pages_copy';
-
-    /**
-     * RBAC permission name to copy page root nodes
+     * RBAC permission access pages module
      */
     const PAGES_ACCESS_PERMISSION = 'pages';
 
