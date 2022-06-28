@@ -114,15 +114,26 @@ trait RequestParamActionTrait
     private function generateJson($parameters, $actionId)
     {
 
-        $properties = [];
         $requiredFields = [];
+
+        // init main json struct object with defaults
+        $jsonStruct = new \stdClass();
+        $jsonStruct->title = 'Request Params';
+        $jsonStruct->type = "object";
+        $jsonStruct->properties = [];
+
         foreach ($parameters as $parameter) {
             // get name
             $parameterName = $parameter->name;
 
+            // init obj for each property and set defaults
+            $paramStruct = new \stdClass();
+            $paramStruct->title = Inflector::camel2words($parameterName);
+            $paramStruct->type = 'string';
+
             // nameActionParamId
             $methodName = $actionId . 'ActionParam' . ucfirst($parameterName);
-            // use data from method if it exist.
+            // use data from method if it exists
             if ($this->hasMethod($methodName)) {
                 $enumData = $this->$methodName();
 
@@ -131,10 +142,10 @@ trait RequestParamActionTrait
                     continue;
                 }
 
-                // instanciate reflection of this methods
+                // instantiate reflection of the actionParam method to be able to get (optional) docBlock
                 $methodRefl = new ReflectionMethod($this, $methodName);
 
-                // get docs from method
+                // get docs from actionParam method
                 $docs = $methodRefl->getDocComment();
                 $additionalData = [];
                 if ($docs !== false) {
@@ -151,108 +162,51 @@ trait RequestParamActionTrait
                     }
                 }
 
-                // additional properties from docs
-                $extraProperties = [];
-
-                // set title to auto gen title if not defined
-                if (!isset($additionalData['title'])) {
-                    $additionalData['title'] = Inflector::camel2words($parameterName);
-                }
-                // set type to string if not defined
-                if (!isset($additionalData['type'])) {
-                    $additionalData['type'] = 'string';
-                }
-
-                // add to required if not is optional
-                if (!$parameter->isOptional()) {
-                    $requiredFields[] = $parameterName;
-                    // TODO: how to check other types?
-                    if (($additionalData['type'] === 'string') && (!isset($additionalData['minLength']))) {
-                        $extraProperties[] = '"minLength": 1';
-                    }
-
-                }
-
                 foreach ($additionalData as $name => $value) {
-                    // if value not is object or array
-                    if (substr($value, 0, 2) !== '{"' && substr($value, 0, 1) !== '[' && substr($value, -1, 2) !== '"}' && substr($value, -1) !== ']') {
-                        $value = '"' . $value . '"';
+                    // if value looks like json object or array, get struct from json string
+                    if ((substr($value, 0, 1) === '[' && substr($value, -1) !== ']') || (substr($value, 0, 2) === '{"'  && substr($value, -1, 2) === '"}') ) {
+                        $value = json_decode($value);
                     }
-                    $extraProperties[] = '"' . $name . '": ' . $value;
-                }
-
-                if (!empty($extraProperties)) {
-                    $extraProperties = implode(',', $extraProperties);
-                } else {
-                    $extraProperties = '';
+                    $paramStruct->$name = $value;
                 }
 
                 if (\is_array($enumData)) {
-                    $keys = $this->jsonListFromArray(array_keys($enumData));
-                    $values = $this->jsonListFromArray($enumData);
+                    // if we want string, cast keys to string, otherwise we would get IDs as int
+                    if ($paramStruct->type === 'string') {
+                        $paramStruct->enum = array_map('strval', array_keys($enumData));
+                    } else {
+                        $paramStruct->enum = array_keys($enumData);
+                    }
 
-                    $properties[] = <<<JSON
-"{$parameterName}": {
-      "enum": [{$keys}],
-      {$extraProperties},
-      "options": {
-        "enum_titles": [{$values}]
-      }
-}
-JSON;
-                } else {
-                    $properties[] = $this->defaultFieldJson($parameterName, $extraProperties);
+                    // ensure options is set...
+                    if (!isset($paramStruct->options)) {
+                        $paramStruct->options = [];
+                    }
+                    // ... and add enum_titles, ensure strings
+                    $paramStruct->options['enum_titles'] = array_map('strval', array_values($enumData));
                 }
 
-            } else {
-
-                // add defaults here again to guarantee same behavior as if property would have a corresponding method
-                $extraProperties = ['"type": "string"','"title": "' . Inflector::camel2words($parameterName) . '"'];
-
-                if (!$parameter->isOptional()) {
-                    $requiredFields[] = $parameterName;
-                    $extraProperties[] = '"minLength": 1';
-                }
-
-                // generate default if nothing else is defined
-                $extraProperties = implode(',', $extraProperties);
-                $properties[] = $this->defaultFieldJson($parameterName, $extraProperties);
             }
+
+            // add to required if param is not optional
+            if (!$parameter->isOptional()) {
+                $requiredFields[] = $parameterName;
+                // TODO: how to check other types?
+                if (($paramStruct->type === 'string') && (!isset($paramStruct->minLength))) {
+                    $paramStruct->minLength = 1;
+                }
+            }
+
+            $jsonStruct->properties[$parameterName] = $paramStruct;
+
         }
 
-        $properties = implode(',' . PHP_EOL, $properties);
-
-        $requiredProperties = '';
         if (!empty($requiredFields)) {
-            $requiredProperties = '"required": [' . $this->jsonListFromArray($requiredFields) . '],';
+            $jsonStruct->required = $requiredFields;
         }
 
-        // build json
-        return <<<JSON
-{
-  "title": "Request Params",
-  "type": "object",
-  {$requiredProperties}
-  "properties": {
-    {$properties}
-  }
-}
-JSON;
+        return json_encode($jsonStruct);
 
-    }
-
-    protected function jsonListFromArray($array)
-    {
-        return '"' . implode('","', $array) . '"';
-    }
-
-    protected function defaultFieldJson($parameterName, $extraProperties = [])
-    {
-        return <<<JSON
-"{$parameterName}": {
-      {$extraProperties}
-}
-JSON;
     }
 
 }
