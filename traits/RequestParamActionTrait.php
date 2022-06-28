@@ -15,6 +15,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
+use Yii;
 use yii\helpers\Inflector;
 
 /**
@@ -118,7 +119,7 @@ trait RequestParamActionTrait
 
         // init main json struct object with defaults
         $jsonStruct = new \stdClass();
-        $jsonStruct->title = 'Request Params';
+        $jsonStruct->title = Yii::t('pages', 'Request Params');
         $jsonStruct->type = "object";
         $jsonStruct->properties = [];
 
