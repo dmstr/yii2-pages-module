@@ -21,13 +21,13 @@ use yii\helpers\Inflector;
 /**
  * This trait will enable auto fetching request params to append matching JSON for request param's json editor
  *
- * USUAGE / HOW IT WORKS:
+ * USAGE / HOW IT WORKS:
  *
  * To enable for a specific controller, use this trait in the desired controller
  *
- * By default it will generate a text field per action parameter.
+ * By default, it will generate a text field per action parameter.
  *
- * For customization you can create a public method for each individual action parameter by adding a method which name
+ * For customization, you can create a public method for each individual action parameter by adding a method which name
  * have to follow this schema:
  *
  * `camelizedActionId` + ActionParam + `ParameterName`
@@ -37,7 +37,7 @@ use yii\helpers\Inflector;
  *
  * Example: detailActionParamProductId
  *
- * This method must return a array (key-value pairs), where the keys should refer to the actual value and the value will
+ * This method must return an array (key-value pairs), where the keys should refer to the actual value and the value will
  * be the label
  *
  * Example:
@@ -63,7 +63,7 @@ use yii\helpers\Inflector;
  *     return true;
  *   }
  *
- *   This will generate a input with defined title for an *existing* parameter
+ *   This will generate an input with defined title for an *existing* parameter
  *
  * - If property is NOT optional, it will be set as required in json schema.
  *   However, since this only implies that the property must be set in the data, but not that a value must also be set,
