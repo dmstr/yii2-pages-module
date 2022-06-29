@@ -163,14 +163,17 @@ trait RequestParamActionTrait
                     }
                 }
 
+                // assign additionalData from docBlock in paramStruct
                 foreach ($additionalData as $name => $value) {
                     // if value looks like json object or array, get struct from json string
-                    if ((substr($value, 0, 1) === '[' && substr($value, -1) !== ']') || (substr($value, 0, 2) === '{"'  && substr($value, -1, 2) === '"}') ) {
+                    $value = trim($value);
+                    if ( preg_match('#^(\{.+\})|(\[.+\])$#', $value)) {
                         $value = json_decode($value);
                     }
                     $paramStruct->$name = $value;
                 }
 
+                // set enum options
                 if (\is_array($enumData)) {
                     // if we want string, cast keys to string, otherwise we would get IDs as int
                     if ($paramStruct->type === 'string') {
@@ -181,15 +184,15 @@ trait RequestParamActionTrait
 
                     // ensure options is set...
                     if (!isset($paramStruct->options)) {
-                        $paramStruct->options = [];
+                        $paramStruct->options = new \stdClass();
                     }
                     // ... and add enum_titles, ensure strings
-                    $paramStruct->options['enum_titles'] = array_map('strval', array_values($enumData));
+                    $paramStruct->options->enum_titles = array_map('strval', array_values($enumData));
                 }
 
             }
 
-            // add to required if param is not optional
+            // add to required list if param is not optional
             if (!$parameter->isOptional()) {
                 $requiredFields[] = $parameterName;
                 // TODO: how to check other types?
