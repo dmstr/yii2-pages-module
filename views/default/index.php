@@ -30,25 +30,6 @@ HTML;
  */
 $toolbar = [];
 
-/**
- * Links to settings and copy pages area for toolbar
- */
-if (\Yii::$app->user->can(Tree::COPY_ACCESS_PERMISSION)) {
-    $copyPages = [
-        'icon'    => 'copy',
-        'url'     => ['/pages/copy'],
-        'options' => [
-            'title'    => Yii::t('pages', 'Copy root nodes'),
-            'class'    => 'btn btn-default'
-        ],
-    ];
-    $toolbar[] = TreeView::BTN_SEPARATOR;
-    $toolbar[] = TreeView::BTN_SEPARATOR;
-    $toolbar[] = TreeView::BTN_SEPARATOR;
-    $toolbar['copy'] = $copyPages;
-}
-
-
 // check settings component and module existence
 if (\Yii::$app->has('settings') && \Yii::$app->hasModule('settings')) {
 

@@ -14,9 +14,5 @@ return [
     'pages_default_page' => [
         'type' => 2,
         'description' => 'CMS-Page Action',
-    ],
-    'pages_copy' => [
-        'type' => 2,
-        'description' => 'Pages Copy',
-    ],
+    ]
 ];
