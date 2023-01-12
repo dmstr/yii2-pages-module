@@ -23,18 +23,21 @@ $(function () {
             // we only want to change schema, so get defined options from current editor.
             var editorOptions = editor.options;
             editorOptions.schema = JSON.parse(schema);
+            // reset startval && make all "new" options required in schema
+            editorOptions.startval = {};
+            editorOptions.required_by_default = true;
             // recreate Editor
             editor.destroy();
             jsonEditorList[editorIndex] = new JSONEditor(element, editorOptions);
             jsonEditorList[editorIndex].on('ready', function () {
               // inital update of value
-              $('input[name="Tree[request_params]"]').val(JSON.stringify(jsonEditorList[editorIndex].getValue()));
-
-              // update/init change callback for newly inserted editor which update the input value
-              jsonEditorList[editorIndex].on('change', function () {
-                  $('input[name="Tree[request_params]"]').val(JSON.stringify(jsonEditorList[editorIndex].getValue()));
-              });
+              $('input[name="Tree[request_params]"]').val(JSON.stringify(this.getValue()));
             });
+            // update/init change callback for newly inserted editor which update the input value
+            jsonEditorList[editorIndex].on('change', function () {
+              $('input[name="Tree[request_params]"]').val(JSON.stringify(this.getValue()));
+            });
+
 
           } else {
             console.error('Editor not found.');
