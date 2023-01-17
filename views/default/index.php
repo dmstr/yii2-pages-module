@@ -3,6 +3,7 @@
  * Output TreeView widget
  *
  * @var $this yii\web\View
+ * @var $queryTree \yii\db\ActiveQuery
  */
 use dmstr\modules\pages\models\Tree;
 use kartik\tree\TreeView;

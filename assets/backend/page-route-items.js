@@ -18,7 +18,6 @@ $(function () {
           });
 
           if (editor !== undefined) {
-            var element = editor.element;
             var editorIndex = jsonEditorList.indexOf(editor);
             // we only want to change schema, so get defined options from current editor.
             var editorOptions = editor.options;
@@ -28,16 +27,22 @@ $(function () {
             editorOptions.required_by_default = true;
             // recreate Editor
             editor.destroy();
-            jsonEditorList[editorIndex] = new JSONEditor(element, editorOptions);
+            // get current editor element once again, as the "old" element from within editor can be stale
+            // if treeview has changed the .kv-detail-container
+            var current_element = document.getElementById('tree-request_params-container');
+            // clear already created forms from prev. container...
+            current_element.innerHTML = '';
+            // init new editor on current element
+            jsonEditorList[editorIndex] = new JSONEditor(current_element, editorOptions);
+            // jsonEditorList[editorIndex] = new JSONEditor(element, editorOptions);
             jsonEditorList[editorIndex].on('ready', function () {
-              // inital update of value
+              // inital update of hidden form input value
               $('input[name="Tree[request_params]"]').val(JSON.stringify(this.getValue()));
             });
             // update/init change callback for newly inserted editor which update the input value
             jsonEditorList[editorIndex].on('change', function () {
               $('input[name="Tree[request_params]"]').val(JSON.stringify(this.getValue()));
             });
-
 
           } else {
             console.error('Editor not found.');
