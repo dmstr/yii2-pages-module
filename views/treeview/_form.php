@@ -254,7 +254,7 @@ echo Html::hiddenInput('softDelete', $softDelete);
                         'theme' => 'bootstrap3',
                         'ajax' => true,
                         'disable_collapse' => true,
-                        'required_by_default' => true,
+                        // 'required_by_default' => true,
 //                        'disable_edit_json' => true,
 //                        'disable_properties' => true
                     ]

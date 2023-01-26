@@ -24,7 +24,7 @@ $(function () {
             editorOptions.schema = JSON.parse(schema);
             // reset startval && make all "new" options required in schema
             editorOptions.startval = {};
-            editorOptions.required_by_default = true;
+            // editorOptions.required_by_default = true;
             // recreate Editor
             editor.destroy();
             // get current editor element once again, as the "old" element from within editor can be stale
