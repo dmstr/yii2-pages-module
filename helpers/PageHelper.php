@@ -26,14 +26,16 @@ class PageHelper
      */
     public static function routeToSchema($route)
     {
-        $responseCluster = \Yii::$app->createController($route);
+        if (!empty($route)) {
+            $responseCluster = \Yii::$app->createController($route);
 
-        if (isset($responseCluster[0])) {
-            $controller = $responseCluster[0];
-            /** @var BaseObject $controller */
-            if ($controller->hasMethod('jsonFromAction')) {
-                /** @var RequestParamActionTrait $controller */
-                return $controller->jsonFromAction($route);
+            if (isset($responseCluster[0])) {
+                $controller = $responseCluster[0];
+                /** @var BaseObject $controller */
+                if ($controller->hasMethod('jsonFromAction')) {
+                    /** @var RequestParamActionTrait $controller */
+                    return $controller->jsonFromAction($route);
+                }
             }
         }
         return static::defaultJsonSchema();
