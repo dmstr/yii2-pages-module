@@ -232,7 +232,7 @@ JS;
         );
 
         if ($this->module->pageCheckAccessDomain) {
-            $pageQuery->andWhere(['access_domain' => [\Yii::$app->language, ActiveRecordAccessTrait::$_all]]);
+            $pageQuery->andWhere(['access_domain' => [\Yii::$app->language, Tree::$_all]]);
         }
 
         // get page
