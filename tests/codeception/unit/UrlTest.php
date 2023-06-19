@@ -1,8 +1,6 @@
 <?php
 // @group mandatory
 
-namespace dmstr\modules\pages\tests\unit;
-
 use Codeception\Util\Debug;
 use dmstr\modules\pages\components\PageUrlRule;
 use dmstr\modules\pages\models\Tree;

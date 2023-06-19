@@ -1,8 +1,6 @@
 <?php
 // @group mandatory
 
-namespace dmstr\modules\pages\tests\unit;
-
 use dmstr\modules\pages\models\Tree;
 
 class ModelTestCase extends \Codeception\Test\Unit
