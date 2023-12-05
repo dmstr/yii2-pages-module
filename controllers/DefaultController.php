@@ -272,6 +272,9 @@ JS;
             }
 
             // Render view
+            if (empty($page->view)) {
+                throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
+            }
             return $this->render($page->view, ['page' => $page]);
         } else {
             if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
