@@ -13,8 +13,10 @@ class m180321_103245_alter_table_names extends Migration
     public function safeUp()
     {
 
-        $this->renameTable('dmstr_page','{{%dmstr_page}}');
-        $this->renameTable('dmstr_page_translation','{{%dmstr_page_translation}}');
+        if (!empty($this->getDb()->tablePrefix)) {
+            $this->renameTable('dmstr_page','{{%dmstr_page}}');
+            $this->renameTable('dmstr_page_translation','{{%dmstr_page_translation}}');
+        }
 
     }
 
