@@ -244,6 +244,15 @@ JS;
             $page = null;
         }
 
+        // if the route of the $page does not point to $this->route, make a redirect to the destination url
+        if ($page !== null && ltrim('/', $page->route) !== $this->route) {
+            $destRoute = [$page->route];
+            if (!empty($page->request_params) && Json::decode($page->request_params)) {
+                $destRoute = ArrayHelper::merge($destRoute, Json::decode($page->request_params));
+            }
+            return $this->redirect($destRoute);
+        }
+
         # reactivate access_* check in ActiveRecordAccessTrait::find for further queries
         Tree::$activeAccessTrait = true;
         // check if page has access_read permissions set, if yes check if user is allowed
@@ -272,6 +281,9 @@ JS;
             }
 
             // Render view
+            if (empty($page->view)) {
+                throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
+            }
             return $this->render($page->view, ['page' => $page]);
         } else {
             if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
