@@ -245,7 +245,7 @@ JS;
         }
 
         // if the route of the $page does not point to $this->route, make a redirect to the destination url
-        if ($page !== null && ltrim('/', $page->route) !== $this->route) {
+        if ($page !== null && ltrim($page->route, '/') !== $this->route) {
             $destRoute = [$page->route];
             if (!empty($page->request_params) && Json::decode($page->request_params)) {
                 $destRoute = ArrayHelper::merge($destRoute, Json::decode($page->request_params));
