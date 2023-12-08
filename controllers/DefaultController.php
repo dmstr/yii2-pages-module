@@ -196,7 +196,7 @@ JS;
 
         $page = Tree::findOne(['id' => $pageId]);
         if ($page && $page instanceof Tree) {
-            $this->redirect($page->createUrl());
+            return $this->redirect($page->createUrl());
         } else {
             throw new NotFoundHttpException();
         }
