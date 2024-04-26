@@ -77,13 +77,13 @@ class Module extends \yii\base\Module
 
         // add routes from settings module
         if (self::checkSettingsInstalled()) {
-            $routes = explode("\n", \Yii::$app->settings->get('pages.availableRoutes'));
+            $routes = explode("\n", (string)\Yii::$app->settings->get('pages.availableRoutes'));
             foreach ($routes as $route) {
                 $routeEntry = trim($route);
                 $this->availableRoutes[$routeEntry] = $routeEntry;
             }
 
-            $views = explode("\n", \Yii::$app->settings->get('pages.availableViews'));
+            $views = explode("\n", (string)\Yii::$app->settings->get('pages.availableViews'));
             foreach ($views as $view) {
                 // use custom name if appended after a semicolon (;)
                 $viewEntry = explode(';', trim($view));
