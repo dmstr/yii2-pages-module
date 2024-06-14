@@ -38,7 +38,7 @@ use JsonSchema\Validator;
  * @property string $default_meta_keywords
  * @property string $default_meta_description
  * @property string $request_params
- * @property int $access_owner
+ * @property string $access_owner
  * @property string $access_domain
  * @property string $access_read
  * @property string $access_update
