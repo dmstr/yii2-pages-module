@@ -27,7 +27,19 @@ use yii\helpers\Inflector;
  *
  * By default, it will generate a text field per action parameter.
  *
- * For customization, you can create a public method for each individual action parameter by adding a method which name
+ * For customization:
+ *
+ * you can simply implement a method `camelizedActionId` + ActionParamSchema
+ *
+ * Example: detailActionParamSchema
+ *
+ * This method must return the hole JsonEditor schema, where the returned schema can be:
+ * - an object or array that can be encoded as json
+ * - valid json string
+ *
+ * OR:
+ *
+ * you can create a public method for each individual action parameter by adding a method which name
  * have to follow this schema:
  *
  * `camelizedActionId` + ActionParam + `ParameterName`
@@ -92,10 +104,13 @@ trait RequestParamActionTrait
             // get method reflection of action. If not exist exception will be thrown an catched underneath
             $actionRefl = $controllerRefl->getMethod($actionName);
 
-            // map parameter names to key value paired array
+            // first: try to get self defined schema
+            $schema = $this->getActionsParamsSchema($actionRefl->getParameters(), $actionId);
+            if ($schema !== false) {
+                return $schema;
+            }
 
-
-            // return json for json editor
+            // otherwise try to build json from *ActionParam* methods
             return $this->generateJson($actionRefl->getParameters(), $actionId);
 
         } catch (ReflectionException $e) {
@@ -103,6 +118,45 @@ trait RequestParamActionTrait
         }
     }
 
+    /**
+     *
+     * try to get the editor schema from $actionId . 'ActionParamSchema' Method
+     * return of this method can be:
+     * - an object or array that can be encoded as json
+     * - valid json string
+     *
+     * in all other cases this method returns false
+     * json encode errors generate a warning but are suppressed
+     *
+     * @param $parameters
+     * @param $actionId
+     *
+     * @return false|string
+     */
+    private function getActionsParamsSchema($parameters, $actionId)
+    {
+        $methodName = $actionId . 'ActionParamSchema';
+        if ($this->hasMethod($methodName)) {
+            $schema = $this->$methodName($parameters);
+            // some base validation on the schema
+            try {
+                if (is_array($schema)) {
+                    return json_encode($schema, JSON_THROW_ON_ERROR);
+                }
+                if (is_object($schema)) {
+                    return json_encode($schema, JSON_THROW_ON_ERROR);
+                }
+                if (is_string($schema)) {
+                    $valid = \json_decode($schema);
+                    return $schema;
+                }
+            } catch (\Exception $e) {
+                Yii::warning('');
+                return false;
+            }
+        }
+        return false;
+    }
 
     /**
      * Generate json for request param json editor
