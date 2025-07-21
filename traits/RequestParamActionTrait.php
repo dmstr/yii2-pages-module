@@ -92,8 +92,14 @@ trait RequestParamActionTrait
     public function jsonFromAction($route)
     {
         try {
-            // get action id from route
-            $actionId = lcfirst(Inflector::camelize(basename($route)));
+            // catch routes without named action
+            // and use the controller default action as fallback
+            if ($this->getUniqueId() === trim($route, '/')) {
+                $actionId = lcfirst($this->defaultAction);
+            } else {
+                // in all other cases get action id from route
+                $actionId = lcfirst(Inflector::camelize(basename($route)));
+            }
 
             // get potential action name in controller
             $actionName = 'action' . Inflector::camelize($actionId);
