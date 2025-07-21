@@ -459,6 +459,13 @@ class BaseTree extends \kartik\tree\models\Tree
                 ],
                 [
                     [
+                        self::ATTR_ACCESS_OWNER,
+                    ],
+                    'filter',
+                    'filter' => 'strval'
+                ],
+                [
+                    [
                         self::ATTR_DOMAIN_ID,
                         self::ATTR_PAGE_TITLE,
                         self::ATTR_SLUG,
@@ -467,6 +474,7 @@ class BaseTree extends \kartik\tree\models\Tree
                         self::ATTR_ICON,
                         self::ATTR_DEFAULT_META_KEYWORDS,
                         self::ATTR_REQUEST_PARAMS,
+                        self::ATTR_ACCESS_OWNER,
                         self::ATTR_ACCESS_READ,
                         self::ATTR_ACCESS_UPDATE,
                         self::ATTR_ACCESS_DELETE,
@@ -522,7 +530,6 @@ class BaseTree extends \kartik\tree\models\Tree
                 [
                     [
                         self::ATTR_ROOT,
-                        self::ATTR_ACCESS_OWNER,
                     ],
                     'integer',
                     'integerOnly' => true,
@@ -530,7 +537,6 @@ class BaseTree extends \kartik\tree\models\Tree
                 [
                     [
                         self::ATTR_ROOT,
-                        self::ATTR_ACCESS_OWNER,
                         self::ATTR_COLLAPSED,
                         self::ATTR_ICON_TYPE
                     ],
