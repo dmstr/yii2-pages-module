@@ -118,34 +118,6 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
      */
     public function actionIndex($pageId = null)
     {
-        $localicedRootNode = $this->module->getLocalizedRootNode();
-        if (!$localicedRootNode) {
-            $language = mb_strtolower(\Yii::$app->language);
-            $rootNodePrefix = Tree::ROOT_NODE_PREFIX;
-
-            $msg = <<<HTML
-<b>Localized root-node missing</b>
-<p>
-Please create a new root-node for the current language.
-</p>
-<p>
-<a onclick="$('#tree-domain_id').val('{$rootNodePrefix}');$('#tree-name').val('{$rootNodePrefix}_{$language}');$('.kv-detail-container button[type=submit]').click()" 
-   class="btn btn-warning">Create root-node for <b>{$language}</b></a>
-</p>
-HTML;
-
-            $js = <<<'JS'
-$(".kv-create-root").click();
-JS;
-
-            $this->getView()->registerJs($js, View::POS_LOAD);
-            \Yii::$app->session->addFlash('warning', $msg);
-        } else {
-            if (!empty($pageId)) {
-                Yii::$app->session->set('kvNodeId', $pageId);
-            }
-        }
-
         /**
          * Register the pages asset bundle
          */
