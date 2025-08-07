@@ -20,7 +20,7 @@ echo TreeView::widget(
         'displayValue' => 1,
         'showTooltips' => false,
         'wrapperTemplate' => '{header}{footer}{tree}',
-        'headingOptions' => ['label' => 'Nodes'],
+        'headingOptions' => ['label' => Yii::t('pages', 'Nodes')],
         'treeOptions' => ['style' => 'height:auto; min-height:400px'],
         'headerTemplate' => $headerTemplate,
         'mainTemplate' => $mainTemplate,
