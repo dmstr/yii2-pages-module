@@ -120,17 +120,8 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
      */
     public function actionIndex($pageId = null)
     {
-        $query = Tree::find()
-            ->andWhere(
-                [
-                    Tree::ATTR_ACCESS_DOMAIN => [
-                        Yii::$app->language,
-                        Tree::GLOBAL_ACCESS_DOMAIN
-                    ]
-                ]
-            )
-            ->orderBy('root, lft');
-
+        $query = Tree::getAccessibleItemsQuery();
+        
         $headerTemplate = <<< HTML
 <div class="row">
     <div class="col-sm-6" id="dmstr-pages-detail-heading">
