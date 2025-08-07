@@ -362,7 +362,7 @@ class Tree extends BaseTree
                 ['<', 'parent.lft', new Expression($tableName . '.lft')],
                 ['>', 'parent.rgt', new Expression($tableName . '.rgt')],
                 ['=', 'parent.root', new Expression($tableName . '.root')],
-                ['>', 'parent.lvl', 0], // Exclude root nodes from parent check
+                ['>=', 'parent.lvl', 0], // Include root nodes in parent check
                 [Tree::ATTR_ACCESS_DOMAIN => [Yii::$app->language, Tree::GLOBAL_ACCESS_DOMAIN]]
             ])
             ->andWhere(['NOT', $directAccessCondition]); // Parents that DON'T have access
