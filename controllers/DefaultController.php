@@ -120,7 +120,7 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
      */
     public function actionIndex($pageId = null)
     {
-        $queryTree = Tree::find()
+        $query = Tree::find()
             ->andWhere(
                 [
                     Tree::ATTR_ACCESS_DOMAIN => [
@@ -189,7 +189,7 @@ HTML;
         $this->view->title = Yii::t('pages', 'Pages');
 
         return $this->render('index', [
-            'queryTree' => $queryTree,
+            'query' => $query,
             'headerTemplate' => $headerTemplate,
             'toolbar' => $toolbar,
             'mainTemplate' => $mainTemplate
