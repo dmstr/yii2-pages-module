@@ -30,6 +30,10 @@ class BaseTree extends \kartik\tree\models\Tree
 {
     use ActiveRecordAccessTrait;
 
+    // needed since 1.0.9. Currently we want all children to have children so new need for a extra db field (yet)
+    // If that changes in the future, the default value must be `1` to ensure backwards compatibility
+    public $child_allowed = 1;
+
     /**
      * Icon type css
      */
