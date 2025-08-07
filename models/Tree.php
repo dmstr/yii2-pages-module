@@ -13,15 +13,16 @@ namespace dmstr\modules\pages\models;
 use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\Module as PagesModule;
 use dosamigos\translateable\TranslateableBehavior;
+use JsonSchema\Validator;
 use kartik\tree\models\TreeQuery;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\caching\TagDependency;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
-use JsonSchema\Validator;
 
 /**
  * Class Tree
@@ -127,6 +128,7 @@ class Tree extends BaseTree
      * Disallow node movement when user has no update permissions
      *
      * @param string $dir
+     *
      * @return bool
      */
     public function isMovable($dir)
@@ -155,6 +157,7 @@ class Tree extends BaseTree
 
     /**
      * Renders all available root nodes as mapped array, `id` => `name_id`
+     *
      * @return array
      */
     public static function optsSourceRootId()
@@ -197,9 +200,11 @@ class Tree extends BaseTree
 
     /**
      * Get all icon constants for dropdown list in example
+     *
      * @param bool $html whether to render icon as array value prefix
-     * @return array
+     *
      * @throws \ReflectionException
+     * @return array
      */
     public static function optsIcon($html = false)
     {
@@ -275,7 +280,7 @@ class Tree extends BaseTree
      */
     public static function getRootByDomainId($domainId)
     {
-        $rootCondition[self::ATTR_DOMAIN_ID]     = $domainId;
+        $rootCondition[self::ATTR_DOMAIN_ID] = $domainId;
         $rootCondition[self::ATTR_ACCESS_DOMAIN] = [self::GLOBAL_ACCESS_DOMAIN, mb_strtolower(\Yii::$app->language)];
         return self::findOne($rootCondition);
     }
@@ -296,6 +301,75 @@ class Tree extends BaseTree
             ]
         );
         return $leavesQuery->with('translationsMeta');
+    }
+
+    /**
+     * Get all nodes where user has access to with hierarchical permission checking
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public static function getAccessibleItemsQuery()
+    {
+        $query = self::find();
+
+        // Always order by root and left values for nested set
+        $query->orderBy(['root' => SORT_ASC, 'lft' => SORT_ASC]);
+
+        // If user is admin, return all items
+        if (Yii::$app->user->can(self::getAdminRole())) {
+            return $query;
+        }
+
+        $userId = static::currentUserId();
+        $userAuthItems = array_keys(self::getUsersAuthItems());
+
+        // Build access condition: owner OR has read permission
+        $ownerCondition = [self::ATTR_ACCESS_OWNER => $userId];
+
+        // Public access
+        $publicCondition = [self::ATTR_ACCESS_READ => self::$_all];
+
+        // Build read permission conditions using precise matching
+        $readConditions = [$publicCondition];
+
+        // Use FIND_IN_SET or array matching for precise permission checking
+        $authItemsString = implode(',', array_filter($userAuthItems, function($item) {
+            return $item !== self::$_all;
+        }));
+
+        if (!empty($authItemsString)) {
+            $dbName = Yii::$app->getDb()->getDriverName();
+            if ($dbName === 'mysql') {
+                $readConditions[] = 'FIND_IN_SET(' . self::ATTR_ACCESS_READ . ', "' . $authItemsString . '") > 0';
+            } else {
+                // For PostgreSQL and other databases, use array matching
+                $readConditions[] = [self::ATTR_ACCESS_READ => array_filter($userAuthItems, function($item) {
+                    return $item !== self::$_all;
+                })];
+            }
+        }
+
+        $directAccessCondition = ['OR', $ownerCondition, ['OR', ...$readConditions]];
+        $query->andWhere($directAccessCondition);
+
+        // Add hierarchical access control exclude nodes where ANY parent lacks access
+        // This uses NOT EXISTS to exclude nodes that have inaccessible parents
+        $tableName = self::tableName();
+        $parentQuery = self::find()
+            ->alias('parent')
+            ->where([
+                'and',
+                ['<', 'parent.lft', new Expression($tableName . '.lft')],
+                ['>', 'parent.rgt', new Expression($tableName . '.rgt')],
+                ['=', 'parent.root', new Expression($tableName . '.root')],
+                ['>', 'parent.lvl', 0], // Exclude root nodes from parent check
+                [Tree::ATTR_ACCESS_DOMAIN => [Yii::$app->language, Tree::GLOBAL_ACCESS_DOMAIN]]
+            ])
+            ->andWhere(['NOT', $directAccessCondition]); // Parents that DON'T have access
+
+        $query->andWhere(['NOT EXISTS', $parentQuery]);
+
+        return $query;
     }
 
     /**
@@ -536,8 +610,8 @@ class Tree extends BaseTree
      * @param integer $sourceId
      * @param string $route
      *
-     * @return Tree|null
      * @throws \yii\console\Exception
+     * @return Tree|null
      */
     public function sibling($targetLanguage, $sourceId = null, $route = self::DEFAULT_PAGE_ROUTE)
     {
@@ -598,8 +672,8 @@ class Tree extends BaseTree
      * @param $message
      * @param $code
      *
-     * @return bool
      * @throws \yii\console\Exception
+     * @return bool
      */
     protected function outputError($message, $code)
     {
@@ -612,8 +686,8 @@ class Tree extends BaseTree
     }
 
     /**
-     * @return string
      * @throws \yii\base\InvalidConfigException
+     * @return string
      */
     public function getRequestParamsSchema()
     {
