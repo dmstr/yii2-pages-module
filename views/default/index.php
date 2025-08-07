@@ -25,6 +25,9 @@ echo TreeView::widget(
         'treeOptions' => ['style' => 'height:auto; min-height:400px'],
         'headerTemplate' => $headerTemplate,
         'mainTemplate' => $mainTemplate,
-        'toolbar' => $toolbar
+        'toolbar' => $toolbar,
+        'krajeeDialogSettings' => [
+            'useNative' => true
+        ]
     ]
 );
