@@ -7,6 +7,7 @@
  * @var string $headerTemplate
  * @var string $mainTemplate
  * @var array $toolbar
+ * @var int|string $pageId
  */
 use dmstr\modules\pages\models\Tree;
 use kartik\tree\TreeView;
@@ -17,7 +18,7 @@ echo TreeView::widget(
         'query' => $query,
         'isAdmin' => true,
         'softDelete' => false,
-        'displayValue' => 1,
+        'displayValue' => $pageId,
         'showTooltips' => false,
         'wrapperTemplate' => '{header}{footer}{tree}',
         'headingOptions' => ['label' => Yii::t('pages', 'Nodes')],

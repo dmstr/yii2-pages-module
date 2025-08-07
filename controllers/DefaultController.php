@@ -121,7 +121,7 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
     public function actionIndex($pageId = null)
     {
         $query = Tree::getAccessibleItemsQuery();
-        
+
         $headerTemplate = <<< HTML
 <div class="row">
     <div class="col-sm-6" id="dmstr-pages-detail-heading">
@@ -183,7 +183,8 @@ HTML;
             'query' => $query,
             'headerTemplate' => $headerTemplate,
             'toolbar' => $toolbar,
-            'mainTemplate' => $mainTemplate
+            'mainTemplate' => $mainTemplate,
+            'pageId' => $pageId
         ]);
     }
 
