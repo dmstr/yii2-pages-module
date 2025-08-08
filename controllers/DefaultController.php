@@ -120,6 +120,12 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
      */
     public function actionIndex($pageId = null)
     {
+
+        // do rbac permission check if page is readable. The active record permssion check does not show the page if it does not exist
+        if (!empty($pageId) && empty(Tree::findOne($pageId))) {
+            throw new NotFoundHttpException(Yii::t('pages', 'The requested page does not exist.'));
+        }
+
         $query = Tree::getAccessibleItemsQuery();
 
         $headerTemplate = <<< HTML
