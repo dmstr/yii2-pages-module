@@ -18,7 +18,6 @@ use yii\console\Application;
  *
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  *
- * @property mixed|object $localizedRootNode
  */
 class Module extends \yii\base\Module
 {
@@ -105,25 +104,6 @@ class Module extends \yii\base\Module
                 }
             }
         }
-    }
-
-    /**
-     * @return mixed|object dmstr\modules\pages\models\Tree
-     */
-    public function getLocalizedRootNode()
-    {
-        $localizedRoot = Tree::ROOT_NODE_PREFIX.'_'.\Yii::$app->language;
-        \Yii::trace('localizedRoot: '.$localizedRoot, __METHOD__);
-        $rootNode = Tree::findOne(
-            [
-                Tree::ATTR_DOMAIN_ID => Tree::ROOT_NODE_PREFIX,
-                Tree::ATTR_ACTIVE => Tree::ACTIVE,
-            ]
-        );
-        if ($rootNode !== null && !$rootNode->isVisible()) {
-            return null;
-        }
-        return $rootNode;
     }
 
     /**

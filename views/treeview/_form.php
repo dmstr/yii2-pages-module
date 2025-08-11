@@ -6,33 +6,51 @@ use dmstr\jsoneditor\JsonEditorWidget;
 use insolita\wgadminlte\Box;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
+use kartik\tree\models\Tree;
 use kartik\tree\TreeView;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
+use yii\web\View;
 
 /**
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
- * @package yii2-tree-manager
- * @version 1.5.0
- *
- * @var $this  \yii\web\View
- * @var $form \kartik\form\ActiveForm
- * @var $node \dmstr\modules\pages\models\Tree
- * @var $params array
- * @var $isAdmin boolean
- * @var $keyAttribute string
- * @var $action string
- * @var $currUrl string
- * @var $modelClass string
- * @var $softDelete boolean
- * @var $iconsList string
- * @var $nameAttribute string
- * @var $iconAttribute string
- * @var $iconTypeAttribute string
- * @var $showFormButtons boolean
+ * @var View $this
+ * @var Tree $node
+ * @var ActiveForm $form
+ * @var array $formOptions
+ * @var string $keyAttribute
+ * @var string $nameAttribute
+ * @var string $iconAttribute
+ * @var string $iconTypeAttribute
+ * @var array|string $iconsList
+ * @var string $formAction
+ * @var array $breadcrumbs
+ * @var array $nodeAddlViews
+ * @var mixed $currUrl
+ * @var boolean $isAdmin
+ * @var boolean $showIDAttribute
+ * @var boolean $showNameAttribute
+ * @var boolean $showFormButtons
+ * @var boolean $allowNewRoots
+ * @var string $nodeSelected
+ * @var string $nodeTitle
+ * @var string $nodeTitlePlural
+ * @var array $params
+ * @var string $keyField
+ * @var string $nodeView
+ * @var string $nodeAddlViews
+ * @var array $nodeViewButtonLabels
+ * @var string $noNodesMessage
+ * @var boolean $softDelete
+ * @var string $modelClass
+ * @var string $defaultBtnCss
+ * @var string $treeManageHash
+ * @var string $treeSaveHash
+ * @var string $treeRemoveHash
+ * @var string $treeMoveHash
+ * @var string $hideCssClass
  */
 
 $this->registerJs(
@@ -69,7 +87,7 @@ if (!$node->isNewRecord) {
  * Begin active form
  * @controller NodeController
  */
-$form = ActiveForm::begin(['action' => $action]);
+$form = ActiveForm::begin(['action' => $formAction, 'options' => $formOptions]);
 
 // Get tree manager module
 $treeViewModule = TreeView::module();
@@ -85,6 +103,9 @@ echo Html::hiddenInput('parentKey', $parentKey);
 echo Html::hiddenInput('currUrl', Url::to(['/pages', 'pageId' => $node->id]));
 echo Html::hiddenInput('modelClass', $modelClass);
 echo Html::hiddenInput('softDelete', $softDelete);
+echo Html::hiddenInput('treeManageHash', $treeManageHash);
+echo Html::hiddenInput('treeRemoveHash', $treeRemoveHash);
+echo Html::hiddenInput('treeMoveHash', $treeMoveHash);
 ?>
 
 

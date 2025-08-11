@@ -216,11 +216,14 @@ Run tests
     make run-tests
     
 
-Ressources
+Changelog
 ----------
 
-tbd
+2.5.10
 
----
+- Removed localized root node message
+- Updated kartik-v/yii2-tree-manager requirement to ^1.1.2
+- Update Tree model to support new child_allowed attribute (since kartik-v/yii2-tree-manager 1.0.9)
+- Improved permission check for page nodes so allowed child nodes in not allowed parents do not show up
 
 ### ![dmstr logo](http://t.phundament.com/dmstr-16-cropped.png) Built by [dmstr](http://diemeisterei.de)

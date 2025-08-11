@@ -17,11 +17,13 @@ use dmstr\modules\pages\helpers\PageHelper;
 use dmstr\modules\pages\models\Tree;
 use dmstr\modules\pages\Module;
 use dmstr\modules\pages\traits\RequestParamActionTrait;
+use kartik\tree\TreeView;
 use pheme\settings\components\Settings;
 use Yii;
 use yii\base\Event;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -61,9 +63,9 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
     {
 
         $rootIds = [Tree::ROOT_NODE_PREFIX];
-        /** @var Settings \Yii::$app->settings */
+        /** @var Settings Yii::$app->settings */
         if (Module::checkSettingsInstalled() && Yii::$app->settings->get('refPageRootIds', 'pages', null)) {
-            $tmp = explode("\n", \Yii::$app->settings->get('pages.refPageRootIds'));
+            $tmp = explode("\n", Yii::$app->settings->get('pages.refPageRootIds'));
             $tmp = array_filter(array_map('trim', $tmp));
             $rootIds = $tmp ?? $rootIds;
         }
@@ -106,8 +108,8 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
      */
     public function init()
     {
-        if (\Yii::$app->user->can('pages', ['route' => true])) {
-            \Yii::$app->trigger('registerMenuItems', new Event(['sender' => $this]));
+        if (Yii::$app->user->can('pages', ['route' => true])) {
+            Yii::$app->trigger('registerMenuItems', new Event(['sender' => $this]));
         }
 
         parent::init();
@@ -118,58 +120,84 @@ class DefaultController extends Controller implements ContextMenuItemsInterface
      */
     public function actionIndex($pageId = null)
     {
-        $localicedRootNode = $this->module->getLocalizedRootNode();
-        if (!$localicedRootNode) {
-            $language = mb_strtolower(\Yii::$app->language);
-            $rootNodePrefix = Tree::ROOT_NODE_PREFIX;
 
-            $msg = <<<HTML
-<b>Localized root-node missing</b>
-<p>
-Please create a new root-node for the current language.
-</p>
-<p>
-<a onclick="$('#tree-domain_id').val('{$rootNodePrefix}');$('#tree-name').val('{$rootNodePrefix}_{$language}');$('.kv-detail-container button[type=submit]').click()" 
-   class="btn btn-warning">Create root-node for <b>{$language}</b></a>
-</p>
+        // do rbac permission check if page is readable. The active record permssion check does not show the page if it does not exist
+        if (!empty($pageId) && empty(Tree::findOne($pageId))) {
+            throw new NotFoundHttpException(Yii::t('pages', 'The requested page does not exist.'));
+        }
+
+        $query = Tree::getAccessibleItemsQuery();
+
+        $headerTemplate = <<< HTML
+<div class="row">
+    <div class="col-sm-6" id="dmstr-pages-detail-heading">
+        {heading}
+    </div>
+    <div class="col-sm-6" id="dmstr-pages-detail-search">
+        {search}
+    </div>
+</div>
 HTML;
 
-            $js = <<<'JS'
-$(".kv-create-root").click();
-JS;
+        $toolbar = [];
 
-            $this->getView()->registerJs($js, View::POS_LOAD);
-            \Yii::$app->session->addFlash('warning', $msg);
-        } else {
-            if (!empty($pageId)) {
-                Yii::$app->session->set('kvNodeId', $pageId);
+        // check settings component and module existence
+        if (Yii::$app->has('settings') && Yii::$app->hasModule('settings')) {
+
+            // check module permissions
+            $settingPermission = false;
+            if (Yii::$app->getModule('settings')->accessRoles === null) {
+                $settingPermission = true;
+            } else {
+                foreach (Yii::$app->getModule('settings')->accessRoles as $role) {
+                    $settingPermission = Yii::$app->user->can($role);
+                }
+            }
+
+            if ($settingPermission) {
+                $settings = [
+                    'icon' => 'cogs',
+                    'url' => ['/settings', 'SettingSearch' => ['section' => 'pages']],
+                    'options' => [
+                        'title' => Yii::t('pages', 'Settings'),
+                        'class' => 'btn btn-info'
+                    ]
+                ];
+                $toolbar[] = TreeView::BTN_SEPARATOR;
+                $toolbar['settings'] = $settings;
             }
         }
 
-        /**
-         * Register the pages asset bundle
-         */
+        $mainTemplate = <<< HTML
+<div class="row">
+    <div class="col-md-5" id="dmstr-pages-detail-wrapper">
+        <div class="box box-solid">
+        {wrapper}
+        </div>
+    </div>
+    <div class="col-md-7" id="dmstr-pages-detail-panel">
+        {detail}
+    </div>
+</div>
+HTML;
+
+
         PagesBackendAsset::register($this->view);
+        $this->view->title = Yii::t('pages', 'Pages');
 
-        /** @var Tree $queryTree */
-        $queryTree = Tree::find()
-            ->andWhere(
-                [
-                    Tree::ATTR_ACCESS_DOMAIN => [
-                        \Yii::$app->language,
-                        Tree::GLOBAL_ACCESS_DOMAIN
-                    ]
-                ]
-            )
-            ->orderBy('root, lft');
-
-        return $this->render('index', ['queryTree' => $queryTree]);
+        return $this->render('index', [
+            'query' => $query,
+            'headerTemplate' => $headerTemplate,
+            'toolbar' => $toolbar,
+            'mainTemplate' => $mainTemplate,
+            'pageId' => $pageId
+        ]);
     }
 
     /**
-     * @return \yii\web\Response
+     * @return Yii\web\Response
      * @throws MethodNotAllowedHttpException
-     * @throws \yii\base\InvalidConfigException
+     * @throws Yii\base\InvalidConfigException
      */
     public function actionResolveRouteToSchema()
     {
@@ -214,7 +242,7 @@ JS;
     public function actionPage($pageId)
     {
         Url::remember();
-        \Yii::$app->session->set('__crudReturnUrl', null);
+        Yii::$app->session->set('__crudReturnUrl', null);
 
         // Set layout
         $this->layout = $this->module->defaultPageLayout;
@@ -232,7 +260,7 @@ JS;
         );
 
         if ($this->module->pageCheckAccessDomain) {
-            $pageQuery->andWhere(['access_domain' => [\Yii::$app->language, Tree::$_all]]);
+            $pageQuery->andWhere(['access_domain' => [Yii::$app->language, Tree::$_all]]);
         }
 
         // get page
@@ -240,7 +268,7 @@ JS;
         $page = $pageQuery->one();
 
         // Show disabled pages for admins
-        if ($page !== null && $page->isDisabled() && !\Yii::$app->user->can('pages')) {
+        if ($page !== null && $page->isDisabled() && !Yii::$app->user->can('pages')) {
             $page = null;
         }
 
@@ -257,13 +285,13 @@ JS;
         Tree::$activeAccessTrait = true;
         // check if page has access_read permissions set, if yes check if user is allowed
         if (!empty($page->access_read) && $page->access_read !== '*') {
-            if (!\Yii::$app->user->can($page->access_read)) {
+            if (!Yii::$app->user->can($page->access_read)) {
                 # if userIsGuest, redirect to login page
-                if (!\Yii::$app->user->isGuest) {
-                    throw new HttpException(403, \Yii::t('pages', 'Forbidden'));
+                if (!Yii::$app->user->isGuest) {
+                    throw new HttpException(403, Yii::t('pages', 'Forbidden'));
                 }
 
-                return $this->redirect(\Yii::$app->user->loginUrl);
+                return $this->redirect(Yii::$app->user->loginUrl);
             }
         }
 
@@ -282,24 +310,24 @@ JS;
 
             // Render view
             if (empty($page->view)) {
-                throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
+                throw new HttpException(404, Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
             }
             return $this->render($page->view, ['page' => $page]);
         } else {
             if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
-                \Yii::trace('Resolved fallback URL for ' . $fallbackPage->id, __METHOD__);
+                Yii::trace('Resolved fallback URL for ' . $fallbackPage->id, __METHOD__);
                 return $this->redirect($fallbackPage->createUrl(['language' => $fallbackPage->access_domain]));
             } else {
-                throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
+                throw new HttpException(404, Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
             }
         }
 
         if ($fallbackPage = $this->resolveFallbackPage($pageId)) {
-            \Yii::trace('Resolved fallback URL for ' . $fallbackPage->id, __METHOD__);
+            Yii::trace('Resolved fallback URL for ' . $fallbackPage->id, __METHOD__);
             return $this->redirect($fallbackPage->createUrl(['language' => $fallbackPage->access_domain]));
         }
 
-        throw new HttpException(404, \Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
+        throw new HttpException(404, Yii::t('pages', 'Page not found.') . ' [ID: ' . $pageId . ']');
     }
 
 
