@@ -18,7 +18,6 @@ use yii\console\Application;
  *
  * @author Christopher Stebe <c.stebe@herzogkommunikation.de>
  *
- * @property mixed|object $localizedRootNode
  */
 class Module extends \yii\base\Module
 {
