@@ -24,6 +24,7 @@ use yii\web\View;
  * @var string $nameAttribute
  * @var string $iconAttribute
  * @var string $iconTypeAttribute
+ * @var string $iconsListShow
  * @var array|string $iconsList
  * @var string $formAction
  * @var array $breadcrumbs
@@ -108,7 +109,6 @@ echo Html::hiddenInput('treeRemoveHash', $treeRemoveHash);
 echo Html::hiddenInput('treeMoveHash', $treeMoveHash);
 ?>
 
-
 <?php $this->beginBlock('buttons') ?>
 <?php if (empty($inputOpts['disabled']) || ($isAdmin && $showFormButtons)): ?>
     <div class="row">
@@ -149,7 +149,7 @@ echo Html::hiddenInput('treeMoveHash', $treeMoveHash);
 <div class="clearfix"></div>
 
 
-<?php if ($iconsList === 'text' || $iconsList === 'none') : ?>
+<?php if ($iconsListShow === 'text' || $iconsListShow === 'none') : ?>
 
     <div class="row">
         <div class="col-xs-12 col-sm-12">
